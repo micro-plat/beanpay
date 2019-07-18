@@ -8,7 +8,7 @@ import (
 
 	"github.com/asaskevich/govalidator"
 
-	"github.com/micro-plat/beanpay/apiserver/modules/const/sql"
+	"github.com/micro-plat/beanpay/modules/const/sql"
 	"github.com/micro-plat/hydra/conf"
 	_ "github.com/micro-plat/hydra/hydra"
 	"github.com/micro-plat/hydra/registry"
