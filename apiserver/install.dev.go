@@ -4,19 +4,20 @@ package main
 
 //bindConf 绑定启动配置， 启动时检查注册中心配置是否存在，不存在则引导用户输入配置参数并自动创建到注册中心
 func (s *apiserver) install() {
+	s.IsDebug = true
 	//api.port#//
 	s.Conf.API.SetMainConf(`{"address":":9090"}`)
 	//#api.port//
 
 	//api.appconf#//
 	//#api.appconf//
-	
+
 	//api.cros#//
 	//#api.cros//
-		
+
 	//api.jwt#//
 	//#api.jwt//
-	
+
 	//api.metric#//
 	//#api.metric//
 
@@ -25,20 +26,19 @@ func (s *apiserver) install() {
 
 	//cache#//
 	//#cache//
-	
+
 	//queue#//
 	//#queue//
-	
+
 	//cron.appconf#//
 	//#cron.appconf//
-	
+
 	//cron.task#//
 	//#cron.task//
 
 	//cron.metric#//
 	//#cron.metric//
 
-	
 	//mqc.server#//
 	//#mqc.server//
 
@@ -47,7 +47,7 @@ func (s *apiserver) install() {
 
 	//mqc.metric#//
 	//#mqc.metric//
-	
+
 	//web.port#//
 	//#web.port//
 
@@ -68,7 +68,7 @@ func (s *apiserver) install() {
 
 	//rpc.port#//
 	//#rpc.port//
-	
+
 	//rpc.metric#//
 	//#rpc.metric//
 }
