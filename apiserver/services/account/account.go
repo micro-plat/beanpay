@@ -23,7 +23,7 @@ func (u *AccountHandler) Handle(ctx *context.Context) (r interface{}) {
 	}
 
 	ctx.Log.Info("2. 创建帐户信息")
-	id, err := account.Create(u.container.GetRegularDB(),
+	id, err := account.Create(ctx,
 		ctx.Request.GetString("uaid"),
 		ctx.Request.GetString("name"))
 	if err != nil {

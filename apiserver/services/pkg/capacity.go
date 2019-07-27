@@ -23,7 +23,7 @@ func (u *CapacityHandler) AddHandle(ctx *context.Context) (r interface{}) {
 	}
 
 	ctx.Log.Info("2. 添加服务包数量")
-	err := pkg.AddCapacity(u.container.GetRegularDB(),
+	err := pkg.AddCapacity(ctx,
 		ctx.Request.GetString("uaid"),
 		ctx.Request.GetString("spkg_id"),
 		ctx.Request.GetString("trade_no"),
@@ -45,7 +45,7 @@ func (u *CapacityHandler) DeductHandle(ctx *context.Context) (r interface{}) {
 	}
 
 	ctx.Log.Info("2. 扣减服务包数量")
-	err := pkg.DeductCapacity(u.container.GetRegularDB(),
+	err := pkg.DeductCapacity(ctx,
 		ctx.Request.GetString("uaid"),
 		ctx.Request.GetString("spkg_id"),
 		ctx.Request.GetString("trade_no"),
@@ -67,7 +67,7 @@ func (u *CapacityHandler) RefundHandle(ctx *context.Context) (r interface{}) {
 	}
 
 	ctx.Log.Info("2. 退回服务包数量")
-	err := pkg.RefundCapacity(u.container.GetRegularDB(),
+	err := pkg.RefundCapacity(ctx,
 		ctx.Request.GetString("uaid"),
 		ctx.Request.GetString("spkg_id"),
 		ctx.Request.GetString("trade_no"),

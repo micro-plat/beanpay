@@ -1,13 +1,21 @@
 package pkg
 
 import (
+	"fmt"
+
+	"github.com/micro-plat/beanpay/beanpay"
 	"github.com/micro-plat/beanpay/beanpay/account"
+	"github.com/micro-plat/hydra/component"
 	"github.com/micro-plat/hydra/context"
 	"github.com/micro-plat/lib4go/db"
 )
 
 //Create 创建服务包信息
-func Create(db db.IDBExecuter, uaid string, spkgid string, name string, total int, daily int, expires string) (int, error) {
+func Create(i interface{}, uaid string, spkgid string, name string, total int, daily int, expires string) (int, error) {
+	db, err := getDBExecuter(i)
+	if err != nil {
+		return 0, err
+	}
 	id, err := account.GetAccountID(db, uaid)
 	if err != nil {
 		return 0, err
@@ -17,7 +25,11 @@ func Create(db db.IDBExecuter, uaid string, spkgid string, name string, total in
 }
 
 //GetPackageRemain 查询包剩余数量
-func GetPackageRemain(db db.IDBExecuter, uaid string, spkgID string) (int, error) {
+func GetPackageRemain(i interface{}, uaid string, spkgID string) (int, error) {
+	db, err := getDBExecuter(i)
+	if err != nil {
+		return 0, err
+	}
 	id, err := account.GetAccountID(db, uaid)
 	if err != nil {
 		return 0, err
@@ -26,7 +38,11 @@ func GetPackageRemain(db db.IDBExecuter, uaid string, spkgID string) (int, error
 }
 
 //AddCapacity 添加服务包数量
-func AddCapacity(db db.IDBExecuter, uaid string, spkgid string, tradeNo string, capacity int) error {
+func AddCapacity(i interface{}, uaid string, spkgid string, tradeNo string, capacity int) error {
+	db, err := getDBExecuter(i)
+	if err != nil {
+		return err
+	}
 	if capacity <= 0 {
 		return context.NewErrorf(903, "数量错误%d", capacity)
 	}
@@ -42,7 +58,11 @@ func AddCapacity(db db.IDBExecuter, uaid string, spkgid string, tradeNo string, 
 }
 
 //DeductCapacity 扣减服务包数量
-func DeductCapacity(db db.IDBExecuter, uaid string, spkgid string, tradeNo string, capacity int) error {
+func DeductCapacity(i interface{}, uaid string, spkgid string, tradeNo string, capacity int) error {
+	db, err := getDBExecuter(i)
+	if err != nil {
+		return err
+	}
 	if capacity <= 0 {
 		return context.NewErrorf(903, "数量错误%d", capacity)
 	}
@@ -58,7 +78,11 @@ func DeductCapacity(db db.IDBExecuter, uaid string, spkgid string, tradeNo strin
 }
 
 //RefundCapacity 退回服务包数量
-func RefundCapacity(db db.IDBExecuter, uaid string, spkgid string, tradeNo string, capacity int) error {
+func RefundCapacity(i interface{}, uaid string, spkgid string, tradeNo string, capacity int) error {
+	db, err := getDBExecuter(i)
+	if err != nil {
+		return err
+	}
 	if capacity <= 0 {
 		return context.NewErrorf(903, "数量错误%d", capacity)
 	}
@@ -74,7 +98,11 @@ func RefundCapacity(db db.IDBExecuter, uaid string, spkgid string, tradeNo strin
 }
 
 //Query 查询指定服务变的变动明细
-func Query(db db.IDBExecuter, uaid string, spkgid string, startTime string, pi int, ps int) (db.QueryRows, error) {
+func Query(i interface{}, uaid string, spkgid string, startTime string, pi int, ps int) (db.QueryRows, error) {
+	db, err := getDBExecuter(i)
+	if err != nil {
+		return nil, err
+	}
 	id, err := account.GetAccountID(db, uaid)
 	if err != nil {
 		return nil, err
@@ -84,4 +112,16 @@ func Query(db db.IDBExecuter, uaid string, spkgid string, startTime string, pi i
 		return nil, err
 	}
 	return query(db, pkgid, startTime, pi, ps)
+}
+func getDBExecuter(c interface{}) (db.IDBExecuter, error) {
+	switch v := c.(type) {
+	case *context.Context:
+		return v.GetContainer().GetDB(beanpay.DBName)
+	case component.IContainer:
+		return v.GetDB(beanpay.DBName)
+	case db.IDBExecuter:
+		return v, nil
+	default:
+		return nil, fmt.Errorf("不支持的参数类型")
+	}
 }

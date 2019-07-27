@@ -23,7 +23,7 @@ func (u *BalanceHandler) AddHandle(ctx *context.Context) (r interface{}) {
 	}
 
 	ctx.Log.Info("2. 帐户加款")
-	err := account.AddAmount(u.container.GetRegularDB(),
+	err := account.AddAmount(ctx,
 		ctx.Request.GetString("uaid"),
 		ctx.Request.GetString("trade_no"),
 		ctx.Request.GetInt("amount"))
@@ -44,7 +44,7 @@ func (u *BalanceHandler) DeductHandle(ctx *context.Context) (r interface{}) {
 	}
 
 	ctx.Log.Info("2. 帐户扣款")
-	err := account.DeductAmount(u.container.GetRegularDB(),
+	err := account.DeductAmount(ctx,
 		ctx.Request.GetString("uaid"),
 		ctx.Request.GetString("trade_no"),
 		ctx.Request.GetInt("amount"))
@@ -65,7 +65,7 @@ func (u *BalanceHandler) RefundHandle(ctx *context.Context) (r interface{}) {
 	}
 
 	ctx.Log.Info("2. 帐户退款")
-	err := account.RefundAmount(u.container.GetRegularDB(),
+	err := account.RefundAmount(ctx,
 		ctx.Request.GetString("uaid"),
 		ctx.Request.GetString("trade_no"),
 		ctx.Request.GetInt("amount"))

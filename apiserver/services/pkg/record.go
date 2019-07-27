@@ -23,7 +23,7 @@ func (u *RecordHandler) QueryHandle(ctx *context.Context) (r interface{}) {
 	}
 
 	ctx.Log.Info("2. 服务包数量变动查询")
-	data, err := pkg.Query(u.container.GetRegularDB(),
+	data, err := pkg.Query(ctx,
 		ctx.Request.GetString("uaid"),
 		ctx.Request.GetString("spkg_id"),
 		ctx.Request.GetString("start_time"),

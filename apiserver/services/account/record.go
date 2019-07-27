@@ -23,7 +23,7 @@ func (u *RecordHandler) QueryHandle(ctx *context.Context) (r interface{}) {
 	}
 
 	ctx.Log.Info("2. 查询数据")
-	data, err := account.Query(u.container.GetRegularDB(),
+	data, err := account.Query(ctx,
 		ctx.Request.GetString("uaid"),
 		ctx.Request.GetString("start_time"),
 		ctx.Request.GetInt("pi", 0),

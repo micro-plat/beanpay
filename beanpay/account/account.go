@@ -1,12 +1,20 @@
 package account
 
 import (
+	"fmt"
+
+	"github.com/micro-plat/beanpay/beanpay"
+	"github.com/micro-plat/hydra/component"
 	"github.com/micro-plat/hydra/context"
 	"github.com/micro-plat/lib4go/db"
 )
 
 //Create 根据uaid,name创建帐户,如果帐户存在直接返回帐户编号
-func Create(db db.IDBExecuter, uaid string, name string) (int, error) {
+func Create(i interface{}, uaid string, name string) (int, error) {
+	db, err := getDBExecuter(i)
+	if err != nil {
+		return 0, err
+	}
 	if id, err := getAccountID(db, uaid); id != 0 && err != nil {
 		return id, nil
 	}
@@ -14,7 +22,11 @@ func Create(db db.IDBExecuter, uaid string, name string) (int, error) {
 }
 
 //GetBalance 获取帐户余额
-func GetBalance(db db.IDBExecuter, uaid string) (int, error) {
+func GetBalance(i interface{}, uaid string) (int, error) {
+	db, err := getDBExecuter(i)
+	if err != nil {
+		return 0, err
+	}
 	id, err := getAccountID(db, uaid)
 	if err != nil {
 		return 0, err
@@ -23,12 +35,20 @@ func GetBalance(db db.IDBExecuter, uaid string) (int, error) {
 }
 
 //GetAccountID 根据uaid获取帐户编号
-func GetAccountID(db db.IDBExecuter, uaid string) (int, error) {
+func GetAccountID(i interface{}, uaid string) (int, error) {
+	db, err := getDBExecuter(i)
+	if err != nil {
+		return 0, err
+	}
 	return getAccountID(db, uaid)
 }
 
 //AddAmount 资金加款
-func AddAmount(db db.IDBExecuter, uaid string, tradeNo string, amount int) error {
+func AddAmount(i interface{}, uaid string, tradeNo string, amount int) error {
+	db, err := getDBExecuter(i)
+	if err != nil {
+		return err
+	}
 	if amount <= 0 {
 		return context.NewErrorf(903, "金额错误%d", amount)
 	}
@@ -47,7 +67,11 @@ func AddAmount(db db.IDBExecuter, uaid string, tradeNo string, amount int) error
 }
 
 //DeductAmount 资金扣款
-func DeductAmount(db db.IDBExecuter, uaid string, tradeNo string, amount int) error {
+func DeductAmount(i interface{}, uaid string, tradeNo string, amount int) error {
+	db, err := getDBExecuter(i)
+	if err != nil {
+		return err
+	}
 	if amount <= 0 {
 		return context.NewErrorf(903, "金额错误%d", amount)
 	}
@@ -66,7 +90,11 @@ func DeductAmount(db db.IDBExecuter, uaid string, tradeNo string, amount int) er
 }
 
 //RefundAmount 资金退款
-func RefundAmount(db db.IDBExecuter, uaid string, tradeNo string, amount int) error {
+func RefundAmount(i interface{}, uaid string, tradeNo string, amount int) error {
+	db, err := getDBExecuter(i)
+	if err != nil {
+		return err
+	}
 	if amount <= 0 {
 		return context.NewErrorf(903, "金额错误%d", amount)
 	}
@@ -85,10 +113,26 @@ func RefundAmount(db db.IDBExecuter, uaid string, tradeNo string, amount int) er
 }
 
 //Query 查询余额变动明细
-func Query(db db.IDBExecuter, uaid string, startTime string, pi int, ps int) (db.QueryRows, error) {
+func Query(i interface{}, uaid string, startTime string, pi int, ps int) (db.QueryRows, error) {
+	db, err := getDBExecuter(i)
+	if err != nil {
+		return nil, err
+	}
 	id, err := getAccountID(db, uaid)
 	if err != nil {
 		return nil, err
 	}
 	return query(db, id, startTime, pi, ps)
+}
+func getDBExecuter(c interface{}) (db.IDBExecuter, error) {
+	switch v := c.(type) {
+	case *context.Context:
+		return v.GetContainer().GetDB(beanpay.DBName)
+	case component.IContainer:
+		return v.GetDB(beanpay.DBName)
+	case db.IDBExecuter:
+		return v, nil
+	default:
+		return nil, fmt.Errorf("不支持的参数类型")
+	}
 }

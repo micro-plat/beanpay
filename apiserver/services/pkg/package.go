@@ -23,7 +23,7 @@ func (u *PackageHandler) Handle(ctx *context.Context) (r interface{}) {
 	}
 
 	ctx.Log.Info("2. 创建服务包")
-	id, err := pkg.Create(u.container.GetRegularDB(),
+	id, err := pkg.Create(ctx,
 		ctx.Request.GetString("uaid"),
 		ctx.Request.GetString("spkg_id"),
 		ctx.Request.GetString("name"),
