@@ -95,7 +95,7 @@ func QueryAccountRecords(i interface{}, eid string, startTime string, endTime st
 
 //CreatePackage 根据用户编号， 服务编号，服务名称，服务包可用总数，日限制使用次数，过期时间创建服务包
 //用户必须先创建资金帐户
-func CreatePackage(i interface{}, eid string, sid string, name string, total int, daily int, expires string) (int, error) {
+func CreatePackage(i interface{}, eid string, sid string, name string, total int, daily int, expires string) (interface{}, error) {
 	db, err := getDBExecuter(i)
 	if err != nil {
 		return 0, err

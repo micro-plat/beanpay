@@ -23,7 +23,7 @@ func (u *PackageHandler) Handle(ctx *context.Context) (r interface{}) {
 	}
 
 	ctx.Log.Info("2. 创建服务包")
-	id, err := beanpay.CreatePackage(ctx,
+	pkg, err := beanpay.CreatePackage(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("sid"),
 		ctx.Request.GetString("name"),
@@ -35,9 +35,5 @@ func (u *PackageHandler) Handle(ctx *context.Context) (r interface{}) {
 	}
 
 	ctx.Log.Info("3. 处理返回结果")
-	return map[string]interface{}{
-		"sid":    ctx.Request.GetString("sid"),
-		"pkg_id": id,
-		"name":   ctx.Request.GetString("name"),
-	}
+	return pkg
 }

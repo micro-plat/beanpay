@@ -22,7 +22,7 @@ func change(db db.IDBExecuter, pkgID int64, tradeNo string, tp int, capacity int
 		return nil, err
 	}
 	if row == 0 {
-		return nil, context.NewError(901, "服务包剩余数量不足")
+		return nil, context.NewError(ecodes.NotEnough, "服务包剩余数量不足")
 	}
 
 	//添加变动记录

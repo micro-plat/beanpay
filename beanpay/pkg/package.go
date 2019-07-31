@@ -1,6 +1,8 @@
 package pkg
 
 import (
+	"fmt"
+
 	"github.com/micro-plat/beanpay/beanpay/account"
 	"github.com/micro-plat/beanpay/beanpay/const/ecodes"
 	"github.com/micro-plat/beanpay/beanpay/const/ttypes"
@@ -9,13 +11,25 @@ import (
 )
 
 //Create 创建服务包信息
-func Create(db db.IDBExecuter, eid string, sid string, name string, total int, daily int, expires string) (int, error) {
+func Create(db db.IDBExecuter, eid string, sid string, name string, total int, daily int, expires string) (interface{}, error) {
+
+	pkg, err := GetPackage(db, eid, sid)
+	if err == nil {
+		return context.NewResult(ecodes.HasExists, pkg), nil
+	}
+	if context.GetCode(err) != ecodes.NotExists {
+		return nil, fmt.Errorf("x0:%v", err)
+	}
 	acc, err := account.GetAccount(db, eid)
 	if err != nil {
-		return 0, err
+		return nil, fmt.Errorf("x1:%v", err)
 	}
 
-	return create(db, acc.ID, sid, name, total, daily, expires)
+	err = create(db, acc.ID, sid, name, total, daily, expires)
+	if err != nil {
+		return nil, fmt.Errorf("x2:%v", err)
+	}
+	return GetPackage(db, eid, sid)
 }
 
 //GetPackage 获取服务包编号

@@ -29,7 +29,7 @@ comment on table beanpay_package_record is '服务包数量变动';
 alter table beanpay_package_record
 	add constraint pk_package_record primary key(record_id);
 alter table beanpay_package_record
-	add constraint beanpay_pkg_record_account_id unique(account_id,trade_no);
+	add constraint beanpay_pkg_record_account_id unique(account_id,trade_no,change_type);
 
 drop sequence seq_package_record_id;
 

@@ -24,5 +24,5 @@ create table beanpay_package_record
 
 
 	drop index beanpay_package_record_account_id ON beanpay_package_record;
-	create unique index beanpay_package_record_account_id ON beanpay_package_record(account_id,trade_no);
+	create unique index beanpay_package_record_account_id ON beanpay_package_record(account_id,trade_no,change_type);
  

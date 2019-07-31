@@ -6,20 +6,20 @@ package main
 func (s *apiserver) install() {
 	s.IsDebug = true
 	s.Conf.API.SetMainConf(`{"address":":9090"}`)
-	s.Conf.Plat.SetVarConf("db", "db", `{
-			"provider":"mysql",
-			"connString":"mrss:123456@tcp(192.168.0.36)/mrss?charset=utf8",
-			"maxOpen":20,
-			"maxIdle":10,
-			"lifeTime":600
-	}`)
-
 	// s.Conf.Plat.SetVarConf("db", "db", `{
-	// 		"provider":"ora",
-	// 		"connString":"sso/123456@orcl136",
+	// 		"provider":"mysql",
+	// 		"connString":"mrss:123456@tcp(192.168.0.36)/mrss?charset=utf8",
 	// 		"maxOpen":20,
 	// 		"maxIdle":10,
 	// 		"lifeTime":600
 	// }`)
+
+	s.Conf.Plat.SetVarConf("db", "db", `{
+			"provider":"ora",
+			"connString":"sso/123456@orcl136",
+			"maxOpen":20,
+			"maxIdle":10,
+			"lifeTime":600
+	}`)
 
 }
