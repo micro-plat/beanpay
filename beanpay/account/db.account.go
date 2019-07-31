@@ -6,10 +6,10 @@ import (
 	"github.com/micro-plat/lib4go/db"
 )
 
-//Create 根据uid,name创建帐户信息
-func create(db db.IDBExecuter, uid string, name string) error {
+//Create 根据eid,name创建帐户信息
+func create(db db.IDBExecuter, eid string, name string) error {
 	input := map[string]interface{}{
-		"uid":  uid,
+		"eid":  eid,
 		"name": name,
 	}
 	_, _, _, err := db.Execute(sql.CreateAccount, input)
@@ -19,12 +19,12 @@ func create(db db.IDBExecuter, uid string, name string) error {
 	return nil
 }
 
-//GetAccountID 根据uid获取帐户编号
-func getAccount(db db.IDBExecuter, uid string) (r db.QueryRow, err error) {
+//GetAccountID 根据eid获取帐户编号
+func getAccount(db db.IDBExecuter, eid string) (r db.QueryRow, err error) {
 	input := map[string]interface{}{
-		"uid": uid,
+		"eid": eid,
 	}
-	rows, _, _, err := db.Query(sql.GetAccountByUid, input)
+	rows, _, _, err := db.Query(sql.GetAccountByeid, input)
 	if err != nil {
 		return nil, err
 	}

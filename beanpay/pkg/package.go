@@ -8,8 +8,8 @@ import (
 )
 
 //Create 创建服务包信息
-func Create(db db.IDBExecuter, uid string, sid string, name string, total int, daily int, expires string) (int, error) {
-	acc, err := account.GetAccount(db, uid)
+func Create(db db.IDBExecuter, eid string, sid string, name string, total int, daily int, expires string) (int, error) {
+	acc, err := account.GetAccount(db, eid)
 	if err != nil {
 		return 0, err
 	}
@@ -18,8 +18,8 @@ func Create(db db.IDBExecuter, uid string, sid string, name string, total int, d
 }
 
 //GetPackageRemain 查询包剩余数量
-func GetPackageRemain(db db.IDBExecuter, uid string, sid string) (int, error) {
-	acc, err := account.GetAccount(db, uid)
+func GetPackageRemain(db db.IDBExecuter, eid string, sid string) (int, error) {
+	acc, err := account.GetAccount(db, eid)
 	if err != nil {
 		return 0, err
 	}
@@ -27,8 +27,8 @@ func GetPackageRemain(db db.IDBExecuter, uid string, sid string) (int, error) {
 }
 
 //GetPackageID 获取服务包编号
-func GetPackageID(db db.IDBExecuter, uid string, sid string) (int, error) {
-	acc, err := account.GetAccount(db, uid)
+func GetPackageID(db db.IDBExecuter, eid string, sid string) (int, error) {
+	acc, err := account.GetAccount(db, eid)
 	if err != nil {
 		return 0, err
 	}
@@ -40,11 +40,11 @@ func GetPackageID(db db.IDBExecuter, uid string, sid string) (int, error) {
 }
 
 //AddCapacity 添加服务包数量
-func AddCapacity(db db.IDBExecuter, uid string, sid string, tradeNo string, capacity int) error {
+func AddCapacity(db db.IDBExecuter, eid string, sid string, tradeNo string, capacity int) error {
 	if capacity <= 0 {
 		return context.NewErrorf(903, "数量错误%d", capacity)
 	}
-	acc, err := account.GetAccount(db, uid)
+	acc, err := account.GetAccount(db, eid)
 	if err != nil {
 		return err
 	}
@@ -56,12 +56,12 @@ func AddCapacity(db db.IDBExecuter, uid string, sid string, tradeNo string, capa
 }
 
 //DeductCapacity 扣减服务包数量
-func DeductCapacity(db db.IDBExecuter, uid string, sid string, tradeNo string, capacity int) error {
+func DeductCapacity(db db.IDBExecuter, eid string, sid string, tradeNo string, capacity int) error {
 
 	if capacity <= 0 {
 		return context.NewErrorf(903, "数量错误%d", capacity)
 	}
-	acc, err := account.GetAccount(db, uid)
+	acc, err := account.GetAccount(db, eid)
 	if err != nil {
 		return err
 	}
@@ -73,11 +73,11 @@ func DeductCapacity(db db.IDBExecuter, uid string, sid string, tradeNo string, c
 }
 
 //RefundCapacity 退回服务包数量
-func RefundCapacity(db db.IDBExecuter, uid string, sid string, tradeNo string, capacity int) error {
+func RefundCapacity(db db.IDBExecuter, eid string, sid string, tradeNo string, capacity int) error {
 	if capacity <= 0 {
 		return context.NewErrorf(903, "数量错误%d", capacity)
 	}
-	acc, err := account.GetAccount(db, uid)
+	acc, err := account.GetAccount(db, eid)
 	if err != nil {
 		return err
 	}
@@ -89,8 +89,8 @@ func RefundCapacity(db db.IDBExecuter, uid string, sid string, tradeNo string, c
 }
 
 //Query 查询指定服务变的变动明细
-func Query(db db.IDBExecuter, uid string, sid string, startTime string, endTime string, pi int, ps int) (db.QueryRows, error) {
-	acc, err := account.GetAccount(db, uid)
+func Query(db db.IDBExecuter, eid string, sid string, startTime string, endTime string, pi int, ps int) (db.QueryRows, error) {
+	acc, err := account.GetAccount(db, eid)
 	if err != nil {
 		return nil, err
 	}

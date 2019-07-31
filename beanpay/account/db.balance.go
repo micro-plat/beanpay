@@ -9,11 +9,11 @@ import (
 )
 
 //GetBalance 查询帐户金额
-func getBalance(db db.IDBExecuter, uid string) (int, error) {
+func getBalance(db db.IDBExecuter, eid string) (int, error) {
 	input := map[string]interface{}{
-		"uid": uid,
+		"eid": eid,
 	}
-	rows, _, _, err := db.Query(sql.GetAccountByUid, input)
+	rows, _, _, err := db.Query(sql.GetAccountByeid, input)
 	if err != nil {
 		return 0, err
 	}
@@ -38,7 +38,7 @@ func change(db db.IDBExecuter, accountID int, tradeNo string, tp int, amount int
 		return nil, err
 	}
 	if row == 0 {
-		return nil, context.NewError(ecodes.NotEnough, "帐户不存在或余额不足")
+		return nil, context.NewError(ecodes.NotEnough, "帐户余额不足")
 	}
 
 	//添加资金变动

@@ -18,13 +18,13 @@ func NewRecordHandler(container component.IContainer) (u *RecordHandler) {
 func (u *RecordHandler) QueryHandle(ctx *context.Context) (r interface{}) {
 	ctx.Log.Info("---------------服务包数量变动查询--------------------")
 	ctx.Log.Info("1. 参数校验")
-	if err := ctx.Request.Check("uid", "start_time", "end_time"); err != nil {
+	if err := ctx.Request.Check("eid", "start_time", "end_time"); err != nil {
 		return context.NewError(context.ERR_NOT_ACCEPTABLE, err)
 	}
 
 	ctx.Log.Info("2. 服务包数量变动查询")
 	data, err := beanpay.QueryPackageRecords(ctx,
-		ctx.Request.GetString("uid"),
+		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("sid"),
 		ctx.Request.GetString("start_time"),
 		ctx.Request.GetString("end_time"),

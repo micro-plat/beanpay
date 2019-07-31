@@ -18,13 +18,13 @@ func NewPackageHandler(container component.IContainer) (u *PackageHandler) {
 func (u *PackageHandler) Handle(ctx *context.Context) (r interface{}) {
 	ctx.Log.Info("---------------创建服务包--------------------")
 	ctx.Log.Info("1. 参数校验")
-	if err := ctx.Request.Check("uid", "sid", "name", "total"); err != nil {
+	if err := ctx.Request.Check("eid", "sid", "name", "total"); err != nil {
 		return context.NewError(context.ERR_NOT_ACCEPTABLE, err)
 	}
 
 	ctx.Log.Info("2. 创建服务包")
 	id, err := beanpay.CreatePackage(ctx,
-		ctx.Request.GetString("uid"),
+		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("sid"),
 		ctx.Request.GetString("name"),
 		ctx.Request.GetInt("total"),

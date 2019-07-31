@@ -7,29 +7,29 @@ import (
 	"github.com/micro-plat/lib4go/db"
 )
 
-//Create 根据uid,name创建帐户,如果帐户存在直接返回帐户编号
-func Create(db db.IDBExecuter, uid string, name string) (interface{}, error) {
-	acc, err := GetAccount(db, uid)
+//Create 根据eid,name创建帐户,如果帐户存在直接返回帐户编号
+func Create(db db.IDBExecuter, eid string, name string) (interface{}, error) {
+	acc, err := GetAccount(db, eid)
 	if err == nil {
 		return context.NewResult(ecodes.HasExists, acc), nil
 	}
 	if context.GetCode(err) != ecodes.NotExists {
 		return nil, err
 	}
-	if err = create(db, uid, name); err != nil {
+	if err = create(db, eid, name); err != nil {
 		return nil, err
 	}
-	return GetAccount(db, uid)
+	return GetAccount(db, eid)
 }
 
 //GetBalance 获取帐户余额
-func GetBalance(db db.IDBExecuter, uid string) (int, error) {
-	return getBalance(db, uid)
+func GetBalance(db db.IDBExecuter, eid string) (int, error) {
+	return getBalance(db, eid)
 }
 
-//GetAccount 根据uid获取帐户
-func GetAccount(db db.IDBExecuter, uid string) (acc *Account, err error) {
-	row, err := getAccount(db, uid)
+//GetAccount 根据eid获取帐户
+func GetAccount(db db.IDBExecuter, eid string) (acc *Account, err error) {
+	row, err := getAccount(db, eid)
 	if err != nil {
 		return nil, err
 	}
@@ -41,11 +41,11 @@ func GetAccount(db db.IDBExecuter, uid string) (acc *Account, err error) {
 }
 
 //AddAmount 资金加款
-func AddAmount(db db.IDBExecuter, uid string, tradeNo string, amount int) (*context.Result, error) {
+func AddAmount(db db.IDBExecuter, eid string, tradeNo string, amount int) (*context.Result, error) {
 	if amount <= 0 {
 		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%d", amount)
 	}
-	acc, err := GetAccount(db, uid)
+	acc, err := GetAccount(db, eid)
 	if err != nil {
 		return nil, err
 	}
@@ -69,11 +69,11 @@ func AddAmount(db db.IDBExecuter, uid string, tradeNo string, amount int) (*cont
 }
 
 //DeductAmount 资金扣款
-func DeductAmount(db db.IDBExecuter, uid string, tradeNo string, amount int) (*context.Result, error) {
+func DeductAmount(db db.IDBExecuter, eid string, tradeNo string, amount int) (*context.Result, error) {
 	if amount <= 0 {
 		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%d", amount)
 	}
-	acc, err := GetAccount(db, uid)
+	acc, err := GetAccount(db, eid)
 	if err != nil {
 		return nil, err
 	}
@@ -96,11 +96,11 @@ func DeductAmount(db db.IDBExecuter, uid string, tradeNo string, amount int) (*c
 }
 
 //RefundAmount 资金退款
-func RefundAmount(db db.IDBExecuter, uid string, tradeNo string, amount int) (*context.Result, error) {
+func RefundAmount(db db.IDBExecuter, eid string, tradeNo string, amount int) (*context.Result, error) {
 	if amount <= 0 {
 		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%d", amount)
 	}
-	acc, err := GetAccount(db, uid)
+	acc, err := GetAccount(db, eid)
 	if err != nil {
 		return nil, err
 	}
@@ -117,12 +117,12 @@ func RefundAmount(db db.IDBExecuter, uid string, tradeNo string, amount int) (*c
 		return context.NewResult(ecodes.HasExists, row), nil
 	}
 	//检查是否存在加款记录
-	b, err = exists(db, acc.ID, tradeNo, amount, ttypes.Add)
+	b, err = exists(db, acc.ID, tradeNo, amount, ttypes.Deduct)
 	if err != nil {
 		return nil, err
 	}
 	if !b {
-		return nil, context.NewError(ecodes.HasExists, "加款交易编号不存在")
+		return nil, context.NewError(ecodes.HasExists, "扣款交易编号不存在")
 	}
 	row, err := change(db, acc.ID, tradeNo, ttypes.Refund, amount)
 	if err != nil {
@@ -132,8 +132,8 @@ func RefundAmount(db db.IDBExecuter, uid string, tradeNo string, amount int) (*c
 }
 
 //Query 查询余额变动明细
-func Query(db db.IDBExecuter, uid string, startTime string, endTime string, pi int, ps int) (db.QueryRows, error) {
-	acc, err := GetAccount(db, uid)
+func Query(db db.IDBExecuter, eid string, startTime string, endTime string, pi int, ps int) (db.QueryRows, error) {
+	acc, err := GetAccount(db, eid)
 	if err != nil {
 		return nil, err
 	}

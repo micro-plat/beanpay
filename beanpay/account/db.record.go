@@ -13,6 +13,7 @@ func query(db db.IDBExecuter, accountID int, startTime string, endTime string, p
 		"account_id": accountID,
 		"start":      startTime,
 		"end":        endTime,
+		"pf":         pi * ps,
 		"pi":         pi,
 		"ps":         ps,
 	}

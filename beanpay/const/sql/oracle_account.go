@@ -4,11 +4,11 @@ package sql
 
 //CreateAccount 创建帐户信息
 const CreateAccount = `INSERT INTO beanpay_account_info(account_id,account_name,
-	uid,balance,credit,status,create_time)values(seq_account_info_id.nextval,
-	@account_name,@uid,0,0,0,sysdate)`
+	eid,balance,credit,status,create_time)values(seq_account_info_id.nextval,
+	@name,@eid,0,0,0,sysdate)`
 
-//GetAccountByuid 根据uid查询帐户编号
-const GetAccountByuid = `select t.account_id,t.account_name,t.uid,t.balance,t.credit from beanpay_account_info t where t.uid=@uid`
+//GetAccountByeid 根据eid查询帐户编号
+const GetAccountByeid = `select t.account_id,t.account_name,t.eid,t.balance,t.credit from beanpay_account_info t where t.eid=@eid`
 
 //ChangeAmount 帐户加款
 const ChangeAmount = `update beanpay_account_info t set t.balance=t.balance + @amount where t.account_id=@account_id
@@ -22,15 +22,31 @@ and t.change_type=@tp
 and abs(t.amount) >= @max_amount
 `
 
+//GetBalanceRecord 查询交易变动记录是否已存在
+const GetBalanceRecord = `select  t.record_id,t.account_id,
+t.trade_no,t.change_type,t.amount,t.balance,to_char(t.create_time, 'yyyymmddhh24miss') create_time from beanpay_account_record t 
+where t.record_id=@record_id`
+
+//GetBalanceRecordByTradeNo 查询交易变动记录是否已存在
+const GetBalanceRecordByTradeNo = `select t.record_id,t.account_id,
+t.trade_no,t.change_type,t.amount,t.balance,to_char(t.create_time, 'yyyymmddhh24miss') create_time
+ from beanpay_account_record t 
+where t.trade_no=@trade_no and t.account_id=@account_id
+and t.change_type=@tp`
+
 //AddBalanceRecord 添加资金变动
-const AddBalanceRecord = `insert into beanpay_account_record(record_id,account_id,trade_no,change_type,amount,balance,create_time)
-select seq_account_record_id.nextval,@account_id,@trade_no,1,@amount,t.balance,now() from beanpay_account_info t where t.account_id=@account_id`
+const AddBalanceRecord = `insert into beanpay_account_record
+(record_id,account_id,trade_no,change_type,amount,balance,create_time)
+select seq_account_record_id.nextval,@account_id,@trade_no,@tp,@amount,t.balance,sysdate
+ from beanpay_account_info t where t.account_id=@account_id`
 
 //QueryBalanceRecord 查询余额资金变动信息
-const QueryBalanceRecord = `select * from(select l1.* from(select t.* from  
+const QueryBalanceRecord = `select *
+from(select rownum rn,l1.* from(select t.record_id,t.account_id,
+t.trade_no,t.change_type,t.amount,t.balance,to_char(t.create_time, 'yyyymmddhh24miss') create_time from  
 beanpay_account_record t where t.account_id = @account_id and 
-t.create_time >= to_date(@start,'yyyymmddhh24miss')
-and t.create_time < to_date(@end,'yyyymmddhh24miss')
-order by t.create_time desc) l1
-where rownum <= @pi * @ps) l2 
-where rownum > (@pi-1) * @ps`
+t.create_time >= to_date(@start,'yyyymmdd')
+and t.create_time < to_date(@end,'yyyymmdd')+1
+order by t.record_id desc) l1
+where rownum <= (@pi+1) * @ps) l2 
+where l2.rn > (@pi) * @ps`

@@ -7,7 +7,7 @@ create table beanpay_account_info
 	'帐户编号' ,
 		account_name varchar
 	(32)  not null    comment '帐户名称' ,
-		uid varchar
+		eid varchar
 	(32)  not null    comment '外部用户账户编号' ,
 		balance bigint default 0 not null    comment '帐户余额，单位：分' ,
 		credit bigint default 0 not null    comment '信用余额，单位：分' ,
@@ -22,6 +22,6 @@ create table beanpay_account_info
 
 
 
-	drop index beanpay_account_info_uid ON beanpay_account_info;
-	create unique index beanpay_account_info_uid ON beanpay_account_info(uid);
+	drop index beanpay_account_info_eid ON beanpay_account_info;
+	create unique index beanpay_account_info_eid ON beanpay_account_info(eid);
  
