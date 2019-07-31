@@ -1,0 +1,1119 @@
+{
+	"info": {
+		"_postman_id": "1ae83ff0-93bc-4493-8670-88610c556769",
+		"name": "beanpay",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "帐户操作",
+			"item": [
+				{
+					"name": "创建账户",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f967354f-d411-4a59-b5f4-fbf6dade69fc",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://192.168.4.121:9090/account/create?eid=86001&name=colin",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"4",
+								"121"
+							],
+							"port": "9090",
+							"path": [
+								"account",
+								"create"
+							],
+							"query": [
+								{
+									"key": "eid",
+									"value": "86001"
+								},
+								{
+									"key": "name",
+									"value": "colin"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "重复创建账户",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ac6e55c5-94d6-4391-b812-f40679a62ab1",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://192.168.4.121:9090/account/create?eid=86001&name=colin",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"4",
+								"121"
+							],
+							"port": "9090",
+							"path": [
+								"account",
+								"create"
+							],
+							"query": [
+								{
+									"key": "eid",
+									"value": "86001"
+								},
+								{
+									"key": "name",
+									"value": "colin"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "余额加款",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "912ecfa1-ecd7-4fdc-b6e0-ee6069b734ae",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://192.168.4.121:9090/account/balance/add?eid=86001&trade_no=8970876&amount=200",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"4",
+								"121"
+							],
+							"port": "9090",
+							"path": [
+								"account",
+								"balance",
+								"add"
+							],
+							"query": [
+								{
+									"key": "eid",
+									"value": "86001"
+								},
+								{
+									"key": "trade_no",
+									"value": "8970876"
+								},
+								{
+									"key": "amount",
+									"value": "200"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "余额重复加款",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c4364c10-c366-4ad2-84e1-ba0b24e6e5d4",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://192.168.4.121:9090/account/balance/add?eid=86001&trade_no=8970876&amount=200",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"4",
+								"121"
+							],
+							"port": "9090",
+							"path": [
+								"account",
+								"balance",
+								"add"
+							],
+							"query": [
+								{
+									"key": "eid",
+									"value": "86001"
+								},
+								{
+									"key": "trade_no",
+									"value": "8970876"
+								},
+								{
+									"key": "amount",
+									"value": "200"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "余额扣款",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a417e3b6-a3e3-4069-ade7-e4381afa3d3f",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://192.168.4.121:9090/account/balance/deduct?eid=86001&trade_no=8970876&amount=200",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"4",
+								"121"
+							],
+							"port": "9090",
+							"path": [
+								"account",
+								"balance",
+								"deduct"
+							],
+							"query": [
+								{
+									"key": "eid",
+									"value": "86001"
+								},
+								{
+									"key": "trade_no",
+									"value": "8970876"
+								},
+								{
+									"key": "amount",
+									"value": "200"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "余额重复扣款",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6d95f22e-c83d-435d-b365-616171218490",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://192.168.4.121:9090/account/balance/deduct?eid=86001&trade_no=8970876&amount=200",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"4",
+								"121"
+							],
+							"port": "9090",
+							"path": [
+								"account",
+								"balance",
+								"deduct"
+							],
+							"query": [
+								{
+									"key": "eid",
+									"value": "86001"
+								},
+								{
+									"key": "trade_no",
+									"value": "8970876"
+								},
+								{
+									"key": "amount",
+									"value": "200"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "余额退款",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "21ecc00d-0ec5-4a44-ade2-4932237838e6",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://192.168.4.121:9090/account/balance/refund?eid=86001&trade_no=8970876&amount=200",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"4",
+								"121"
+							],
+							"port": "9090",
+							"path": [
+								"account",
+								"balance",
+								"refund"
+							],
+							"query": [
+								{
+									"key": "eid",
+									"value": "86001"
+								},
+								{
+									"key": "trade_no",
+									"value": "8970876"
+								},
+								{
+									"key": "amount",
+									"value": "200"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "余额重复退款",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1cac72fb-d206-42ec-8c74-a7c906bda60b",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://192.168.4.121:9090/account/balance/refund?eid=86001&trade_no=8970876&amount=200",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"4",
+								"121"
+							],
+							"port": "9090",
+							"path": [
+								"account",
+								"balance",
+								"refund"
+							],
+							"query": [
+								{
+									"key": "eid",
+									"value": "86001"
+								},
+								{
+									"key": "trade_no",
+									"value": "8970876"
+								},
+								{
+									"key": "amount",
+									"value": "200"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查询资金变动记录",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "322ec891-788d-4ce3-b75d-946d2b72da23",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://192.168.4.121:9090/account/record/query?eid=86001&start_time=20190731&end_time=20190731&pi=0&ps=2",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"4",
+								"121"
+							],
+							"port": "9090",
+							"path": [
+								"account",
+								"record",
+								"query"
+							],
+							"query": [
+								{
+									"key": "eid",
+									"value": "86001"
+								},
+								{
+									"key": "start_time",
+									"value": "20190731"
+								},
+								{
+									"key": "end_time",
+									"value": "20190731"
+								},
+								{
+									"key": "pi",
+									"value": "0"
+								},
+								{
+									"key": "ps",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查询资金变动第二页",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "32446209-8f1e-44e0-a543-6f43ff00c40b",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://192.168.4.121:9090/account/record/query?eid=86001&start_time=20190731&end_time=20190731&pi=1&ps=2",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"4",
+								"121"
+							],
+							"port": "9090",
+							"path": [
+								"account",
+								"record",
+								"query"
+							],
+							"query": [
+								{
+									"key": "eid",
+									"value": "86001"
+								},
+								{
+									"key": "start_time",
+									"value": "20190731"
+								},
+								{
+									"key": "end_time",
+									"value": "20190731"
+								},
+								{
+									"key": "pi",
+									"value": "1"
+								},
+								{
+									"key": "ps",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "服务包操作",
+			"item": [
+				{
+					"name": "创建服务包",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4d388308-340f-47b2-bfcf-54b0ba395af0",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://192.168.4.121:9090/package/create?eid=86001&sid=1000&name=colin&total=1000",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"4",
+								"121"
+							],
+							"port": "9090",
+							"path": [
+								"package",
+								"create"
+							],
+							"query": [
+								{
+									"key": "eid",
+									"value": "86001"
+								},
+								{
+									"key": "sid",
+									"value": "1000"
+								},
+								{
+									"key": "name",
+									"value": "colin"
+								},
+								{
+									"key": "total",
+									"value": "1000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "重复创建服务包",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cb1f50fb-6872-480b-b198-38d35b3cd7a0",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://192.168.4.121:9090/package/create?eid=86001&sid=1000&name=colin&total=1000",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"4",
+								"121"
+							],
+							"port": "9090",
+							"path": [
+								"package",
+								"create"
+							],
+							"query": [
+								{
+									"key": "eid",
+									"value": "86001"
+								},
+								{
+									"key": "sid",
+									"value": "1000"
+								},
+								{
+									"key": "name",
+									"value": "colin"
+								},
+								{
+									"key": "total",
+									"value": "1000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "服务增加数量",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cd2f4588-dace-4a92-bec7-4798c51aa411",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://192.168.4.121:9090/package/capacity/add?eid=86001&sid=1000&trade_no=8970876&num=200",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"4",
+								"121"
+							],
+							"port": "9090",
+							"path": [
+								"package",
+								"capacity",
+								"add"
+							],
+							"query": [
+								{
+									"key": "eid",
+									"value": "86001"
+								},
+								{
+									"key": "sid",
+									"value": "1000"
+								},
+								{
+									"key": "trade_no",
+									"value": "8970876"
+								},
+								{
+									"key": "num",
+									"value": "200"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "服务包重复增加数量",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ce67bb6e-b377-4c69-b16c-af97f93b42f7",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://192.168.4.121:9090/package/capacity/add?eid=86001&sid=1000&trade_no=8970876&num=200",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"4",
+								"121"
+							],
+							"port": "9090",
+							"path": [
+								"package",
+								"capacity",
+								"add"
+							],
+							"query": [
+								{
+									"key": "eid",
+									"value": "86001"
+								},
+								{
+									"key": "sid",
+									"value": "1000"
+								},
+								{
+									"key": "trade_no",
+									"value": "8970876"
+								},
+								{
+									"key": "num",
+									"value": "200"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "服务包减少数量",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3c21e379-dde7-4944-b59d-2ae4e48a45cc",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://192.168.4.121:9090/package/capacity/deduct?eid=86001&sid=1000&trade_no=8970876&num=200",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"4",
+								"121"
+							],
+							"port": "9090",
+							"path": [
+								"package",
+								"capacity",
+								"deduct"
+							],
+							"query": [
+								{
+									"key": "eid",
+									"value": "86001"
+								},
+								{
+									"key": "sid",
+									"value": "1000"
+								},
+								{
+									"key": "trade_no",
+									"value": "8970876"
+								},
+								{
+									"key": "num",
+									"value": "200"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "服务包重复减少数量",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ab9346f7-187a-47d6-8e8a-33bb8e487bcc",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://192.168.4.121:9090/package/capacity/deduct?eid=86001&sid=1000&trade_no=8970876&num=200",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"4",
+								"121"
+							],
+							"port": "9090",
+							"path": [
+								"package",
+								"capacity",
+								"deduct"
+							],
+							"query": [
+								{
+									"key": "eid",
+									"value": "86001"
+								},
+								{
+									"key": "sid",
+									"value": "1000"
+								},
+								{
+									"key": "trade_no",
+									"value": "8970876"
+								},
+								{
+									"key": "num",
+									"value": "200"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "服务包数量退回",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "01820b8c-5a10-4433-855a-8bb7be1fac99",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://192.168.4.121:9090/package/capacity/refund?eid=86001&sid=1000&trade_no=8970876&num=200",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"4",
+								"121"
+							],
+							"port": "9090",
+							"path": [
+								"package",
+								"capacity",
+								"refund"
+							],
+							"query": [
+								{
+									"key": "eid",
+									"value": "86001"
+								},
+								{
+									"key": "sid",
+									"value": "1000"
+								},
+								{
+									"key": "trade_no",
+									"value": "8970876"
+								},
+								{
+									"key": "num",
+									"value": "200"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "服务包数量重复退回",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3de0a95d-8dbe-4eba-84c4-6ac17f00c927",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://192.168.4.121:9090/package/capacity/refund?eid=86001&sid=1000&trade_no=8970876&num=200",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"4",
+								"121"
+							],
+							"port": "9090",
+							"path": [
+								"package",
+								"capacity",
+								"refund"
+							],
+							"query": [
+								{
+									"key": "eid",
+									"value": "86001"
+								},
+								{
+									"key": "sid",
+									"value": "1000"
+								},
+								{
+									"key": "trade_no",
+									"value": "8970876"
+								},
+								{
+									"key": "num",
+									"value": "200"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查询服务包首页",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0434e215-ae5b-4606-9040-87bbdc9f26cf",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://192.168.4.121:9090/package/record/query?eid=86001&sid=1000&start_time=20190731&end_time=20190731&pi=0&ps=2",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"4",
+								"121"
+							],
+							"port": "9090",
+							"path": [
+								"package",
+								"record",
+								"query"
+							],
+							"query": [
+								{
+									"key": "eid",
+									"value": "86001"
+								},
+								{
+									"key": "sid",
+									"value": "1000"
+								},
+								{
+									"key": "start_time",
+									"value": "20190731"
+								},
+								{
+									"key": "end_time",
+									"value": "20190731"
+								},
+								{
+									"key": "pi",
+									"value": "0"
+								},
+								{
+									"key": "ps",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查询服务数量第二页",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f5ad166b-1dd7-439a-ac94-d4b9db2646fb",
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://192.168.4.121:9090/package/record/query?eid=86001&sid=1000&start_time=20190731&end_time=20190731&pi=0&ps=2",
+							"protocol": "http",
+							"host": [
+								"192",
+								"168",
+								"4",
+								"121"
+							],
+							"port": "9090",
+							"path": [
+								"package",
+								"record",
+								"query"
+							],
+							"query": [
+								{
+									"key": "eid",
+									"value": "86001"
+								},
+								{
+									"key": "sid",
+									"value": "1000"
+								},
+								{
+									"key": "start_time",
+									"value": "20190731"
+								},
+								{
+									"key": "end_time",
+									"value": "20190731"
+								},
+								{
+									"key": "pi",
+									"value": "0"
+								},
+								{
+									"key": "ps",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
