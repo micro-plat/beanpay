@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"github.com/micro-plat/beanpay/beanpay/const/ecodes"
 	"github.com/micro-plat/beanpay/beanpay/const/sql"
 	"github.com/micro-plat/hydra/context"
 	"github.com/micro-plat/lib4go/db"
@@ -30,17 +31,31 @@ func create(db db.IDBExecuter, accountID int, spkgID string, name string, total 
 }
 
 //GetPackageID 根据帐户编号，外部包编号获取当前系统包编号
-func getPackageID(db db.IDBExecuter, accountID int, spkgID string) (int, error) {
+func getPackage(db db.IDBExecuter, accountID int, spkgID string) (db.QueryRow, error) {
 	input := map[string]interface{}{
 		"account_id": accountID,
 		"spkg_id":    spkgID,
 	}
 	rows, _, _, err := db.Query(sql.GetPackageBySPKG, input)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 	if rows.IsEmpty() {
-		return 0, context.NewError(908, "服务包不存在")
+		return nil, context.NewError(ecodes.NotExists, "服务包不存在")
 	}
-	return rows.Get(0).GetInt("pkg_id"), nil
+	return rows.Get(0), nil
+}
+func getRecordByTradeNo(db db.IDBExecuter, pkgID int64, tradeNo string, tp int) (db.QueryRow, error) {
+	rows, _, _, err := db.Query(sql.GetPackageRecordByTradeNo, map[string]interface{}{
+		"pkg_id":   pkgID,
+		"trade_no": tradeNo,
+		"tp":       tp,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if rows.IsEmpty() {
+		return nil, context.NewError(ecodes.NotExists, "记录不存在")
+	}
+	return rows.Get(0), nil
 }

@@ -8,12 +8,13 @@ import (
 )
 
 //Query 查询服务包变动记录
-func query(db db.IDBExecuter, aid int, pkg_id int, startTime string, endTime string, pi int, ps int) (db.QueryRows, error) {
+func query(db db.IDBExecuter, aid int, pkg_id int64, startTime string, endTime string, pi int, ps int) (db.QueryRows, error) {
 	input := map[string]interface{}{
 		"account_id": aid,
 		"pkg_id":     pkg_id,
 		"start":      startTime,
 		"end":        endTime,
+		"pf":         pi * ps,
 		"pi":         pi,
 		"ps":         ps,
 	}

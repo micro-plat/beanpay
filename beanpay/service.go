@@ -103,77 +103,68 @@ func CreatePackage(i interface{}, eid string, sid string, name string, total int
 	return pkg.Create(db, eid, sid, name, total, daily, expires)
 }
 
-//GetPackageID 根据用户编号，服务编号获取服务包编号
-func GetPackageID(i interface{}, eid string, sid string) (int, error) {
+//GetPackage 根据用户编号，服务编号获取服务包编号
+func GetPackage(i interface{}, eid string, sid string) (*pkg.PKG, error) {
 	db, err := getDBExecuter(i)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
-	return pkg.GetPackageID(db, eid, sid)
-}
-
-//GetPackageRemain 查询指定用户，服务包的剩余数量
-func GetPackageRemain(i interface{}, eid string, sid string) (int, error) {
-	db, err := getDBExecuter(i)
-	if err != nil {
-		return 0, err
-	}
-	return pkg.GetPackageRemain(db, eid, sid)
+	return pkg.GetPackage(db, eid, sid)
 }
 
 //AddCapacity 指定用户编号，交易变号，金额进行服务包数量追加
-func AddCapacity(i interface{}, eid string, sid string, tradeNo string, capacity int) error {
+func AddCapacity(i interface{}, eid string, sid string, tradeNo string, capacity int) (*context.Result, error) {
 	m, db, err := getTrans(i)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	err = pkg.AddCapacity(db, eid, sid, tradeNo, capacity)
+	row, err := pkg.AddCapacity(db, eid, sid, tradeNo, capacity)
 	if !m {
-		return err
+		return row, err
 	}
 	if err != nil {
 		db.Rollback()
-		return err
+		return nil, err
 	}
 	db.Commit()
-	return nil
+	return row, nil
 }
 
 //DeductCapacity 指定用户编号，交易变号，金额进行服务包数量扣减
-func DeductCapacity(i interface{}, eid string, sid string, tradeNo string, capacity int) error {
+func DeductCapacity(i interface{}, eid string, sid string, tradeNo string, capacity int) (*context.Result, error) {
 	m, db, err := getTrans(i)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	err = pkg.DeductCapacity(db, eid, sid, tradeNo, capacity)
+	row, err := pkg.DeductCapacity(db, eid, sid, tradeNo, capacity)
 	if !m {
-		return err
+		return row, err
 	}
 	if err != nil {
 		db.Rollback()
-		return err
+		return nil, err
 	}
 	db.Commit()
-	return nil
+	return row, nil
 
 }
 
 //RefundCapacity 指定用户编号，交易变号，金额进行服务包数量退回
-func RefundCapacity(i interface{}, eid string, sid string, tradeNo string, capacity int) error {
+func RefundCapacity(i interface{}, eid string, sid string, tradeNo string, capacity int) (*context.Result, error) {
 	m, db, err := getTrans(i)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	err = pkg.RefundCapacity(db, eid, sid, tradeNo, capacity)
+	row, err := pkg.RefundCapacity(db, eid, sid, tradeNo, capacity)
 	if !m {
-		return err
+		return row, err
 	}
 	if err != nil {
 		db.Rollback()
-		return err
+		return nil, err
 	}
 	db.Commit()
-	return nil
+	return row, nil
 }
 
 //QueryPackageRecords 查询指定用户在一段时间内的服务包的变动记录

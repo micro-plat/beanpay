@@ -82,7 +82,7 @@ func DeductAmount(db db.IDBExecuter, eid string, tradeNo string, amount int) (*c
 		return nil, err
 	}
 	if b {
-		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, ttypes.Add)
+		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, ttypes.Deduct)
 		if err != nil {
 			return nil, context.NewError(ecodes.Failed, "暂时无法扣款")
 		}
@@ -105,7 +105,7 @@ func RefundAmount(db db.IDBExecuter, eid string, tradeNo string, amount int) (*c
 		return nil, err
 	}
 	//检查是否已退款
-	b, err := exists(db, acc.ID, tradeNo, amount, ttypes.Refund)
+	b, err := exists(db, acc.ID, tradeNo, 0, ttypes.Refund)
 	if err != nil {
 		return nil, err
 	}
