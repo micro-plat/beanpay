@@ -1,12 +1,9 @@
 package beanpay
 
-
-
-var DBName = "db"
-var QueueName = "queue"
+import "github.com/micro-plat/beanpay/beanpay/const/confs"
 
 //Config　配置数据库，消息队列的配置名称
 func Config(db string, mq string) {
-	DBName = db
-	QueueName = mq
+	confs.DBName = db
+	confs.QueueName = mq
 }

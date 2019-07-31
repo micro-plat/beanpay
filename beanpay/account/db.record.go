@@ -8,10 +8,11 @@ import (
 )
 
 //Query 查询余额变动明细
-func query(db db.IDBExecuter, accountID int, startTime string, pi int, ps int) (db.QueryRows, error) {
+func query(db db.IDBExecuter, accountID int, startTime string, endTime string, pi int, ps int) (db.QueryRows, error) {
 	input := map[string]interface{}{
 		"account_id": accountID,
 		"start":      startTime,
+		"end":        endTime,
 		"pi":         pi,
 		"ps":         ps,
 	}

@@ -3,7 +3,7 @@ create table beanpay_account_info
 (
 	account_id number(20) not null ,
 	account_name varchar2(32) not null ,
-	uaid varchar2(32) not null ,
+	uid varchar2(32) not null ,
 	balance number(20) default 0 not null ,
 	credit number(20) default 0 not null ,
 	status number(1) default 0 not null ,
@@ -14,7 +14,7 @@ create table beanpay_account_info
 comment on table beanpay_account_info is '账户信息';
 	comment on column beanpay_account_info.account_id is '帐户编号';	
 	comment on column beanpay_account_info.account_name is '帐户名称';	
-	comment on column beanpay_account_info.uaid is '外部用户账户编号';	
+	comment on column beanpay_account_info.uid is '外部用户账户编号';	
 	comment on column beanpay_account_info.balance is '帐户余额，单位：分';	
 	comment on column beanpay_account_info.credit is '信用余额，单位：分';	
 	comment on column beanpay_account_info.status is '账户状态 0：正常 1:锁定';	
@@ -25,14 +25,14 @@ comment on table beanpay_account_info is '账户信息';
 alter table beanpay_account_info
 	add constraint pk_account_info primary key(account_id);
 alter table beanpay_account_info
-	add constraint beanpay_account_info_uaid unique(uaid);
+	add constraint beanpay_account_info_uid unique(uid);
 
 
 
 drop sequence seq_account_info_id;
 create sequence seq_account_info_id
-	minvalue 100
+	minvalue 86000
 	maxvalue 99999999999
-	start with 100
+	start with 86000
 	cache 20;
 	

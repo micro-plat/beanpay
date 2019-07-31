@@ -1,7 +1,7 @@
 package account
 
 import (
-	"github.com/micro-plat/beanpay/beanpay/account"
+	"github.com/micro-plat/beanpay/beanpay"
 	"github.com/micro-plat/hydra/component"
 	"github.com/micro-plat/hydra/context"
 )
@@ -18,21 +18,18 @@ func NewAccountHandler(container component.IContainer) (u *AccountHandler) {
 func (u *AccountHandler) Handle(ctx *context.Context) (r interface{}) {
 	ctx.Log.Info("---------------创建资金帐户--------------------")
 	ctx.Log.Info("1. 参数校验")
-	if err := ctx.Request.Check("uaid", "name"); err != nil {
+	if err := ctx.Request.Check("uid", "name"); err != nil {
 		return context.NewError(context.ERR_NOT_ACCEPTABLE, err)
 	}
 
 	ctx.Log.Info("2. 创建帐户信息")
-	id, err := account.Create(ctx,
-		ctx.Request.GetString("uaid"),
+	account, err := beanpay.CreateAccount(ctx,
+		ctx.Request.GetString("uid"),
 		ctx.Request.GetString("name"))
 	if err != nil {
 		return err
 	}
 
 	ctx.Log.Info("3. 处理返回结果")
-	return map[string]interface{}{
-		"account_id": id,
-		"name":       ctx.Request.GetString("name"),
-	}
+	return account
 }

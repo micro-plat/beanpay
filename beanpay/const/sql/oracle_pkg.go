@@ -30,4 +30,5 @@ select seq_package_record_id.nextval,t.pkg_id,t.account_id,@trade_no,@tp,@num,t.
 const QueryPackageRecord = `select t.* from beanpay_package_record t 
 where t.pkg_id=@pkg_id 
 and t.create_time>to_date(@start,'yyyymmddhh24miss')
+and t.create_time<to_date(@end,'yyyymmddhh24miss')
 limit #pi,#ps`

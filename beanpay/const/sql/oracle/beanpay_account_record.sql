@@ -25,13 +25,13 @@ comment on table beanpay_account_record is '账户余额变动信息';
 alter table beanpay_account_record
 	add constraint pk_account_record primary key(record_id);
 alter table beanpay_account_record
-	add constraint beanpay_acct_record_account_id unique(account_id,trade_no);
+	add constraint beanpay_acct_record_account_id unique(account_id,trade_no,change_type);
 
 drop sequence seq_account_record_id;
 
 create sequence seq_account_record_id
-	minvalue 100
+	minvalue 100000
 	maxvalue 99999999999
-	start with 100
+	start with 100000
 	cache 20;
 	

@@ -8,7 +8,7 @@ create table beanpay_package_info
 		account_id bigint  not null    comment '帐户编号' ,
 		spkg_id varchar
 	(32)  not null    comment '外部服务包编号' ,
-		pkg_name varchar2
+		pkg_name varchar
 	(32) not null comment '服务包名称' ,
 		total_capacity bigint  not null    comment '总共可用数量' ,
 		total_remain bigint  not null    comment '总共剩余数量' ,
@@ -20,9 +20,7 @@ create table beanpay_package_info
 				
   )COMMENT='服务包信息';
 
-
-
-
+	alter table beanpay_package_info AUTO_INCREMENT=620000;
 
 
 	drop index beanpay_package_info_account_id ON beanpay_package_info;

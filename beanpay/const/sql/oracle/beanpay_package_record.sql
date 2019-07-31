@@ -34,8 +34,8 @@ alter table beanpay_package_record
 drop sequence seq_package_record_id;
 
 create sequence seq_package_record_id
-	minvalue 100
+	minvalue 600000
 	maxvalue 99999999999
-	start with 100
+	start with 600000
 	cache 20;
 	

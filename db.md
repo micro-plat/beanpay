@@ -4,9 +4,9 @@
 
 | 字段名       | 类型         | 默认值  | 为空  |  约束  | 描述                    |
 | ------------ | ------------ | :-----: | :---: | :----: | :---------------------- |
-| account_id   | number(20)   |         |  否   | PK,SEQ | 帐户编号                |
+| account_id   | number(20)   |  86000  |  否   | PK,SEQ | 帐户编号                |
 | account_name | varchar2(32) |         |  否   |        | 帐户名称                |
-| uaid         | varchar2(32) |         |  否   |  UNQ   | 外部用户账户编号        |
+| uid          | varchar2(32) |         |  否   |  UNQ   | 外部用户账户编号        |
 | balance      | number(20)   |    0    |  否   |        | 帐户余额，单位：分      |
 | credit       | number(20)   |    0    |  否   |        | 信用余额，单位：分      |
 | status       | number(1)    |    0    |  否   |        | 账户状态 0：正常 1:锁定 |
@@ -16,10 +16,10 @@
 
 | 字段名      | 类型         | 默认值  | 为空  |  约束  | 描述                            |
 | ----------- | ------------ | :-----: | :---: | :----: | :------------------------------ |
-| record_id   | number(20)   |         |  否   | PK,SEQ | 变动编号                        |
+| record_id   | number(20)   | 100000  |  否   | PK,SEQ | 变动编号                        |
 | account_id  | number(20)   |         |  否   |  UNQ   | 帐户编号                        |
 | trade_no    | varchar2(32) |         |  否   |  UNQ   | 交易编号                        |
-| change_type | number(1)    |         |  否   |        | 变动类型 1:加款 2：扣款 3：退款 |
+| change_type | number(1)    |         |  否   |  UNQ   | 变动类型 1:加款 2：扣款 3：退款 |
 | amount      | number(20)   |         |  否   |        | 变动金额 单位：分               |
 | balance     | number(20)   |         |  否   |        | 帐户余额 单位：分               |
 | create_time | date         | sysdate |  否   |        | 创建时间                        |
@@ -28,7 +28,7 @@
 
 | 字段名         | 类型         | 默认值  | 为空  |  约束  | 描述           |
 | -------------- | ------------ | :-----: | :---: | :----: | :------------- |
-| pkg_id         | number(20)   |         |  否   | PK,SEQ | 服务包编号     |
+| pkg_id         | number(20)   | 620000  |  否   | PK,SEQ | 服务包编号     |
 | account_id     | number(20)   |         |  否   |  UNQ   | 帐户编号       |
 | spkg_id        | varchar2(32) |         |  否   |  UNQ   | 外部服务包编号 |
 | pkg_name       | varchar2(32) |         |  否   |        | 服务包名称     |
@@ -44,7 +44,7 @@
 
 | 字段名      | 类型         | 默认值  | 为空  |  约束  | 描述                            |
 | ----------- | ------------ | :-----: | :---: | :----: | :------------------------------ |
-| record_id   | number(20)   |         |  否   | PK,SEQ | 变动编号                        |
+| record_id   | number(20)   | 600000  |  否   | PK,SEQ | 变动编号                        |
 | pkg_id      | number(20)   |         |  否   |        | 服务包编号                      |
 | account_id  | number(20)   |         |  否   |  UNQ   | 帐户编号                        |
 | trade_no    | varchar2(32) |         |  否   |  UNQ   | 外部交易编号                    |

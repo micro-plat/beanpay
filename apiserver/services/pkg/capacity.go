@@ -1,7 +1,7 @@
 package pkg
 
 import (
-	"github.com/micro-plat/beanpay/beanpay/pkg"
+	"github.com/micro-plat/beanpay/beanpay"
 	"github.com/micro-plat/hydra/component"
 	"github.com/micro-plat/hydra/context"
 )
@@ -18,14 +18,14 @@ func NewCapacityHandler(container component.IContainer) (u *CapacityHandler) {
 func (u *CapacityHandler) AddHandle(ctx *context.Context) (r interface{}) {
 	ctx.Log.Info("---------------添加服务包数量--------------------")
 	ctx.Log.Info("1. 参数校验")
-	if err := ctx.Request.Check("uaid", "spkg_id", "trade_no", "capacity"); err != nil {
+	if err := ctx.Request.Check("uid", "sid", "trade_no", "capacity"); err != nil {
 		return context.NewError(context.ERR_NOT_ACCEPTABLE, err)
 	}
 
 	ctx.Log.Info("2. 添加服务包数量")
-	err := pkg.AddCapacity(ctx,
-		ctx.Request.GetString("uaid"),
-		ctx.Request.GetString("spkg_id"),
+	err := beanpay.AddCapacity(ctx,
+		ctx.Request.GetString("uid"),
+		ctx.Request.GetString("sid"),
 		ctx.Request.GetString("trade_no"),
 		ctx.Request.GetInt("capacity"))
 	if err != nil {
@@ -40,14 +40,14 @@ func (u *CapacityHandler) AddHandle(ctx *context.Context) (r interface{}) {
 func (u *CapacityHandler) DeductHandle(ctx *context.Context) (r interface{}) {
 	ctx.Log.Info("---------------扣减服务包数量--------------------")
 	ctx.Log.Info("1. 参数校验")
-	if err := ctx.Request.Check("uaid", "spkg_id", "trade_no", "capacity"); err != nil {
+	if err := ctx.Request.Check("uid", "sid", "trade_no", "capacity"); err != nil {
 		return context.NewError(context.ERR_NOT_ACCEPTABLE, err)
 	}
 
 	ctx.Log.Info("2. 扣减服务包数量")
-	err := pkg.DeductCapacity(ctx,
-		ctx.Request.GetString("uaid"),
-		ctx.Request.GetString("spkg_id"),
+	err := beanpay.DeductCapacity(ctx,
+		ctx.Request.GetString("uid"),
+		ctx.Request.GetString("sid"),
 		ctx.Request.GetString("trade_no"),
 		ctx.Request.GetInt("capacity"))
 	if err != nil {
@@ -62,14 +62,14 @@ func (u *CapacityHandler) DeductHandle(ctx *context.Context) (r interface{}) {
 func (u *CapacityHandler) RefundHandle(ctx *context.Context) (r interface{}) {
 	ctx.Log.Info("---------------退回服务包数量--------------------")
 	ctx.Log.Info("1. 参数校验")
-	if err := ctx.Request.Check("uaid", "spkg_id", "trade_no", "capacity"); err != nil {
+	if err := ctx.Request.Check("uid", "sid", "trade_no", "capacity"); err != nil {
 		return context.NewError(context.ERR_NOT_ACCEPTABLE, err)
 	}
 
 	ctx.Log.Info("2. 退回服务包数量")
-	err := pkg.RefundCapacity(ctx,
-		ctx.Request.GetString("uaid"),
-		ctx.Request.GetString("spkg_id"),
+	err := beanpay.RefundCapacity(ctx,
+		ctx.Request.GetString("uid"),
+		ctx.Request.GetString("sid"),
 		ctx.Request.GetString("trade_no"),
 		ctx.Request.GetInt("capacity"))
 	if err != nil {

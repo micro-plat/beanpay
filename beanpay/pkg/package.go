@@ -1,127 +1,105 @@
 package pkg
 
 import (
-	"fmt"
-
-	"github.com/micro-plat/beanpay/beanpay"
 	"github.com/micro-plat/beanpay/beanpay/account"
-	"github.com/micro-plat/hydra/component"
+	"github.com/micro-plat/beanpay/beanpay/const/ttypes"
 	"github.com/micro-plat/hydra/context"
 	"github.com/micro-plat/lib4go/db"
 )
 
 //Create 创建服务包信息
-func Create(i interface{}, uaid string, spkgid string, name string, total int, daily int, expires string) (int, error) {
-	db, err := getDBExecuter(i)
-	if err != nil {
-		return 0, err
-	}
-	id, err := account.GetAccountID(db, uaid)
+func Create(db db.IDBExecuter, uid string, sid string, name string, total int, daily int, expires string) (int, error) {
+	acc, err := account.GetAccount(db, uid)
 	if err != nil {
 		return 0, err
 	}
 
-	return create(db, id, spkgid, name, total, daily, expires)
+	return create(db, acc.ID, sid, name, total, daily, expires)
 }
 
 //GetPackageRemain 查询包剩余数量
-func GetPackageRemain(i interface{}, uaid string, spkgID string) (int, error) {
-	db, err := getDBExecuter(i)
+func GetPackageRemain(db db.IDBExecuter, uid string, sid string) (int, error) {
+	acc, err := account.GetAccount(db, uid)
 	if err != nil {
 		return 0, err
 	}
-	id, err := account.GetAccountID(db, uaid)
+	return getPackageRemain(db, acc.ID, sid)
+}
+
+//GetPackageID 获取服务包编号
+func GetPackageID(db db.IDBExecuter, uid string, sid string) (int, error) {
+	acc, err := account.GetAccount(db, uid)
 	if err != nil {
 		return 0, err
 	}
-	return getPackageRemain(db, id, spkgID)
+	pkgid, err := getPackageID(db, acc.ID, sid)
+	if err != nil {
+		return 0, err
+	}
+	return pkgid, nil
 }
 
 //AddCapacity 添加服务包数量
-func AddCapacity(i interface{}, uaid string, spkgid string, tradeNo string, capacity int) error {
-	db, err := getDBExecuter(i)
-	if err != nil {
-		return err
-	}
+func AddCapacity(db db.IDBExecuter, uid string, sid string, tradeNo string, capacity int) error {
 	if capacity <= 0 {
 		return context.NewErrorf(903, "数量错误%d", capacity)
 	}
-	id, err := account.GetAccountID(db, uaid)
+	acc, err := account.GetAccount(db, uid)
 	if err != nil {
 		return err
 	}
-	pkgid, err := getPackageID(db, id, spkgid)
+	pkgid, err := getPackageID(db, acc.ID, sid)
 	if err != nil {
 		return err
 	}
-	return change(db, pkgid, tradeNo, 0, capacity)
+	return change(db, pkgid, tradeNo, ttypes.Add, capacity)
 }
 
 //DeductCapacity 扣减服务包数量
-func DeductCapacity(i interface{}, uaid string, spkgid string, tradeNo string, capacity int) error {
-	db, err := getDBExecuter(i)
-	if err != nil {
-		return err
-	}
+func DeductCapacity(db db.IDBExecuter, uid string, sid string, tradeNo string, capacity int) error {
+
 	if capacity <= 0 {
 		return context.NewErrorf(903, "数量错误%d", capacity)
 	}
-	id, err := account.GetAccountID(db, uaid)
+	acc, err := account.GetAccount(db, uid)
 	if err != nil {
 		return err
 	}
-	pkgid, err := getPackageID(db, id, spkgid)
+	pkgid, err := getPackageID(db, acc.ID, sid)
 	if err != nil {
 		return err
 	}
-	return change(db, pkgid, tradeNo, 1, -capacity)
+	return change(db, pkgid, tradeNo, ttypes.Deduct, -capacity)
 }
 
 //RefundCapacity 退回服务包数量
-func RefundCapacity(i interface{}, uaid string, spkgid string, tradeNo string, capacity int) error {
-	db, err := getDBExecuter(i)
-	if err != nil {
-		return err
-	}
+func RefundCapacity(db db.IDBExecuter, uid string, sid string, tradeNo string, capacity int) error {
 	if capacity <= 0 {
 		return context.NewErrorf(903, "数量错误%d", capacity)
 	}
-	id, err := account.GetAccountID(db, uaid)
+	acc, err := account.GetAccount(db, uid)
 	if err != nil {
 		return err
 	}
-	pkgid, err := getPackageID(db, id, spkgid)
+	pkgid, err := getPackageID(db, acc.ID, sid)
 	if err != nil {
 		return err
 	}
-	return change(db, pkgid, tradeNo, 2, capacity)
+	return change(db, pkgid, tradeNo, ttypes.Refund, capacity)
 }
 
 //Query 查询指定服务变的变动明细
-func Query(i interface{}, uaid string, spkgid string, startTime string, pi int, ps int) (db.QueryRows, error) {
-	db, err := getDBExecuter(i)
+func Query(db db.IDBExecuter, uid string, sid string, startTime string, endTime string, pi int, ps int) (db.QueryRows, error) {
+	acc, err := account.GetAccount(db, uid)
 	if err != nil {
 		return nil, err
 	}
-	id, err := account.GetAccountID(db, uaid)
-	if err != nil {
-		return nil, err
+	pkgid := 0
+	if sid != "" {
+		pkgid, err = getPackageID(db, acc.ID, sid)
+		if err != nil {
+			return nil, err
+		}
 	}
-	pkgid, err := getPackageID(db, id, spkgid)
-	if err != nil {
-		return nil, err
-	}
-	return query(db, pkgid, startTime, pi, ps)
-}
-func getDBExecuter(c interface{}) (db.IDBExecuter, error) {
-	switch v := c.(type) {
-	case *context.Context:
-		return v.GetContainer().GetDB(beanpay.DBName)
-	case component.IContainer:
-		return v.GetDB(beanpay.DBName)
-	case db.IDBExecuter:
-		return v, nil
-	default:
-		return nil, fmt.Errorf("不支持的参数类型")
-	}
+	return query(db, acc.ID, pkgid, startTime, endTime, pi, ps)
 }

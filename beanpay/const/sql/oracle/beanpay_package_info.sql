@@ -42,8 +42,8 @@ alter table beanpay_package_info
 drop sequence seq_package_info_pkg_id;
 
 create sequence seq_package_info_pkg_id
-	minvalue 100
+	minvalue 620000
 	maxvalue 99999999999
-	start with 100
+	start with 620000
 	cache 20;
 	
