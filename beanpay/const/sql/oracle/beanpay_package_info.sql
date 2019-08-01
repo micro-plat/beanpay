@@ -10,8 +10,8 @@ create table beanpay_package_info
 (32) not null ,
 	total_capacity number(20) not null ,
 	total_remain number(20) not null ,
-	capacity_daily number(10) default 0 not null ,
-	deduct_today number(10) default 0 not null ,
+	capacity_daily number(20) default 0 not null ,
+	deduct_today number(20) default 0 not null ,
 	expires date not null ,
 	book_time date default sysdate not null ,
 	last_update date not null

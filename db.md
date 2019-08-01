@@ -34,8 +34,8 @@
 | pkg_name       | varchar2(32) |         |  否   |        | 服务包名称     |
 | total_capacity | number(20)   |         |  否   |        | 总共可用数量   |
 | total_remain   | number(20)   |         |  否   |        | 总共剩余数量   |
-| capacity_daily | number(10)   |    0    |  否   |        | 日限制总数量   |
-| deduct_today   | number(10)   |    0    |  否   |        | 今日扣减数量   |
+| capacity_daily | number(20)   |    0    |  否   |        | 日限制总数量   |
+| deduct_today   | number(20)   |    0    |  否   |        | 今日扣减数量   |
 | expires        | date         |         |  否   |        | 过期日期       |
 | book_time      | date         | sysdate |  否   |        | 预订时间       |
 | last_update    | date         |         |  否   |        | 上次变更时间   |

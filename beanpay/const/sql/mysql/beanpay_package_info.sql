@@ -12,8 +12,8 @@ create table beanpay_package_info
 	(32) not null comment '服务包名称' ,
 		total_capacity bigint  not null    comment '总共可用数量' ,
 		total_remain bigint  not null    comment '总共剩余数量' ,
-		capacity_daily int default 0 not null    comment '日限制总数量' ,
-		deduct_today int default 0 not null    comment '今日扣减数量' ,
+		capacity_daily bigint default 0 not null    comment '日限制总数量' ,
+		deduct_today bigint default 0 not null    comment '今日扣减数量' ,
 		expires datetime  not null    comment '过期日期' ,
 		book_time datetime default current_timestamp not null    comment '预订时间' ,
 		last_update datetime  not null    comment '上次变更时间' 
