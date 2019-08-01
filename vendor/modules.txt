@@ -49,7 +49,7 @@ github.com/json-iterator/go
 github.com/mattn/go-isatty
 # github.com/mholt/archiver v3.1.1+incompatible
 github.com/mholt/archiver
-# github.com/micro-plat/hydra v0.9.1
+# github.com/micro-plat/hydra v0.9.7 => ../../../github.com/micro-plat/hydra
 github.com/micro-plat/hydra/conf
 github.com/micro-plat/hydra/hydra
 github.com/micro-plat/hydra/registry
@@ -75,16 +75,18 @@ github.com/micro-plat/hydra/rpc/balancer
 github.com/micro-plat/hydra/servers/rpc/pb
 github.com/micro-plat/hydra/servers/pkg/dispatcher
 github.com/micro-plat/hydra/servers/pkg/middleware
+github.com/micro-plat/hydra/servers/pkg/sharding
 github.com/micro-plat/hydra/servers/http/middleware
 github.com/micro-plat/hydra/servers/pkg/circuit
 github.com/micro-plat/hydra/servers/pkg/dispatcher/render
 github.com/micro-plat/hydra/servers/pkg/timer
 github.com/micro-plat/hydra/servers/pkg/json
-# github.com/micro-plat/lib4go v0.0.0-20190705091641-a9c3303797f1
+# github.com/micro-plat/lib4go v0.1.4 => ../../../github.com/micro-plat/lib4go
 github.com/micro-plat/lib4go/db
 github.com/micro-plat/lib4go/logger
 github.com/micro-plat/lib4go/types
 github.com/micro-plat/lib4go/security/des
+github.com/micro-plat/lib4go/security/md5
 github.com/micro-plat/lib4go/concurrent/cmap
 github.com/micro-plat/lib4go/registry
 github.com/micro-plat/lib4go/db/tpl
@@ -97,7 +99,6 @@ github.com/micro-plat/lib4go/influxdb
 github.com/micro-plat/lib4go/queue
 github.com/micro-plat/lib4go/rpc
 github.com/micro-plat/lib4go/security/jwt
-github.com/micro-plat/lib4go/security/md5
 github.com/micro-plat/lib4go/cache/memcache
 github.com/micro-plat/lib4go/cache/redis
 github.com/micro-plat/lib4go/mq/mqtt
@@ -131,14 +132,14 @@ github.com/modern-go/concurrent
 github.com/modern-go/reflect2
 # github.com/nwaples/rardecode v1.0.0
 github.com/nwaples/rardecode
-# github.com/pierrec/lz4 v2.0.5+incompatible
+# github.com/pierrec/lz4 v2.2.4+incompatible
 github.com/pierrec/lz4
 github.com/pierrec/lz4/internal/xxh32
 # github.com/pkg/profile v1.3.0
 github.com/pkg/profile
 # github.com/samuel/go-zookeeper v0.0.0-20180130194729-c4fab1ac1bec
 github.com/samuel/go-zookeeper/zk
-# github.com/shirou/gopsutil v2.18.12+incompatible
+# github.com/shirou/gopsutil v2.19.6+incompatible
 github.com/shirou/gopsutil/cpu
 github.com/shirou/gopsutil/disk
 github.com/shirou/gopsutil/mem
