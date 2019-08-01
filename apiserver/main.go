@@ -11,7 +11,7 @@ func main() {
 		hydra.NewApp(
 			hydra.WithPlatName("beanpay"),
 			hydra.WithSystemName("apiserver"),
-			hydra.WithServerTypes("api")),
+			hydra.WithServerTypes("api-rpc")),
 	}
 
 	app.init()

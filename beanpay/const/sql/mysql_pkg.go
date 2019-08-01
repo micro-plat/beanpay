@@ -18,6 +18,7 @@ where t.spkg_id=@spkg_id and t.account_id=@account_id`
 //ChangePackage 服务数量变更
 const ChangePackage = `update beanpay_package_info t 
 set t.total_remain=t.total_remain + @capacity ,
+t.total_capacity=t.total_capacity+@total,
 t.deduct_today=t.deduct_today + @capacity
 where t.pkg_id=@pkg_id
 and t.total_remain + @capacity >= 0 

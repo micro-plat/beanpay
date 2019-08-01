@@ -7,6 +7,7 @@ import (
 	"github.com/micro-plat/beanpay/beanpay/const/sql"
 	"github.com/micro-plat/hydra/context"
 	"github.com/micro-plat/lib4go/db"
+	"github.com/micro-plat/lib4go/types"
 )
 
 //Create 根据帐户编号，包编号，名称，总数，日限制数，过期时间
@@ -16,7 +17,7 @@ func create(db db.IDBExecuter, accountID int, spkgID string, name string, total 
 		"spkg_id":    spkgID,
 		"name":       name,
 		"total":      total,
-		"daily":      daily,
+		"daily":      types.DecodeInt(daily, 0, total, daily),
 		"expires":    expires,
 	}
 	_, s, p, err := db.Execute(sql.CreatePackage, input)

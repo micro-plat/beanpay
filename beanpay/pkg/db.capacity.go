@@ -13,6 +13,7 @@ func change(db db.IDBExecuter, pkgID int64, tradeNo string, tp int, capacity int
 	input := map[string]interface{}{
 		"pkg_id":   pkgID,
 		"capacity": capacity,
+		"total":    types.DecodeInt(tp, 1, capacity, 0),
 		"trade_no": tradeNo,
 		"tp":       tp,
 	}

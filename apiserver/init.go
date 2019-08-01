@@ -22,12 +22,12 @@ func (r *apiserver) init() {
 			return err
 		}
 
-		r.Micro("/account/create", account.NewAccountHandler)
+		r.Micro("/account", account.NewAccountHandler)
 		r.Micro("/account/balance", account.NewBalanceHandler)
 		r.Micro("/account/record", account.NewRecordHandler)
 
 		if r.Cli.Context().Bool("pkg") {
-			r.Micro("/package/create", pkg.NewPackageHandler)
+			r.Micro("/package", pkg.NewPackageHandler)
 			r.Micro("/package/capacity", pkg.NewCapacityHandler)
 			r.Micro("/package/record", pkg.NewRecordHandler)
 		}

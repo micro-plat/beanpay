@@ -14,8 +14,8 @@ func NewAccountHandler(container component.IContainer) (u *AccountHandler) {
 	return &AccountHandler{container: container}
 }
 
-//Handle 创建资金帐户
-func (u *AccountHandler) Handle(ctx *context.Context) (r interface{}) {
+//CreateHandle 创建资金帐户
+func (u *AccountHandler) CreateHandle(ctx *context.Context) (r interface{}) {
 	ctx.Log.Info("---------------创建资金帐户--------------------")
 	ctx.Log.Info("1. 参数校验")
 	if err := ctx.Request.Check("eid", "name"); err != nil {
@@ -26,6 +26,25 @@ func (u *AccountHandler) Handle(ctx *context.Context) (r interface{}) {
 	account, err := beanpay.CreateAccount(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("name"))
+	if err != nil {
+		return err
+	}
+
+	ctx.Log.Info("3. 处理返回结果")
+	return account
+}
+
+//QueryHandle 查询资金帐户
+func (u *AccountHandler) QueryHandle(ctx *context.Context) (r interface{}) {
+	ctx.Log.Info("---------------查询资金帐户--------------------")
+	ctx.Log.Info("1. 参数校验")
+	if err := ctx.Request.Check("eid"); err != nil {
+		return context.NewError(context.ERR_NOT_ACCEPTABLE, err)
+	}
+
+	ctx.Log.Info("2. 查询帐户信息")
+	account, err := beanpay.GetAccount(ctx,
+		ctx.Request.GetString("eid"))
 	if err != nil {
 		return err
 	}

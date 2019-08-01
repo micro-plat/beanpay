@@ -1,8 +1,6 @@
 package pkg
 
 import (
-	"fmt"
-
 	"github.com/micro-plat/beanpay/beanpay/account"
 	"github.com/micro-plat/beanpay/beanpay/const/ecodes"
 	"github.com/micro-plat/beanpay/beanpay/const/ttypes"
@@ -18,16 +16,16 @@ func Create(db db.IDBExecuter, eid string, sid string, name string, total int, d
 		return context.NewResult(ecodes.HasExists, pkg), nil
 	}
 	if context.GetCode(err) != ecodes.NotExists {
-		return nil, fmt.Errorf("x0:%v", err)
+		return nil, err
 	}
 	acc, err := account.GetAccount(db, eid)
 	if err != nil {
-		return nil, fmt.Errorf("x1:%v", err)
+		return nil, err
 	}
 
 	err = create(db, acc.ID, sid, name, total, daily, expires)
 	if err != nil {
-		return nil, fmt.Errorf("x2:%v", err)
+		return nil, err
 	}
 	return GetPackage(db, eid, sid)
 }
