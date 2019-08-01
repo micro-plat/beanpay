@@ -4,6 +4,7 @@
 
 本文档提供beanpay 独立服务`apiserver`对外提供的`api`,`rpc`服务开发规范。
 
+[项目地址](https://github.com/micro-plat/beanpay)
 
 ### 1.1 协议格式
 
@@ -117,10 +118,6 @@ http.status:200
     "credit":0
 }
 ```
-
-> 请求支持幂等，重复调用返回的内容相同，但`http status`为`201`
-
-
 
 ### 2.3 钱包加款
 
@@ -599,6 +596,8 @@ http.status:200
     "trade_no":"8970876"
 }
 ```
+> 请求支持幂等，重复调用返回的内容相同，但`http status`为`201`
+
 
 
 
@@ -654,6 +653,8 @@ http.status:200
     "trade_no":"8970876"
 }
 ```
+> 请求支持幂等，重复调用返回的内容相同，但`http status`为`201`
+
 
 
 
