@@ -5,7 +5,6 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io"
-	"reflect"
 	"strings"
 	"time"
 )
@@ -140,9 +139,6 @@ func (q XMap) GetMustFloat64(name string) (float64, bool) {
 
 //ToStruct 将当前对象转换为指定的struct
 func (q XMap) ToStruct(o interface{}) error {
-	if reflect.ValueOf(o).IsNil() {
-		return fmt.Errorf("struct不能为nil")
-	}
 	return Map2Struct(q, o)
 }
 

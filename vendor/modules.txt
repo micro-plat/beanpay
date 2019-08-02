@@ -49,7 +49,7 @@ github.com/json-iterator/go
 github.com/mattn/go-isatty
 # github.com/mholt/archiver v3.1.1+incompatible
 github.com/mholt/archiver
-# github.com/micro-plat/hydra v0.9.7 => ../../../github.com/micro-plat/hydra
+# github.com/micro-plat/hydra v0.9.8
 github.com/micro-plat/hydra/conf
 github.com/micro-plat/hydra/hydra
 github.com/micro-plat/hydra/registry
@@ -81,7 +81,7 @@ github.com/micro-plat/hydra/servers/pkg/circuit
 github.com/micro-plat/hydra/servers/pkg/dispatcher/render
 github.com/micro-plat/hydra/servers/pkg/timer
 github.com/micro-plat/hydra/servers/pkg/json
-# github.com/micro-plat/lib4go v0.1.4 => ../../../github.com/micro-plat/lib4go
+# github.com/micro-plat/lib4go v0.1.4
 github.com/micro-plat/lib4go/db
 github.com/micro-plat/lib4go/logger
 github.com/micro-plat/lib4go/types

@@ -12,6 +12,6 @@ require (
 	github.com/zkfy/go-oci8 v0.0.0-20180327092318-ad9f59dedff0
 )
 
-replace github.com/micro-plat/hydra => ../../../github.com/micro-plat/hydra
+//replace github.com/micro-plat/hydra => ../../../github.com/micro-plat/hydra
 
-replace github.com/micro-plat/lib4go => ../../../github.com/micro-plat/lib4go
+//replace github.com/micro-plat/lib4go => ../../../github.com/micro-plat/lib4go
