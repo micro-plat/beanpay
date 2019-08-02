@@ -34,7 +34,7 @@
  ~/work/bin$ go install -tags "prod oci" github.com/micro-plat/beanpay/apiserver #oracle
 ```
 
-- 安装服务, 根据安装向导设置数据库连接串,并生成数据库表结构
+- 安装服务, 根据向导设置数据库连接串, 生成数据库表结构
 
 ```sh
 apiserver install -r zk://192.168.106.18 -c t
