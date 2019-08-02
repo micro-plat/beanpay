@@ -9,6 +9,7 @@ import (
 func (s *apiserver) install() {
 	s.installs()
 	s.Conf.API.SetMainConf(`{"address":":9090"}`)
+	s.Conf.RPC.SetMainConf(`{"address":":9091"}`)
 	s.Conf.API.Installer(func(c component.IContainer) error {
 		if !s.Conf.Confirm("创建数据库表结构?") {
 			return nil
