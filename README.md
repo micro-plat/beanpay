@@ -77,7 +77,7 @@ apiserver start -r zk://192.168.106.18 -c t
 {"account_id":"86000","amount":"200","balance":"200","change_type":"3","create_time":"20190731172225","record_id":"100002","trade_no":"8970876"}
 ```
 
-[接口开发规范](https://github.com/micro-plat/beanpay/blob/master/api.md)
+[其它接口，参考开发规范](https://github.com/micro-plat/beanpay/blob/master/api.md)
 
 ## 二、代码集成
 
