@@ -22,7 +22,7 @@
 
 独立启动`apiserver`对外提供`api`,`rpc`服务
 
-#### 1、启动`api`服务
+#### 1、启动`apiserver`
 
 - 编译`apiserver`服务
 
