@@ -13,7 +13,7 @@ func (r *apiserver) init() {
 
 	r.Cli.Append(hydra.ModeRun, cli.BoolFlag{
 		Name:  "pkg,p",
-		Usage: "注册packge服务",
+		Usage: "注册package服务",
 	})
 
 	r.Initializing(func(c component.IContainer) error {
