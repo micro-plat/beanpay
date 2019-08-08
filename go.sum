@@ -68,8 +68,8 @@ github.com/mholt/archiver v3.1.1+incompatible h1:1dCVxuqs0dJseYEhi5pl7MYPH9zDa1w
 github.com/mholt/archiver v3.1.1+incompatible/go.mod h1:Dh2dOXnSdiLxRiPoVfIr/fI1TwETms9B8CTWfeh7ROU=
 github.com/micro-plat/hydra v0.9.1/go.mod h1:pSrTWhsemhNlzLarhPmtZnSdCoMDN7QuCkqK2Hup1xk=
 github.com/micro-plat/hydra v0.9.3/go.mod h1:F+HcsLzvozkAaOYQBRMf26Nqjdseird+BptYaXm+UkM=
-github.com/micro-plat/hydra v0.9.8 h1:Rp73mW+3EMA+3wZ8gB0LlnCX2Nj7oveOd7hkM5BUQ/k=
-github.com/micro-plat/hydra v0.9.8/go.mod h1:RCnqU7gDW9uv4cyTmL5FECN+J2WrTHGG2go7duupuks=
+github.com/micro-plat/hydra v0.10.1 h1:jXyGGwbOp8S2gmeuHV0usHEzC9nDL51aDBV843iBA2M=
+github.com/micro-plat/hydra v0.10.1/go.mod h1:RCnqU7gDW9uv4cyTmL5FECN+J2WrTHGG2go7duupuks=
 github.com/micro-plat/lib4go v0.0.0-20190705091641-a9c3303797f1/go.mod h1:zrC6IThH4iNBu3XkjduKLC+TulO/h3XZ6sWEsFx+YQY=
 github.com/micro-plat/lib4go v0.1.1/go.mod h1:QWcBeMuPBuQSm8sr0wq2DwfL864Nj6gyvDGt1bKDZTw=
 github.com/micro-plat/lib4go v0.1.4 h1:ezZyniqru792ba0P8oZDYxaDc/kY5b5cxZe8elXIv5g=
