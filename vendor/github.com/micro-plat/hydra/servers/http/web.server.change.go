@@ -14,7 +14,7 @@ func (s *WebServer) SetRouters(routers []*conf.Router) (err error) {
 }
 
 //SetJWT Server
-func (s *WebServer) SetJWT(auth *conf.Auth) error {
+func (s *WebServer) SetJWT(auth *conf.JWTAuth) error {
 	s.conf.SetMetadata("jwt", auth)
 	return nil
 }
@@ -69,8 +69,12 @@ func (s *WebServer) StopMetric() error {
 }
 
 //SetView 设置view参数
-func (s *WebServer) SetView(view *conf.View) error {
+func (s *WebServer) SetView(view *conf.View) (err error) {
 	s.conf.SetMetadata("view", view)
+	if s.views, err = s.loadHTMLGlob(); err != nil {
+		s.Logger.Debugf("%s未找到模板:%v", s.conf.Name, err)
+		return err
+	}
 	return nil
 }
 

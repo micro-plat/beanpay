@@ -2,12 +2,19 @@ package http
 
 import (
 	"fmt"
+	"io/ioutil"
+	"os"
+	"path/filepath"
 
 	"github.com/asaskevich/govalidator"
 	"github.com/micro-plat/hydra/conf"
 	"github.com/micro-plat/hydra/servers"
 	"github.com/micro-plat/hydra/servers/http/middleware"
+	"github.com/micro-plat/lib4go/archiver"
 )
+
+//waitRemoveDir 等待移除的静态文件
+var waitRemoveDir = make([]string, 0, 1)
 
 type ISetMetric interface {
 	SetMetric(*conf.Metric) error
@@ -61,6 +68,10 @@ func SetStatic(set ISetStatic, cnf conf.IServerConf) (enable bool, err error) {
 	static.Exts = append(static.Exts, ".txt", ".jpg", ".png", ".gif", ".ico", ".html", ".htm", ".js", ".css", ".map", ".ttf", ".woff", ".woff2", ".woff2")
 	static.Rewriters = append(static.Rewriters, "/", "index.htm", "default.html")
 	static.Exclude = append(static.Exclude, "/views/", ".exe", ".so")
+	static.Dir, err = unarchive(static.Dir, static.Archive) //处理归档文件
+	if err != nil {
+		return false, err
+	}
 	err = set.SetStatic(&static)
 	return !static.Disable && err == nil, err
 }
@@ -70,7 +81,7 @@ type ISetRouterHandler interface {
 	SetRouters([]*conf.Router) error
 }
 
-func getRouters(services []string) conf.Routers {
+func getRouters(services map[string][]string) conf.Routers {
 	routers := conf.Routers{}
 
 	if len(services) == 0 {
@@ -79,14 +90,15 @@ func getRouters(services []string) conf.Routers {
 		return routers
 	}
 	routers.Routers = make([]*conf.Router, 0, len(services))
-	for _, srvs := range services {
-		routers.Routers = append(routers.Routers,
-			&conf.Router{
-				Action:  []string{"GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"},
-				Name:    srvs,
-				Service: srvs,
-				Engine:  "*",
-			})
+	for name, actions := range services {
+		router := &conf.Router{
+			Action:  actions, //[]string{"GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"},
+			Name:    name,
+			Service: name,
+			Engine:  "*",
+		}
+		router.Action = append(router.Action, "OPTIONS")
+		routers.Routers = append(routers.Routers, router)
 	}
 	return routers
 }
@@ -247,26 +259,94 @@ func SetHosts(set ISetHosts, cnf conf.IServerConf) (enable bool, err error) {
 
 //ISetJwtAuth 设置jwt
 type ISetJwtAuth interface {
-	SetJWT(*conf.Auth) error
+	SetJWT(*conf.JWTAuth) error
 }
 
 //SetJWT 设置jwt
 func SetJWT(set ISetJwtAuth, cnf conf.IServerConf) (enable bool, err error) {
 	//设置jwt安全认证参数
 	var auths conf.Authes
-	var jwt *conf.Auth
 	if _, err := cnf.GetSubObject("auth", &auths); err != nil && err != conf.ErrNoSetting {
 		err = fmt.Errorf("jwt配置有误:%v", err)
 		return false, err
 	}
-	if jwt, enable = auths["jwt"]; !enable {
-		jwt = &conf.Auth{Disable: true}
-	} else {
-		if b, err := govalidator.ValidateStruct(jwt); !b {
+	if auths.JWT != nil {
+		if b, err := govalidator.ValidateStruct(auths.JWT); !b {
 			err = fmt.Errorf("jwt配置有误:%v", err)
 			return false, err
 		}
+		err = set.SetJWT(auths.JWT)
+		return err == nil && !auths.JWT.Disable, err
 	}
-	err = set.SetJWT(jwt)
-	return err == nil && !jwt.Disable, err
+	return false, nil
+}
+
+func unarchive(dir string, path string) (string, error) {
+	if path == "" {
+		return dir, nil
+	}
+	archive := archiver.MatchingFormat(path)
+	if archive == nil {
+		return "", fmt.Errorf("指定的文件不是归档文件:%s", path)
+	}
+	tmpDir, err := ioutil.TempDir("", "hydra")
+	if err != nil {
+		return "", fmt.Errorf("创建临时文件失败:%v", err)
+	}
+	reader, err := os.Open(path)
+	if err != nil {
+		return "", fmt.Errorf("无法打开文件:%s(%v)", path, err)
+	}
+	defer reader.Close()
+	err = archive.Read(reader, tmpDir)
+	if err != nil {
+		return "", fmt.Errorf("读取归档文件失败:%v", err)
+	}
+	ndir := filepath.Join(tmpDir, dir)
+	waitRemoveDir = append(waitRemoveDir, tmpDir)
+	return ndir, nil
+}
+
+//---------------------------------------------------------------------------
+//-------------------------------fixed-secret---------------------------------------
+//---------------------------------------------------------------------------
+
+//CheckFixedSecret 设置FixedSecret
+func CheckFixedSecret(cnf conf.IServerConf) (enable bool, err error) {
+	//设置fixedSecret安全认证参数
+	var auths conf.Authes
+	if _, err := cnf.GetSubObject("auth", &auths); err != nil && err != conf.ErrNoSetting {
+		err = fmt.Errorf("fixed-secret配置有误:%v", err)
+		return false, err
+	}
+	if auths.FixedScret != nil {
+		if b, err := govalidator.ValidateStruct(auths.FixedScret); !b {
+			err = fmt.Errorf("fixed-secret配置有误:%v", err)
+			return false, err
+		}
+		return !auths.FixedScret.Disable, nil
+	}
+	return false, nil
+}
+
+//---------------------------------------------------------------------------
+//-------------------------------remote-auth---------------------------------------
+//---------------------------------------------------------------------------
+
+//CheckRemoteAuth 检查是否设置remote-auth
+func CheckRemoteAuth(cnf conf.IServerConf) (enable bool, err error) {
+	//设置Remote安全认证参数
+	var auths conf.Authes
+	if _, err := cnf.GetSubObject("auth", &auths); err != nil && err != conf.ErrNoSetting {
+		err = fmt.Errorf("remote-auth配置有误:%v", err)
+		return false, err
+	}
+	if auths.RemoteAuth != nil {
+		if b, err := govalidator.ValidateStruct(auths.RemoteAuth); !b {
+			err = fmt.Errorf("remote-auth配置有误:%v", err)
+			return false, err
+		}
+		return !auths.RemoteAuth.Disable, nil
+	}
+	return false, nil
 }

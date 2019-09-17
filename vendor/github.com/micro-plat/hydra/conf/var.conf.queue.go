@@ -34,9 +34,18 @@ func (m MQTTConf) WithCert(cert string) MQTTConf {
 func NewRedisQueueConf(address []string, dbIndex int) RedisQueueConf {
 	conf := make(map[string]interface{})
 	conf["proto"] = "redis"
-	conf["address"] = address
+	conf["addrs"] = address
 	conf["db"] = dbIndex
 	return conf
+}
+
+//NewRedisQueueConfForProd 创建prod redis配置
+func NewRedisQueueConfForProd(dbIndex int, name ...string) RedisQueueConf {
+	kn := "#redisCache"
+	if len(name) > 0 {
+		kn = name[0]
+	}
+	return NewRedisQueueConf([]string{kn}, dbIndex)
 }
 
 //WithTimeout 设置超时时长

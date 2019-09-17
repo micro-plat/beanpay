@@ -4,13 +4,15 @@ import (
 	"github.com/micro-plat/beanpay/beanpay/const/sql"
 	"github.com/micro-plat/hydra/context"
 	"github.com/micro-plat/lib4go/db"
+	"github.com/micro-plat/lib4go/types"
 )
 
 //Create 根据eid,name创建帐户信息
-func create(db db.IDBExecuter, eid string, name string) error {
+func create(db db.IDBExecuter, eid string, tp string, name string) error {
 	input := map[string]interface{}{
-		"eid":  eid,
-		"name": name,
+		"eid":          eid,
+		"name":         name,
+		"account_type": types.GetString(tp, "-"),
 	}
 	_, _, _, err := db.Execute(sql.CreateAccount, input)
 	if err != nil {

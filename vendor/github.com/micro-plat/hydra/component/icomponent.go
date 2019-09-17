@@ -9,7 +9,7 @@ type IComponent interface {
 	GetFallbackHandlers() map[string]interface{}
 	AddFallbackHandlers(map[string]interface{})
 	LoadServices() error
-
+	GetRegistryNames(groups ...string) map[string][]string
 	GetGroupServices(group ...string) []string
 	GetServices() []string
 
@@ -38,6 +38,9 @@ type Handler interface {
 
 type GetHandler interface {
 	GetHandle(c *context.Context) interface{}
+}
+type HeadHandler interface {
+	HeadHandle(c *context.Context) interface{}
 }
 type PostHandler interface {
 	PostHandle(c *context.Context) interface{}

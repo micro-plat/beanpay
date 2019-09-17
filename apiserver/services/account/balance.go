@@ -18,12 +18,13 @@ func NewBalanceHandler(container component.IContainer) (u *BalanceHandler) {
 func (u *BalanceHandler) AddHandle(ctx *context.Context) (r interface{}) {
 	ctx.Log.Info("---------------帐户加款--------------------")
 	ctx.Log.Info("1. 参数校验")
-	if err := ctx.Request.Check("eid", "trade_no", "amount"); err != nil {
+	if err := ctx.Request.Check("sid", "eid", "trade_no", "amount"); err != nil {
 		return context.NewError(context.ERR_NOT_ACCEPTABLE, err)
 	}
 
 	ctx.Log.Info("2. 帐户加款")
-	record, err := beanpay.AddAmount(ctx,
+	bp := beanpay.NewBeanpay("sid", ctx.Request.GetString("tp"))
+	record, err := bp.AddAmount(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("trade_no"),
 		ctx.Request.GetInt("amount"))
@@ -39,12 +40,13 @@ func (u *BalanceHandler) AddHandle(ctx *context.Context) (r interface{}) {
 func (u *BalanceHandler) DeductHandle(ctx *context.Context) (r interface{}) {
 	ctx.Log.Info("---------------帐户扣款--------------------")
 	ctx.Log.Info("1. 参数校验")
-	if err := ctx.Request.Check("eid", "trade_no", "amount"); err != nil {
+	if err := ctx.Request.Check("sid", "eid", "trade_no", "amount"); err != nil {
 		return context.NewError(context.ERR_NOT_ACCEPTABLE, err)
 	}
 
 	ctx.Log.Info("2. 帐户扣款")
-	record, err := beanpay.DeductAmount(ctx,
+	bp := beanpay.NewBeanpay(ctx.Request.GetString("sid"), ctx.Request.GetString("tp"))
+	record, err := bp.DeductAmount(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("trade_no"),
 		ctx.Request.GetInt("amount"))
@@ -60,12 +62,13 @@ func (u *BalanceHandler) DeductHandle(ctx *context.Context) (r interface{}) {
 func (u *BalanceHandler) RefundHandle(ctx *context.Context) (r interface{}) {
 	ctx.Log.Info("---------------帐户退款--------------------")
 	ctx.Log.Info("1. 参数校验")
-	if err := ctx.Request.Check("eid", "trade_no", "amount"); err != nil {
+	if err := ctx.Request.Check("sid", "eid", "trade_no", "amount"); err != nil {
 		return context.NewError(context.ERR_NOT_ACCEPTABLE, err)
 	}
 
 	ctx.Log.Info("2. 帐户退款")
-	record, err := beanpay.RefundAmount(ctx,
+	bp := beanpay.NewBeanpay("sid", ctx.Request.GetString("tp"))
+	record, err := bp.RefundAmount(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("trade_no"),
 		ctx.Request.GetInt("amount"))

@@ -9,6 +9,9 @@ create table beanpay_account_info
 	(32)  not null    comment '帐户名称' ,
 		eid varchar
 	(32)  not null    comment '外部用户账户编号' ,
+	account_type varchar
+	(32) not null    comment
+'外部账户类型' ,
 		balance bigint default 0 not null    comment '帐户余额，单位：分' ,
 		credit bigint default 0 not null    comment '信用余额，单位：分' ,
 		status tinyint

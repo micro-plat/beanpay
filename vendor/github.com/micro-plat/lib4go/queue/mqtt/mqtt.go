@@ -58,7 +58,9 @@ func (c *MQTTClient) reconnect() {
 				c.Logger.Debug("publisher与服务器断开连接，准备重连")
 				func() {
 					defer recover()
-					c.clientOnce.Do(c.client.Terminate)
+					c.clientOnce.Do(func() {
+						c.client.Disconnect()
+					})
 				}()
 				client, b, err := c.connect()
 				if err != nil {
@@ -103,7 +105,7 @@ func (c *MQTTClient) connect() (*client.Client, bool, error) {
 		return nil, false, err
 	}
 	for _, addr := range addrs {
-		if err := cc.Connect(&client.ConnectOptions{
+		if err = cc.Connect(&client.ConnectOptions{
 			Network:         "tcp",
 			Address:         addr + ":" + port,
 			UserName:        []byte(c.conf.UserName),

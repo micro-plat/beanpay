@@ -43,6 +43,7 @@ func NewApp(opts ...Option) (m *MicroApp) {
 	for _, opt := range opts {
 		opt(m.option)
 	}
+
 	m.logger = logger.GetSession("hydra", logger.CreateSession())
 	return m
 }
@@ -51,10 +52,10 @@ func NewApp(opts ...Option) (m *MicroApp) {
 func (m *MicroApp) Start() {
 	var err error
 	defer logger.Close()
-	m.app = m.getCliApp()
 	if m.IsDebug {
 		m.PlatName += "_debug"
 	}
+	m.app = m.getCliApp()
 	m.service, err = daemon.New(m.app.Name, m.app.Name)
 	if err != nil {
 		m.logger.Error(err)

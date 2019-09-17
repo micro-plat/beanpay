@@ -8,7 +8,7 @@ import (
 )
 
 //Create 根据eid,name创建帐户,如果帐户存在直接返回帐户编号
-func Create(db db.IDBExecuter, eid string, name string) (interface{}, error) {
+func Create(db db.IDBExecuter, eid string, tp string, name string) (interface{}, error) {
 	acc, err := GetAccount(db, eid)
 	if err == nil {
 		return context.NewResult(ecodes.HasExists, acc), nil
@@ -16,7 +16,7 @@ func Create(db db.IDBExecuter, eid string, name string) (interface{}, error) {
 	if context.GetCode(err) != ecodes.NotExists {
 		return nil, err
 	}
-	if err = create(db, eid, name); err != nil {
+	if err = create(db, eid, tp, name); err != nil {
 		return nil, err
 	}
 	return GetAccount(db, eid)

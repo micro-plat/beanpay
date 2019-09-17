@@ -3,7 +3,6 @@ package component
 import (
 	"errors"
 	"fmt"
-	"strings"
 	"sync"
 
 	"github.com/micro-plat/hydra/context"
@@ -181,7 +180,7 @@ func (r *StandardComponent) GetHandler(engine string, service string, method str
 		r, ok := r.Handlers["__rpc_"]
 		return r, ok
 	default:
-		if r, ok := r.Handlers[registry.Join(service, ":"+method)]; ok {
+		if r, ok := r.Handlers[registry.Join(service, "$"+method)]; ok {
 			return r, ok
 		}
 		r, ok := r.Handlers[service]
@@ -211,7 +210,7 @@ func (r *StandardComponent) Handle(c *context.Context) (rs interface{}) {
 
 //GetFallbackHandler 获取失败降级处理函数
 func (r *StandardComponent) GetFallbackHandler(engine string, service string, method string) (interface{}, bool) {
-	if f, ok := r.FallbackHandlers[registry.Join(service, method)]; ok {
+	if f, ok := r.FallbackHandlers[registry.Join(service, "$", method)]; ok {
 		return f, ok
 	}
 	f, ok := r.FallbackHandlers[service]
@@ -250,21 +249,36 @@ func (r *StandardComponent) Close() error {
 	return nil
 }
 
-func (r *StandardComponent) GetRegistryNames(groups ...string) []string {
+func (r *StandardComponent) GetRegistryNames(groups ...string) map[string][]string {
 	srvs := r.GetGroupServices(groups...)
-	nsvs := make([]string, 0, len(srvs)/3)
+	svsMap := make(map[string][]string, len(srvs)/2)
 	for _, srv := range srvs {
-		if strings.HasSuffix(srv, ":get") ||
-			strings.HasSuffix(srv, ":post") ||
-			strings.HasSuffix(srv, ":put") ||
-			strings.HasSuffix(srv, ":delete") ||
-			strings.HasSuffix(srv, ":options") {
-			continue
+		name, methods := getMethod(srv)
+		if _, ok := svsMap[name]; !ok {
+			svsMap[name] = []string{}
 		}
-		nsvs = append(nsvs, srv)
+		if len(methods) > 0 {
+			for _, method := range methods {
+				if !requestMethods.Contains(method) {
+					panic(fmt.Sprintf("不支持的请求方式:%s(%s)", srv, method))
+				}
+				if !xContains(svsMap[name], method) {
+					svsMap[name] = append(svsMap[name], method)
+				}
+			}
+
+		} else { //默认只支持GET,POST
+			if !xContains(svsMap[name], "get") {
+				svsMap[name] = append(svsMap[name], "get")
+			}
+			if !xContains(svsMap[name], "post") {
+				svsMap[name] = append(svsMap[name], "post")
+			}
+		}
 
 	}
-	return nsvs
+	//"HEAD", "OPTIONS"
+	return svsMap
 }
 
 //GetGroupName 获取分组类型[api,rpc > micro mq,cron > flow, web > page,others > customer]

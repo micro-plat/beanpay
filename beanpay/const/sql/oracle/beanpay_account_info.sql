@@ -4,6 +4,7 @@ create table beanpay_account_info
 	account_id number(20) not null ,
 	account_name varchar2(32) not null ,
 	eid varchar2(32) not null ,
+	account_type varchar2(32) not null ,
 	balance number(20) default 0 not null ,
 	credit number(20) default 0 not null ,
 	status number(1) default 0 not null ,
@@ -15,6 +16,7 @@ comment on table beanpay_account_info is '账户信息';
 	comment on column beanpay_account_info.account_id is '帐户编号';	
 	comment on column beanpay_account_info.account_name is '帐户名称';	
 	comment on column beanpay_account_info.eid is '外部用户账户编号';	
+	comment on column beanpay_account_info.account_type is '外部账户类型';		
 	comment on column beanpay_account_info.balance is '帐户余额，单位：分';	
 	comment on column beanpay_account_info.credit is '信用余额，单位：分';	
 	comment on column beanpay_account_info.status is '账户状态 0：正常 1:锁定';	

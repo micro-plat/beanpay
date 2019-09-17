@@ -45,14 +45,15 @@
 
 | 参数 |  类型  | 可空  | 示例  | 说明         |
 | :--- | :----: | :---: | :---: | :----------- |
+| sid  | string |  否   |  oms  | 系统编号     |
 | eid  | string |  否   | 62356 | 外部用户编号 |
 | name | string |  否   | 62356 | 用户名称     |
-
+| tp   | string |  是   |   0   | 帐户类型     |
 
 * 请求示例:
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/account/create?eid=86001&name=colin"
+~/work/bin$ curl "http://192.168.4.121:9090/account/create?sid=oms&eid=86001&name=colin"
 
 ```
 
@@ -86,13 +87,15 @@ http.status:200
 
 | 参数 |  类型  | 可空  | 示例  | 说明         |
 | :--- | :----: | :---: | :---: | :----------- |
+| sid  | string |  否   |  oms  | 系统编号     |
 | eid  | string |  否   | 62356 | 外部用户编号 |
+| tp   | string |  是   |   0   | 帐户类型     |
 
 
 * 请求示例:
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/account/query?eid=86001"
+~/work/bin$ curl "http://192.168.4.121:9090/account/query?sid=oms&eid=86001"
 ```
 
 #### 2.2.2 响应参数
@@ -127,7 +130,9 @@ http.status:200
 
 | 参数     |  类型  | 可空  |   示例   | 说明             |
 | :------- | :----: | :---: | :------: | :--------------- |
+| sid      | string |  否   |   oms    | 系统编号         |
 | eid      | string |  否   |  62356   | 外部用户编号     |
+| tp       | string |  是   |    0     | 帐户类型         |
 | trade_no | string |  否   | 86009981 | 外部加款交易编号 |
 | amount   | number |  否   |  10000   | 加款金额,单位分  |
 
@@ -135,7 +140,7 @@ http.status:200
 * 请求示例:
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/account/balance/add?eid=86001&trade_no=8970876
+~/work/bin$ curl "http://192.168.4.121:9090/account/balance/add?sid=oms&eid=86001&trade_no=8970876
 &amount=200"
 ```
 
@@ -184,7 +189,9 @@ http.status:200
 
 | 参数     |  类型  | 可空  |   示例   | 说明             |
 | :------- | :----: | :---: | :------: | :--------------- |
+| sid      | string |  否   |   oms    | 系统编号         |
 | eid      | string |  否   |  62356   | 用户编号         |
+| tp       | string |  是   |    0     | 帐户类型         |
 | trade_no | string |  否   | 86009981 | 外部扣款交易编号 |
 | amount   | number |  否   |  10000   | 扣款金额,单位分  |
 
@@ -192,7 +199,7 @@ http.status:200
 * 请求示例:
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/account/balance/deduct?eid=86001&trade_no=8970876
+~/work/bin$ curl "http://192.168.4.121:9090/account/balance/deduct?sid=oms&eid=86001&trade_no=8970876
 &amount=200"
 ```
 
@@ -239,7 +246,9 @@ http.status:200
 
 | 参数     |  类型  | 可空  |   示例   | 说明             |
 | :------- | :----: | :---: | :------: | :--------------- |
+| sid      | string |  否   |   oms    | 系统编号         |
 | eid      | string |  否   |  62356   | 用户编号         |
+| tp       | string |  是   |    0     | 帐户类型         |
 | trade_no | string |  否   | 86009981 | 外部扣款交易编号 |
 | amount   | number |  否   |  10000   | 退款金额,单位分  |
 
@@ -247,7 +256,7 @@ http.status:200
 * 请求示例:
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/account/balance/refund?eid=86001&trade_no=8970876
+~/work/bin$ curl "http://192.168.4.121:9090/account/balance/refund?sid=oms&eid=86001&trade_no=8970876
 &amount=200"
 ```
 
@@ -294,7 +303,9 @@ http.status:200
 
 | 参数       |  类型  | 可空  |      示例      | 说明                        |
 | :--------- | :----: | :---: | :------------: | :-------------------------- |
+| sid        | string |  否   |      oms       | 系统编号                    |
 | eid        | string |  否   |     62356      | 用户编号                    |
+| tp         | string |  是   |       0        | 帐户类型                    |
 | start_time | string |  否   | 20190731172225 | 开始时间                    |
 | end_time   | string |  否   | 20190731172225 | 结束时间                    |
 | pi         | number |  是   |       0        | 第几页，从0开始,未指定默认0 |
@@ -303,7 +314,7 @@ http.status:200
 * 请求示例:
 
 ```sh
-curl "http://192.168.4.121:9090/account/record/query?eid=86001&start_time=20190731
+curl "http://192.168.4.121:9090/account/record/query?sid=oms&eid=86001&start_time=20190731
 &end_time=20190731&pi=0&ps=10"
 ```
 
@@ -369,8 +380,10 @@ http.status:200
 
 | 参数    |  类型  | 可空  |   示例   | 说明                           |
 | :------ | :----: | :---: | :------: | :----------------------------- |
-| eid     | string |  否   |  62356   | 外部用户编号                   |
-| sid     | string |  否   |  589766  | 外部服务包编号                 |
+| sid     | string |  否   |   oms    | 系统编号                       |
+| eid     | string |  否   |  62356   | 用户编号                       |
+| tp      | string |  是   |    0     | 帐户类型                       |
+| spid    | string |  否   |  589766  | 外部服务包编号                 |
 | name    | string |  否   |  62356   | 服务包名称                     |
 | total   | number |  否   |   1000   | 可用总数                       |
 | daily   | number |  是   |   1000   | 日限制数量，未指定时不限制     |
@@ -380,7 +393,7 @@ http.status:200
 * 请求示例:
 
 ```sh
- curl "http://192.168.4.121:9090/package/create?eid=86001&sid=1000&name=colin
+ curl "http://192.168.4.121:9090/package/create?sid=oms&eid=86001&spid=1000&name=colin
  &total=1000"
 ```
 
@@ -434,13 +447,15 @@ http.status:200
 
 | 参数 |  类型  | 可空  |  示例  | 说明           |
 | :--- | :----: | :---: | :----: | :------------- |
-| eid  | string |  否   | 62356  | 外部用户编号   |
-| sid  | string |  否   | 589766 | 外部服务包编号 |
+| sid  | string |  否   |  oms   | 系统编号       |
+| eid  | string |  否   | 62356  | 用户编号       |
+| tp   | string |  是   |   0    | 帐户类型       |
+| spid | string |  否   | 589766 | 外部服务包编号 |
 
 * 请求示例:
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/package/query?eid=86001&sid=1000"
+~/work/bin$ curl "http://192.168.4.121:9090/package/query?sid=oms&eid=86001&spid=1000"
 
 ```
 
@@ -492,8 +507,10 @@ http.status:200
 
 | 参数     |  类型  | 可空  |   示例   | 说明             |
 | :------- | :----: | :---: | :------: | :--------------- |
-| eid      | string |  否   |  62356   | 外部用户编号     |
-| sid      | string |  否   |  589766  | 外部服务包编号   |
+| sid      | string |  否   |   oms    | 系统编号         |
+| eid      | string |  否   |  62356   | 用户编号         |
+| tp       | string |  是   |    0     | 帐户类型         |
+| spid     | string |  否   |  589766  | 外部服务包编号   |
 | trade_no | string |  否   | 86009981 | 外部增加交易编号 |
 | num      | number |  否   |  10000   | 增加数量         |
 
@@ -501,7 +518,7 @@ http.status:200
 * 请求示例:
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/package/capacity/add?eid=86001&sid=1000&trade_no=8970876
+~/work/bin$ curl "http://192.168.4.121:9090/package/capacity/add?sid=oms&eid=86001&spid=1000&trade_no=8970876
 &num=200"
 ```
 
@@ -552,8 +569,10 @@ http.status:200
 
 | 参数     |  类型  | 可空  |   示例   | 说明             |
 | :------- | :----: | :---: | :------: | :--------------- |
-| eid      | string |  否   |  62356   | 外部用户编号     |
-| sid      | string |  否   |  589766  | 外部服务包编号   |
+| sid      | string |  否   |   oms    | 系统编号         |
+| eid      | string |  否   |  62356   | 用户编号         |
+| tp       | string |  是   |    0     | 帐户类型         |
+| spid     | string |  否   |  589766  | 外部服务包编号   |
 | trade_no | string |  否   | 86009981 | 外部增加交易编号 |
 | num      | number |  否   |  10000   | 扣减数量         |
 
@@ -561,7 +580,7 @@ http.status:200
 * 请求示例:
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/package/capacity/deduct?eid=86001&sid=1000&trade_no=8970876&num=200"
+~/work/bin$ curl "http://192.168.4.121:9090/package/capacity/deduct?sid=oms&eid=86001&spid=1000&trade_no=8970876&num=200"
 ```
 
 #### 3.4.2 响应参数
@@ -609,8 +628,10 @@ http.status:200
 
 | 参数     |  类型  | 可空  |   示例   | 说明             |
 | :------- | :----: | :---: | :------: | :--------------- |
+| sid      | string |  否   |   oms    | 系统编号         |
 | eid      | string |  否   |  62356   | 用户编号         |
-| sid      | string |  否   |  589766  | 外部服务包编号   |
+| tp       | string |  是   |    0     | 帐户类型         |
+| spid     | string |  否   |  589766  | 外部服务包编号   |
 | trade_no | string |  否   | 86009981 | 外部扣款交易编号 |
 | num      | number |  否   |  10000   | 退回金额,单位分  |
 
@@ -618,7 +639,7 @@ http.status:200
 * 请求示例:
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/package/capacity/refund?eid=86001&sid=1000&trade_no=8970876&num=200
+~/work/bin$ curl "http://192.168.4.121:9090/package/capacity/refund?sid=oms&eid=86001&spid=1000&trade_no=8970876&num=200
 ```
 
 #### 3.5.2 响应参数
@@ -666,8 +687,10 @@ http.status:200
 
 | 参数       |  类型  | 可空  |      示例      | 说明                        |
 | :--------- | :----: | :---: | :------------: | :-------------------------- |
+| sid        | string |  否   |      oms       | 系统编号                    |
 | eid        | string |  否   |     62356      | 用户编号                    |
-| sid        | string |  是   |     589766     | 外部服务包编号              |
+| tp         | string |  是   |       0        | 帐户类型                    |
+| spid       | string |  是   |     589766     | 外部服务包编号              |
 | start_time | string |  否   | 20190731172225 | 开始时间                    |
 | end_time   | string |  否   | 20190731172225 | 结束时间                    |
 | pi         | number |  是   |       0        | 第几页，从0开始,未指定默认0 |
@@ -676,7 +699,7 @@ http.status:200
 * 请求示例:
 
 ```sh
-curl "http://192.168.4.121:9090/package/record/query?eid=86001&sid=1000&start_time=20190731&end_time=20190731&pi=0&ps=2"
+curl "http://192.168.4.121:9090/package/record/query?sid=oms&eid=86001&spid=1000&start_time=20190731&end_time=20190731&pi=0&ps=2"
 ```
 
 #### 3.6.2 响应参数

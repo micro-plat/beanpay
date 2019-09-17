@@ -12,7 +12,7 @@ import (
 
 // var _ ImainBinder = &mainBinder{}
 
-type imainBinder interface {
+type IExtBinder interface {
 	SetMainConf(input interface{})
 	SetSubConf(n string, input interface{})
 	SetMetric(m *conf.Metric)
@@ -234,7 +234,7 @@ func getConfig(i interface{}) (string, error) {
 	case string:
 		return v, nil
 	default:
-		buff, err := json.Marshal(i)
+		buff, err := json.MarshalIndent(i, "", "  ")
 		if err != nil {
 			return "", err
 		}

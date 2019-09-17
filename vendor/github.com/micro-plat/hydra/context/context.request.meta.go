@@ -1,7 +1,17 @@
 package context
 
+import "strings"
+
 type meta struct {
 	d map[string]interface{}
+}
+
+func (m *meta) Keys() []string {
+	keys := make([]string, 0, len(m.d))
+	for k := range m.d {
+		keys = append(keys, k)
+	}
+	return keys
 }
 
 func (m *meta) Get(name string) (interface{}, bool) {
@@ -23,6 +33,18 @@ func NewMeta() *Meta {
 		inputParams: inputParams{
 			data: m,
 		},
+	}
+}
+
+//Sets 设置map参数
+func (m *Meta) Sets(i map[string]interface{}) {
+	m.m.d = i
+}
+
+//SetStrings 设置map参数
+func (m *Meta) SetStrings(input map[string]string) {
+	for i, v := range input {
+		m.m.d[strings.ToLower(i)] = v
 	}
 }
 

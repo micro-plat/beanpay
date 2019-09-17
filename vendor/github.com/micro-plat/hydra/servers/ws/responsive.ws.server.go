@@ -22,7 +22,7 @@ type IServer interface {
 	GetAddress() string
 	CloseCircuitBreaker() error
 	SetCircuitBreaker(*conf.CircuitBreaker) error
-	SetJWT(auth *conf.Auth) error
+	SetJWT(auth *conf.JWTAuth) error
 	SetRouters(routers []*conf.Router) (err error)
 	SetStatic(*conf.Static) error
 	SetMetric(*conf.Metric) error
@@ -149,7 +149,7 @@ func (w *WSServerResponsiveServer) GetStatus() string {
 }
 
 //GetServices 获取服务列表
-func (w *WSServerResponsiveServer) GetServices() []string {
+func (w *WSServerResponsiveServer) GetServices() map[string][]string {
 	return w.engine.GetServices()
 }
 

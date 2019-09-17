@@ -51,29 +51,29 @@ apiserver start -r zk://192.168.106.18 -c t
 - 传入用户编号、名称创建钱包帐户。返回创建好的帐户信息
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/account/create?eid=86001&name=colin"
+~/work/bin$ curl "http://192.168.4.121:9090/account/create?sid=oms&eid=86001&name=colin&tp=1"
 
-{"account_id":86000,"account_name":"colin","balance":200,"credit":0}
+{"account_id":86000,"account_name":"colin","account_type":"1","balance":200,"credit":0}
 ```
 
 - 传入用户编号或商户编号,外部交易编号(幂等判断)，加款金额进行钱包加款。返回加款记录信息
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/account/balance/add?eid=86001&trade_no=8970876&amount=200"
+~/work/bin$ curl "http://192.168.4.121:9090/account/balance/add?sid=oms&eid=86001&trade_no=8970876&amount=200"
 {"account_id":"86000","amount":"200","balance":"200","change_type":"1","create_time":"20190731172225","record_id":"100000","trade_no":"8970876"}
 ```
 
 - 传入用户编号或商户编号,外部交易编号(幂等判断)，加款金额进行钱包扣款。返回扣款记录信息
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/account/balance/deduct?eid=86001&trade_no=8970876&amount=200"
+~/work/bin$ curl "http://192.168.4.121:9090/account/balance/deduct?sid=oms&eid=86001&trade_no=8970876&amount=200"
 {"account_id":"86000","amount":"-200","balance":"0","change_type":"2","create_time":"20190731172225","record_id":"100001","trade_no":"8970876"}
 ```
 
 - 传入用户编号、外部扣款交易编号(幂等判断)，退款金额进行钱包退款，退款金额不能大于扣款金额，同一笔扣款只允许一次退款操作。返回退款记录信息
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/account/balance/refund?eid=86001&trade_no=8970876&amount=200"
+~/work/bin$ curl "http://192.168.4.121:9090/account/balance/refund?sid=oms&eid=86001&trade_no=8970876&amount=200"
 {"account_id":"86000","amount":"200","balance":"200","change_type":"3","create_time":"20190731172225","record_id":"100002","trade_no":"8970876"}
 ```
 
@@ -116,7 +116,8 @@ apiserver start -r zk://192.168.106.18 -c t
 - 创建帐户
 
 ```go
-account, err := beanpay.CreateAccount(ctx,
+bp:=beanpay.NewBeanpay("oms","0")//根据系统编号与帐户类型创建支付对象
+account, err := bp.CreateAccount(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("name"))
 if err != nil {
@@ -129,7 +130,8 @@ return account
 - 帐户加款
 
 ```go
-record, err := beanpay.AddAmount(ctx,
+bp:=beanpay.NewBeanpay("oms","0")
+record, err := bp.AddAmount(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("trade_no"),
 		ctx.Request.GetInt("amount"))
@@ -143,7 +145,8 @@ return record
 - 帐户扣款
 
 ```go
-record, err := beanpay.DeductAmount(ctx,
+bp:=beanpay.NewBeanpay("oms","0")
+record, err := bp.DeductAmount(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("trade_no"),
 		ctx.Request.GetInt("amount"))

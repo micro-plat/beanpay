@@ -18,14 +18,15 @@ func NewPackageHandler(container component.IContainer) (u *PackageHandler) {
 func (u *PackageHandler) CreateHandle(ctx *context.Context) (r interface{}) {
 	ctx.Log.Info("---------------创建服务包--------------------")
 	ctx.Log.Info("1. 参数校验")
-	if err := ctx.Request.Check("eid", "sid", "name", "total"); err != nil {
+	if err := ctx.Request.Check("sid", "eid", "spid", "name", "total"); err != nil {
 		return context.NewError(context.ERR_NOT_ACCEPTABLE, err)
 	}
 
 	ctx.Log.Info("2. 创建服务包")
-	pkg, err := beanpay.CreatePackage(ctx,
+	bp := beanpay.NewBeanpay("sid", ctx.Request.GetString("tp"))
+	pkg, err := bp.CreatePackage(ctx,
 		ctx.Request.GetString("eid"),
-		ctx.Request.GetString("sid"),
+		ctx.Request.GetString("spid"),
 		ctx.Request.GetString("name"),
 		ctx.Request.GetInt("total"),
 		ctx.Request.GetInt("daily"),
@@ -42,14 +43,15 @@ func (u *PackageHandler) CreateHandle(ctx *context.Context) (r interface{}) {
 func (u *PackageHandler) QueryHandle(ctx *context.Context) (r interface{}) {
 	ctx.Log.Info("---------------查询服务包--------------------")
 	ctx.Log.Info("1. 参数校验")
-	if err := ctx.Request.Check("eid", "sid"); err != nil {
+	if err := ctx.Request.Check("sid", "eid", "spid"); err != nil {
 		return context.NewError(context.ERR_NOT_ACCEPTABLE, err)
 	}
 
 	ctx.Log.Info("2. 查询服务包")
-	pkg, err := beanpay.GetPackage(ctx,
+	bp := beanpay.NewBeanpay("sid", ctx.Request.GetString("tp"))
+	pkg, err := bp.GetPackage(ctx,
 		ctx.Request.GetString("eid"),
-		ctx.Request.GetString("sid"))
+		ctx.Request.GetString("spid"))
 	if err != nil {
 		return err
 	}

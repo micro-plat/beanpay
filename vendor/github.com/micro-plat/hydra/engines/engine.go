@@ -100,6 +100,7 @@ func (r *ServiceEngine) SetHandler(h component.IComponentHandler) error {
 
 	//初始化服务注册
 	svs := h.GetServices()
+
 	for group, handlers := range svs {
 		for name, handler := range handlers {
 			r.StandardComponent.AddCustomerService(name, handler, group, h.GetTags(name)...)
@@ -116,7 +117,7 @@ func (r *ServiceEngine) UpdateVarConf(conf conf.IServerConf) {
 }
 
 //GetServices 获取组件提供的所有服务
-func (r *ServiceEngine) GetServices() []string {
+func (r *ServiceEngine) GetServices() map[string][]string {
 	return r.GetRegistryNames(component.GetGroupName(r.GetServerType())...)
 
 }
@@ -175,9 +176,13 @@ func (r *ServiceEngine) Execute(ctx *context.Context) (rs interface{}) {
 }
 
 //Handling 每次handle执行前执行
-func (r *ServiceEngine) Handling(c *context.Context) (rs interface{}) {
-	c.SetRPC(r.Invoker)
-	return nil
+func (r *ServiceEngine) Handling(ctx *context.Context) (rs interface{}) {
+	ctx.SetRPC(r.Invoker)
+	err := checkSignByFixedSecret(ctx)
+	if err != nil {
+		return err
+	}
+	return checkSignByRemoteSecret(ctx)
 }
 
 //GetRegistry 获取注册中心

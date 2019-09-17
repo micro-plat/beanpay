@@ -3,8 +3,8 @@
 package sql
 
 //CreateAccount 创建帐户信息
-const CreateAccount = `INSERT INTO beanpay_account_info(account_name,eid,balance,credit,status,create_time)values(
-	@name,@eid,0,0,0,now())`
+const CreateAccount = `INSERT INTO beanpay_account_info(account_name,eid,account_type,balance,credit,status,create_time)values(
+	@name,@eid,@account_type,0,0,0,now())`
 
 //GetAccountByeid 根据eid查询帐户编号
 const GetAccountByeid = `select t.account_id,t.account_name,t.eid,t.balance,t.credit from beanpay_account_info t where t.eid=@eid`
