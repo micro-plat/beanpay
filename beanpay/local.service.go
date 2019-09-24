@@ -49,7 +49,7 @@ func (b *Beanpay) makeEID(eid string) string {
 }
 
 //CreateAccount 根据外部用户编号，名称创建资金帐户信息
-func (b *Beanpay) CreateAccount(i interface{}, eid string, name string) (interface{}, error) {
+func (b *Beanpay) CreateAccount(i interface{}, eid string, name string) (*account.AccountResult, error) {
 	db, err := getDBExecuter(i)
 	if err != nil {
 		return nil, err
@@ -67,7 +67,7 @@ func (b *Beanpay) GetAccount(i interface{}, eid string) (*account.Account, error
 }
 
 //AddAmount 指定用户编号，交易变号，金额进行资金帐户加款
-func (b *Beanpay) AddAmount(i interface{}, eid string, tradeNo string, amount int) (*context.Result, error) {
+func (b *Beanpay) AddAmount(i interface{}, eid string, tradeNo string, amount int) (*account.RecordResult, error) {
 	m, db, err := getTrans(i)
 	if err != nil {
 		return nil, err
@@ -85,7 +85,7 @@ func (b *Beanpay) AddAmount(i interface{}, eid string, tradeNo string, amount in
 }
 
 //DeductAmount 指定用户编号，交易变号，金额进行资金帐户扣款
-func (b *Beanpay) DeductAmount(i interface{}, eid string, tradeNo string, amount int) (*context.Result, error) {
+func (b *Beanpay) DeductAmount(i interface{}, eid string, tradeNo string, amount int) (*account.RecordResult, error) {
 	m, db, err := getTrans(i)
 	if err != nil {
 		return nil, err
@@ -103,7 +103,7 @@ func (b *Beanpay) DeductAmount(i interface{}, eid string, tradeNo string, amount
 }
 
 //RefundAmount 指定用户编号，交易变号，金额进行资金帐户退款
-func (b *Beanpay) RefundAmount(i interface{}, eid string, tradeNo string, amount int) (*context.Result, error) {
+func (b *Beanpay) RefundAmount(i interface{}, eid string, tradeNo string, amount int) (*account.RecordResult, error) {
 	m, db, err := getTrans(i)
 	if err != nil {
 		return nil, err
@@ -121,7 +121,7 @@ func (b *Beanpay) RefundAmount(i interface{}, eid string, tradeNo string, amount
 }
 
 //QueryAccountRecords 查询指定用户在一段时间内的资金变动信息
-func (b *Beanpay) QueryAccountRecords(i interface{}, eid string, startTime string, endTime string, pi int, ps int) (db.QueryRows, error) {
+func (b *Beanpay) QueryAccountRecords(i interface{}, eid string, startTime string, endTime string, pi int, ps int) (*account.RecordResults, error) {
 	db, err := getDBExecuter(i)
 	if err != nil {
 		return nil, err

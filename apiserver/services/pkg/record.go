@@ -23,7 +23,7 @@ func (u *RecordHandler) QueryHandle(ctx *context.Context) (r interface{}) {
 	}
 
 	ctx.Log.Info("2. 服务包数量变动查询")
-	bp := beanpay.NewBeanpay("sid", ctx.Request.GetString("tp"))
+	bp := beanpay.NewBeanpay(ctx.Request.GetString("sid"), ctx.Request.GetString("tp"))
 	data, err := bp.QueryPackageRecords(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("spid"),

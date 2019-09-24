@@ -15,3 +15,19 @@ func NewAccount(s string) (*Account, error) {
 	err := json.Unmarshal([]byte(s), &account)
 	return &account, err
 }
+
+type AccountResult struct {
+	*Account
+	code int
+}
+
+func NewAccountResult(code int, account *Account) *AccountResult {
+	return &AccountResult{Account: account, code: code}
+}
+
+func (r *AccountResult) GetResult() interface{} {
+	return r.Account
+}
+func (r *AccountResult) GetCode() int {
+	return r.code
+}

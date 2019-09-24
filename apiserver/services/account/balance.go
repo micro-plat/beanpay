@@ -23,7 +23,7 @@ func (u *BalanceHandler) AddHandle(ctx *context.Context) (r interface{}) {
 	}
 
 	ctx.Log.Info("2. 帐户加款")
-	bp := beanpay.NewBeanpay("sid", ctx.Request.GetString("tp"))
+	bp := beanpay.NewBeanpay(ctx.Request.GetString("sid"), ctx.Request.GetString("tp"))
 	record, err := bp.AddAmount(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("trade_no"),
@@ -67,7 +67,7 @@ func (u *BalanceHandler) RefundHandle(ctx *context.Context) (r interface{}) {
 	}
 
 	ctx.Log.Info("2. 帐户退款")
-	bp := beanpay.NewBeanpay("sid", ctx.Request.GetString("tp"))
+	bp := beanpay.NewBeanpay(ctx.Request.GetString("sid"), ctx.Request.GetString("tp"))
 	record, err := bp.RefundAmount(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("trade_no"),

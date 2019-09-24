@@ -23,7 +23,7 @@ func (u *PackageHandler) CreateHandle(ctx *context.Context) (r interface{}) {
 	}
 
 	ctx.Log.Info("2. 创建服务包")
-	bp := beanpay.NewBeanpay("sid", ctx.Request.GetString("tp"))
+	bp := beanpay.NewBeanpay(ctx.Request.GetString("sid"), ctx.Request.GetString("tp"))
 	pkg, err := bp.CreatePackage(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("spid"),
@@ -48,7 +48,7 @@ func (u *PackageHandler) QueryHandle(ctx *context.Context) (r interface{}) {
 	}
 
 	ctx.Log.Info("2. 查询服务包")
-	bp := beanpay.NewBeanpay("sid", ctx.Request.GetString("tp"))
+	bp := beanpay.NewBeanpay(ctx.Request.GetString("sid"), ctx.Request.GetString("tp"))
 	pkg, err := bp.GetPackage(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("spid"))

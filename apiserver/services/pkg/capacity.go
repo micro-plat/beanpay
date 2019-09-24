@@ -46,7 +46,7 @@ func (u *CapacityHandler) DeductHandle(ctx *context.Context) (r interface{}) {
 	}
 
 	ctx.Log.Info("2. 扣减服务包数量")
-	bp := beanpay.NewBeanpay("sid", ctx.Request.GetString("tp"))
+	bp := beanpay.NewBeanpay(ctx.Request.GetString("sid"), ctx.Request.GetString("tp"))
 	pkg, err := bp.DeductCapacity(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("spid"),
@@ -69,7 +69,7 @@ func (u *CapacityHandler) RefundHandle(ctx *context.Context) (r interface{}) {
 	}
 
 	ctx.Log.Info("2. 退回服务包数量")
-	bp := beanpay.NewBeanpay("sid", ctx.Request.GetString("tp"))
+	bp := beanpay.NewBeanpay(ctx.Request.GetString("sid"), ctx.Request.GetString("tp"))
 	pkg, err := bp.RefundCapacity(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("spid"),
