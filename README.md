@@ -43,7 +43,7 @@ apiserver install -r zk://192.168.106.18 -c t
 - 启动服务
 
 ```sh
-apiserver start -r zk://192.168.106.18 -c t
+apiserver run -r zk://192.168.106.18 -c t
 ```
 
 #### 2、测试服务
