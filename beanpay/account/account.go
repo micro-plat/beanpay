@@ -72,6 +72,34 @@ func AddAmount(db db.IDBExecuter, eid string, tradeNo string, amount int) (*Reco
 	return NewRecordResult(ecodes.Success, row), nil
 }
 
+//DrawingAmount 资金提款
+func DrawingAmount(db db.IDBExecuter, eid string, tradeNo string, amount int) (*RecordResult, error) {
+	if amount <= 0 {
+		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%d", amount)
+	}
+	acc, err := GetAccount(db, eid)
+	if err != nil {
+		return nil, err
+	}
+
+	b, err := exists(db, acc.ID, tradeNo, 0, ttypes.Drawing)
+	if err != nil {
+		return nil, err
+	}
+	if b {
+		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, ttypes.Drawing)
+		if err != nil {
+			return nil, context.NewError(ecodes.Failed, "暂时无法提款")
+		}
+		return NewRecordResult(ecodes.HasExists, row), nil
+	}
+	row, err := change(db, acc.ID, tradeNo, ttypes.Drawing, -1*amount)
+	if err != nil {
+		return nil, err
+	}
+	return NewRecordResult(ecodes.Success, row), nil
+}
+
 //DeductAmount 资金扣款
 func DeductAmount(db db.IDBExecuter, eid string, tradeNo string, amount int) (*RecordResult, error) {
 	if amount <= 0 {

@@ -106,6 +106,27 @@ func (b *RemoteBeanpay) AddAmount(i interface{}, eid string, tradeNo string, amo
 	return context.NewResult(200, result), nil
 }
 
+//DrawingAmount 指定用户编号，交易变号，金额进行资金帐户提款
+func (b *RemoteBeanpay) DrawingAmount(i interface{}, eid string, tradeNo string, amount int, kv ...string) (*context.Result, error) {
+	request, err := getRequest(i)
+	if err != nil {
+		return nil, err
+	}
+	status, result, _, err := request("/account/balance/drawing", "GET", nil, types.Copy(map[string]interface{}{
+		"eid":      b.makeEID(eid),
+		"sid":      b.ident,
+		"trade_no": tradeNo,
+		"amount":   amount,
+	}, kv...), true)
+	if err != nil {
+		return nil, err
+	}
+	if status != 200 {
+		return nil, context.NewError(status, err)
+	}
+	return context.NewResult(200, result), nil
+}
+
 //DeductAmount 指定用户编号，交易变号，金额进行资金帐户扣款
 func (b *RemoteBeanpay) DeductAmount(i interface{}, eid string, tradeNo string, amount int, kv ...string) (*context.Result, error) {
 	request, err := getRequest(i)
@@ -223,6 +244,27 @@ func (b *RemoteBeanpay) AddCapacity(i interface{}, eid string, spid string, trad
 		return nil, err
 	}
 	status, result, _, err := request("/package/capacity/add", "GET", nil, types.Copy(map[string]interface{}{
+		"eid":      b.makeEID(eid),
+		"sid":      b.ident,
+		"trade_no": tradeNo,
+		"capacity": capacity,
+	}, kv...), true)
+	if err != nil {
+		return nil, err
+	}
+	if status != 200 {
+		return nil, context.NewError(status, err)
+	}
+	return context.NewResult(200, result), nil
+}
+
+//DrawingCapacity 指定用户编号，交易变号，金额进行服务包数量追加
+func (b *RemoteBeanpay) DrawingCapacity(i interface{}, eid string, spid string, tradeNo string, capacity int, kv ...string) (*context.Result, error) {
+	request, err := getRequest(i)
+	if err != nil {
+		return nil, err
+	}
+	status, result, _, err := request("/package/capacity/drawing", "GET", nil, types.Copy(map[string]interface{}{
 		"eid":      b.makeEID(eid),
 		"sid":      b.ident,
 		"trade_no": tradeNo,

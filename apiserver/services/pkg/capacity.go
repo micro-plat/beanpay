@@ -37,6 +37,29 @@ func (u *CapacityHandler) AddHandle(ctx *context.Context) (r interface{}) {
 	return pkg
 }
 
+//DrawingHandle 提取服务包数量
+func (u *CapacityHandler) DrawingHandle(ctx *context.Context) (r interface{}) {
+	ctx.Log.Info("---------------提取服务包数量--------------------")
+	ctx.Log.Info("1. 参数校验")
+	if err := ctx.Request.Check("sid", "eid", "spid", "trade_no", "num"); err != nil {
+		return context.NewError(context.ERR_NOT_ACCEPTABLE, err)
+	}
+
+	ctx.Log.Info("2. 提取服务包数量")
+	bp := beanpay.NewBeanpay(ctx.Request.GetString("sid"), ctx.Request.GetString("tp"))
+	pkg, err := bp.DrawingCapacity(ctx,
+		ctx.Request.GetString("eid"),
+		ctx.Request.GetString("spid"),
+		ctx.Request.GetString("trade_no"),
+		ctx.Request.GetInt("num"))
+	if err != nil {
+		return err
+	}
+
+	ctx.Log.Info("3. 处理返回结果")
+	return pkg
+}
+
 //DeductHandle 扣减服务包数量
 func (u *CapacityHandler) DeductHandle(ctx *context.Context) (r interface{}) {
 	ctx.Log.Info("---------------扣减服务包数量--------------------")

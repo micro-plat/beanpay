@@ -84,6 +84,24 @@ func (b *Beanpay) AddAmount(i interface{}, eid string, tradeNo string, amount in
 	return row, nil
 }
 
+//DrawingAmount 指定用户编号，交易变号，金额进行资金帐户提款
+func (b *Beanpay) DrawingAmount(i interface{}, eid string, tradeNo string, amount int) (*account.RecordResult, error) {
+	m, db, err := getTrans(i)
+	if err != nil {
+		return nil, err
+	}
+	row, err := account.DrawingAmount(db, b.makeEID(eid), tradeNo, amount)
+	if !m {
+		return row, err
+	}
+	if err != nil {
+		db.Rollback()
+		return nil, err
+	}
+	db.Commit()
+	return row, nil
+}
+
 //DeductAmount 指定用户编号，交易变号，金额进行资金帐户扣款
 func (b *Beanpay) DeductAmount(i interface{}, eid string, tradeNo string, amount int) (*account.RecordResult, error) {
 	m, db, err := getTrans(i)
@@ -155,6 +173,24 @@ func (b *Beanpay) AddCapacity(i interface{}, eid string, spid string, tradeNo st
 		return nil, err
 	}
 	row, err := pkg.AddCapacity(db, b.makeEID(eid), spid, tradeNo, capacity)
+	if !m {
+		return row, err
+	}
+	if err != nil {
+		db.Rollback()
+		return nil, err
+	}
+	db.Commit()
+	return row, nil
+}
+
+//DrawingCapacity 指定用户编号，交易变号，金额进行服务包数量提取
+func (b *Beanpay) DrawingCapacity(i interface{}, eid string, spid string, tradeNo string, capacity int) (*context.Result, error) {
+	m, db, err := getTrans(i)
+	if err != nil {
+		return nil, err
+	}
+	row, err := pkg.DrawingCapacity(db, b.makeEID(eid), spid, tradeNo, capacity)
 	if !m {
 		return row, err
 	}

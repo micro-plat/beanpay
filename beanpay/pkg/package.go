@@ -75,6 +75,34 @@ func AddCapacity(db db.IDBExecuter, eid string, sid string, tradeNo string, capa
 	return context.NewResult(ecodes.Success, row), nil
 }
 
+//DrawingCapacity 添加服务包数量
+func DrawingCapacity(db db.IDBExecuter, eid string, sid string, tradeNo string, capacity int) (*context.Result, error) {
+	if capacity <= 0 {
+		return nil, context.NewErrorf(ecodes.AmountErr, "数量错误%d", capacity)
+	}
+	pkg, err := GetPackage(db, eid, sid)
+	if err != nil {
+		return nil, err
+	}
+	b, err := exists(db, pkg.ID, tradeNo, 0, ttypes.Drawing)
+	if err != nil {
+		return nil, err
+	}
+	if b {
+		row, err := getRecordByTradeNo(db, pkg.ID, tradeNo, ttypes.Drawing)
+		if err != nil {
+			return nil, context.NewError(ecodes.Failed, "暂时无法提取服务包数量")
+		}
+		return context.NewResult(ecodes.HasExists, row), nil
+	}
+
+	row, err := change(db, pkg.ID, tradeNo, ttypes.Drawing, -1*capacity)
+	if err != nil {
+		return nil, err
+	}
+	return context.NewResult(ecodes.Success, row), nil
+}
+
 //DeductCapacity 扣减服务包数量
 func DeductCapacity(db db.IDBExecuter, eid string, sid string, tradeNo string, capacity int) (*context.Result, error) {
 

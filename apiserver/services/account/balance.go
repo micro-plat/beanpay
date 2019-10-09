@@ -36,6 +36,28 @@ func (u *BalanceHandler) AddHandle(ctx *context.Context) (r interface{}) {
 	return record
 }
 
+//DrawingHandle 帐户提款
+func (u *BalanceHandler) DrawingHandle(ctx *context.Context) (r interface{}) {
+	ctx.Log.Info("---------------帐户提款--------------------")
+	ctx.Log.Info("1. 参数校验")
+	if err := ctx.Request.Check("sid", "eid", "trade_no", "amount"); err != nil {
+		return context.NewError(context.ERR_NOT_ACCEPTABLE, err)
+	}
+
+	ctx.Log.Info("2. 帐户提款")
+	bp := beanpay.NewBeanpay(ctx.Request.GetString("sid"), ctx.Request.GetString("tp"))
+	record, err := bp.DrawingAmount(ctx,
+		ctx.Request.GetString("eid"),
+		ctx.Request.GetString("trade_no"),
+		ctx.Request.GetInt("amount"))
+	if err != nil {
+		return err
+	}
+
+	ctx.Log.Info("3. 处理返回结果")
+	return record
+}
+
 //DeductHandle 帐户扣款
 func (u *BalanceHandler) DeductHandle(ctx *context.Context) (r interface{}) {
 	ctx.Log.Info("---------------帐户扣款--------------------")
