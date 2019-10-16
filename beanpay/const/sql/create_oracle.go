@@ -1,9 +1,11 @@
-// +build oci
+// +build oracle
 
 package sql
 
-import _ "github.com/zkfy/go-oci8"
-import "github.com/micro-plat/lib4go/db"
+import (
+	"github.com/micro-plat/lib4go/db"
+	_ "github.com/zkfy/go-oci8"
+)
 
 func CreateDB(xdb db.IDB) error {
 	return db.CreateDB(xdb, "src/github.com/micro-plat/beanpay/beanpay/const/sql/oracle")

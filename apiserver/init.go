@@ -4,32 +4,36 @@ import (
 	"github.com/micro-plat/beanpay/apiserver/services/account"
 	"github.com/micro-plat/beanpay/apiserver/services/pkg"
 	"github.com/micro-plat/hydra/component"
+	"github.com/micro-plat/hydra/context"
 	"github.com/micro-plat/hydra/hydra"
 	"github.com/urfave/cli"
 )
 
 //init 检查应用程序配置文件，并根据配置初始化服务
-func (r *apiserver) init() {
+func init() {
 
-	r.Cli.Append(hydra.ModeRun, cli.BoolFlag{
+	app.Handling(func(ctx *context.Context) (rt interface{}) {
+		return nil
+	})
+	app.Cli.Append(hydra.ModeRun, cli.BoolFlag{
 		Name:  "pkg,p",
 		Usage: "注册package服务",
 	})
 
-	r.Initializing(func(c component.IContainer) error {
+	app.Initializing(func(c component.IContainer) error {
 
 		if _, err := c.GetDB(); err != nil {
 			return err
 		}
 
-		r.Micro("/account", account.NewAccountHandler)
-		r.Micro("/account/balance", account.NewBalanceHandler)
-		r.Micro("/account/record", account.NewRecordHandler)
+		app.Micro("/account", account.NewAccountHandler)
+		app.Micro("/account/balance", account.NewBalanceHandler)
+		app.Micro("/account/record", account.NewRecordHandler)
 
-		if r.Cli.Context().Bool("pkg") {
-			r.Micro("/package", pkg.NewPackageHandler)
-			r.Micro("/package/capacity", pkg.NewCapacityHandler)
-			r.Micro("/package/record", pkg.NewRecordHandler)
+		if app.Cli.Context().Bool("pkg") {
+			app.Micro("/package", pkg.NewPackageHandler)
+			app.Micro("/package/capacity", pkg.NewCapacityHandler)
+			app.Micro("/package/record", pkg.NewRecordHandler)
 		}
 
 		return nil
