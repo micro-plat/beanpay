@@ -8,11 +8,11 @@ import (
 
 	"github.com/asaskevich/govalidator"
 
-	"github.com/micro-plat/beanpay/beanpay/const/sql"
+	"github.com/micro-plat/beanpay/beanpay/const/sql/creator"
 	"github.com/micro-plat/hydra/conf"
 	_ "github.com/micro-plat/hydra/hydra"
 	"github.com/micro-plat/hydra/registry"
-	ldb "github.com/micro-plat/lib4go/db"
+	"github.com/micro-plat/lib4go/db"
 	"github.com/micro-plat/lib4go/logger"
 	"github.com/micro-plat/zkcli/rgsts"
 	_ "github.com/urfave/cli"
@@ -54,7 +54,7 @@ func main() {
 	}
 
 	//创建数据库
-	err = sql.CreateDB(xdb)
+	err = creator.CreateDB(xdb)
 	if err != nil {
 		logger.Error(err)
 		return
@@ -62,7 +62,7 @@ func main() {
 	logger.Info("数据表创建成功")
 }
 
-func getDB(buff []byte, logger logger.ILogger) (ldb.IDB, error) {
+func getDB(buff []byte, logger logger.ILogger) (db.IDB, error) {
 	var dbConf conf.DBConf
 	if err := json.Unmarshal(buff, &dbConf); err != nil {
 		return nil, err
@@ -71,7 +71,7 @@ func getDB(buff []byte, logger logger.ILogger) (ldb.IDB, error) {
 		return nil, err
 	}
 	logger.Debug("连接到DB：", dbConf.Provider, dbConf.ConnString)
-	return ldb.NewDB(dbConf.Provider,
+	return db.NewDB(dbConf.Provider,
 		dbConf.ConnString,
 		dbConf.MaxOpen,
 		dbConf.MaxIdle,

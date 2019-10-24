@@ -90,6 +90,7 @@ github.com/mholt/archiver v3.1.1+incompatible h1:1dCVxuqs0dJseYEhi5pl7MYPH9zDa1w
 github.com/mholt/archiver v3.1.1+incompatible/go.mod h1:Dh2dOXnSdiLxRiPoVfIr/fI1TwETms9B8CTWfeh7ROU=
 github.com/micro-plat/gmq v1.0.0 h1:hmX89ibwaIoDilYUC7mpZSbs4RBRh9gip4mJ+loFlBs=
 github.com/micro-plat/gmq v1.0.0/go.mod h1:93NeUjbgul5ywP+cm4eXERv6Zk0J8zZyrzYrY3q8GVQ=
+github.com/micro-plat/gmq v1.0.1 h1:ai1PiCEfgBmiqzmZ4iWE3l2Vuz7rOTWOakqRWqi/Hgo=
 github.com/micro-plat/gmq v1.0.1/go.mod h1:93NeUjbgul5ywP+cm4eXERv6Zk0J8zZyrzYrY3q8GVQ=
 github.com/micro-plat/hydra v0.9.1/go.mod h1:pSrTWhsemhNlzLarhPmtZnSdCoMDN7QuCkqK2Hup1xk=
 github.com/micro-plat/hydra v0.9.3/go.mod h1:F+HcsLzvozkAaOYQBRMf26Nqjdseird+BptYaXm+UkM=
