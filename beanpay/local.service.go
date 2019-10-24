@@ -8,6 +8,7 @@ import (
 
 	"github.com/micro-plat/beanpay/beanpay/account"
 	"github.com/micro-plat/beanpay/beanpay/const/confs"
+	"github.com/micro-plat/beanpay/beanpay/const/ttypes"
 	"github.com/micro-plat/beanpay/beanpay/pkg"
 	"github.com/micro-plat/hydra/component"
 	"github.com/micro-plat/lib4go/db"
@@ -103,12 +104,16 @@ func (b *Beanpay) DrawingAmount(i interface{}, eid string, tradeNo string, amoun
 }
 
 //DeductAmount 指定用户编号，交易变号，金额进行资金帐户扣款
-func (b *Beanpay) DeductAmount(i interface{}, eid string, tradeNo string, amount int) (*account.RecordResult, error) {
+func (b *Beanpay) DeductAmount(i interface{}, eid string, tradeNo string, amount int, tradeTypes ...int) (*account.RecordResult, error) {
+	tradeType := ttypes.OrderTrade
+	if len(tradeTypes) > 0 {
+		tradeType = tradeTypes[0]
+	}
 	m, db, err := getTrans(i)
 	if err != nil {
 		return nil, err
 	}
-	row, err := account.DeductAmount(db, b.makeEID(eid), tradeNo, amount)
+	row, err := account.DeductAmount(db, b.makeEID(eid), tradeNo, amount, tradeType)
 	if !m {
 		return row, err
 	}
@@ -121,12 +126,16 @@ func (b *Beanpay) DeductAmount(i interface{}, eid string, tradeNo string, amount
 }
 
 //RefundAmount 指定用户编号，交易变号，金额进行资金帐户退款
-func (b *Beanpay) RefundAmount(i interface{}, eid string, tradeNo string, amount int) (*account.RecordResult, error) {
+func (b *Beanpay) RefundAmount(i interface{}, eid string, tradeNo string, reductNo string, amount int, tradeTypes ...int) (*account.RecordResult, error) {
+	tradeType := ttypes.OrderTrade
+	if len(tradeTypes) > 0 {
+		tradeType = tradeTypes[0]
+	}
 	m, db, err := getTrans(i)
 	if err != nil {
 		return nil, err
 	}
-	row, err := account.RefundAmount(db, b.makeEID(eid), tradeNo, amount)
+	row, err := account.RefundAmount(db, b.makeEID(eid), tradeNo, reductNo, amount, tradeType)
 	if !m {
 		return row, err
 	}

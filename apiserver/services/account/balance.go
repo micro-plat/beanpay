@@ -71,7 +71,8 @@ func (u *BalanceHandler) DeductHandle(ctx *context.Context) (r interface{}) {
 	record, err := bp.DeductAmount(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("trade_no"),
-		ctx.Request.GetInt("amount"))
+		ctx.Request.GetInt("amount"),
+		ctx.Request.GetInt("trade_type"))
 	if err != nil {
 		return err
 	}
@@ -93,7 +94,9 @@ func (u *BalanceHandler) RefundHandle(ctx *context.Context) (r interface{}) {
 	record, err := bp.RefundAmount(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("trade_no"),
-		ctx.Request.GetInt("amount"))
+		ctx.Request.GetString("reduct_no"),
+		ctx.Request.GetInt("amount"),
+		ctx.Request.GetInt("trade_type"))
 	if err != nil {
 		return err
 	}

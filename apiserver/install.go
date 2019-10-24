@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/micro-plat/beanpay/beanpay/const/sql"
+	"github.com/micro-plat/beanpay/beanpay/const/sql/creator"
 	"github.com/micro-plat/hydra/component"
 	"github.com/micro-plat/hydra/conf"
 )
@@ -20,7 +20,7 @@ func init() {
 		if err != nil {
 			return err
 		}
-		err = sql.CreateDB(db)
+		err = creator.CreateDB(db)
 		if err != nil {
 			return err
 		}

@@ -149,16 +149,17 @@ func (b *RemoteBeanpay) DeductAmount(i interface{}, eid string, tradeNo string, 
 }
 
 //RefundAmount 指定用户编号，交易变号，金额进行资金帐户退款
-func (b *RemoteBeanpay) RefundAmount(i interface{}, eid string, tradeNo string, amount int, kv ...string) (*context.Result, error) {
+func (b *RemoteBeanpay) RefundAmount(i interface{}, eid string, tradeNo string, reductNo string, amount int, kv ...string) (*context.Result, error) {
 	request, err := getRequest(i)
 	if err != nil {
 		return nil, err
 	}
 	status, result, _, err := request("/account/balance/refund", "GET", nil, types.Copy(map[string]interface{}{
-		"eid":      b.makeEID(eid),
-		"sid":      b.ident,
-		"trade_no": tradeNo,
-		"amount":   amount,
+		"eid":       b.makeEID(eid),
+		"sid":       b.ident,
+		"trade_no":  tradeNo,
+		"reduct_no": reductNo,
+		"amount":    amount,
 	}, kv...), true)
 	if err != nil {
 		return nil, err

@@ -54,18 +54,18 @@ func AddAmount(db db.IDBExecuter, eid string, tradeNo string, amount int) (*Reco
 		return nil, err
 	}
 
-	b, err := exists(db, acc.ID, tradeNo, 0, ttypes.Add)
+	b, err := exists(db, acc.ID, tradeNo, 0, ttypes.Add, ttypes.OrderTrade)
 	if err != nil {
 		return nil, err
 	}
 	if b {
-		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, ttypes.Add)
+		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, ttypes.Add, 1)
 		if err != nil {
 			return nil, context.NewError(ecodes.Failed, "暂时无法加款")
 		}
 		return NewRecordResult(ecodes.HasExists, row), nil
 	}
-	row, err := change(db, acc.ID, tradeNo, ttypes.Add, amount)
+	row, err := change(db, acc.ID, tradeNo, "0", ttypes.Add, amount, ttypes.OrderTrade)
 	if err != nil {
 		return nil, err
 	}
@@ -82,18 +82,18 @@ func DrawingAmount(db db.IDBExecuter, eid string, tradeNo string, amount int) (*
 		return nil, err
 	}
 
-	b, err := exists(db, acc.ID, tradeNo, 0, ttypes.Drawing)
+	b, err := exists(db, acc.ID, tradeNo, 0, ttypes.Drawing, ttypes.OrderTrade)
 	if err != nil {
 		return nil, err
 	}
 	if b {
-		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, ttypes.Drawing)
+		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, ttypes.Drawing, ttypes.OrderTrade)
 		if err != nil {
 			return nil, context.NewError(ecodes.Failed, "暂时无法提款")
 		}
 		return NewRecordResult(ecodes.HasExists, row), nil
 	}
-	row, err := change(db, acc.ID, tradeNo, ttypes.Drawing, -1*amount)
+	row, err := change(db, acc.ID, tradeNo, "0", ttypes.Drawing, -1*amount, ttypes.OrderTrade)
 	if err != nil {
 		return nil, err
 	}
@@ -101,26 +101,26 @@ func DrawingAmount(db db.IDBExecuter, eid string, tradeNo string, amount int) (*
 }
 
 //DeductAmount 资金扣款
-func DeductAmount(db db.IDBExecuter, eid string, tradeNo string, amount int) (*RecordResult, error) {
-	if amount <= 0 {
+func DeductAmount(db db.IDBExecuter, eid string, tradeNo string, amount int, tradeType int) (*RecordResult, error) {
+	if amount == 0 {
 		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%d", amount)
 	}
 	acc, err := GetAccount(db, eid)
 	if err != nil {
 		return nil, err
 	}
-	b, err := exists(db, acc.ID, tradeNo, 0, ttypes.Deduct)
+	b, err := exists(db, acc.ID, tradeNo, 0, ttypes.Deduct, tradeType)
 	if err != nil {
 		return nil, err
 	}
 	if b {
-		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, ttypes.Deduct)
+		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, ttypes.Deduct, tradeType)
 		if err != nil {
 			return nil, context.NewError(ecodes.Failed, "暂时无法扣款")
 		}
 		return NewRecordResult(ecodes.HasExists, row), nil
 	}
-	row, err := change(db, acc.ID, tradeNo, ttypes.Deduct, -amount)
+	row, err := change(db, acc.ID, tradeNo, "0", ttypes.Deduct, -amount, tradeType)
 	if err != nil {
 		return nil, err
 	}
@@ -128,35 +128,36 @@ func DeductAmount(db db.IDBExecuter, eid string, tradeNo string, amount int) (*R
 }
 
 //RefundAmount 资金退款
-func RefundAmount(db db.IDBExecuter, eid string, tradeNo string, amount int) (*RecordResult, error) {
-	if amount <= 0 {
+func RefundAmount(db db.IDBExecuter, eid string, tradeNo string, deductNo string, amount int, tradeType int) (*RecordResult, error) {
+	if amount == 0 {
 		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%d", amount)
 	}
+
 	acc, err := GetAccount(db, eid)
 	if err != nil {
 		return nil, err
 	}
-	//检查是否已退款
-	b, err := exists(db, acc.ID, tradeNo, 0, ttypes.Refund)
+
+	//检查锁扣款记录
+	deductAmount, err := lockDuductRecord(db, acc.ID, deductNo, ttypes.Deduct, ttypes.OrderTrade)
 	if err != nil {
 		return nil, err
 	}
-	if b {
-		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, ttypes.Refund)
-		if err != nil {
-			return nil, context.NewError(ecodes.Failed, "暂时无法退款")
-		}
-		return NewRecordResult(ecodes.HasExists, row), nil
+	if deductAmount == 0 {
+		return nil, context.NewErrorf(ecodes.HasExists, "扣款交易编号(%s)不存在", deductNo, tradeType)
 	}
-	//检查是否存在加款记录
-	b, err = exists(db, acc.ID, tradeNo, amount, ttypes.Deduct)
+
+	// 查询已扣款
+	refundAmount, err := queryRefundAmount(db, acc.ID, deductNo, ttypes.Refund, tradeType)
 	if err != nil {
 		return nil, err
 	}
-	if !b {
-		return nil, context.NewError(ecodes.HasExists, "扣款交易编号不存在")
+
+	if deductAmount < refundAmount+amount {
+		return nil, context.NewErrorf(ecodes.AmountErr, "扣款金额:%d,已退款金额:%d,本次退款金额:%d", deductAmount, refundAmount, amount)
 	}
-	row, err := change(db, acc.ID, tradeNo, ttypes.Refund, amount)
+
+	row, err := change(db, acc.ID, tradeNo, deductNo, ttypes.Refund, amount, tradeType)
 	if err != nil {
 		return nil, err
 	}
