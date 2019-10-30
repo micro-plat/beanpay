@@ -144,7 +144,7 @@ func RefundAmount(db db.IDBExecuter, eid string, tradeNo string, deductNo string
 		return nil, err
 	}
 	if deductAmount == 0 {
-		return nil, context.NewErrorf(ecodes.HasExists, "扣款交易编号(%s)不存在", deductNo, tradeType)
+		return nil, context.NewErrorf(ecodes.HasExists, "扣款交易编号(%s)不存在", deductNo)
 	}
 
 	// 查询已扣款

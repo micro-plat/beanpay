@@ -7,7 +7,8 @@ create table beanpay_account_record
 		account_id bigint  not null    comment '帐户编号' ,
 		trade_no varchar(32)  not null    comment '交易编号' ,
 		reduct_no varchar(32) default 0  not null    comment '扣款编号，退款时检查用' ,
-		change_type tinyint(1)  not null    comment '变动类型 1:加款 2：扣款 3：退款' ,
+		change_type tinyint(1)  not null    comment '变动类型 变动类型 1:加款 2:提款 3：扣款 4：退款',
+		trade_type number(1) default 1 not null comment '交易类型 1:订单交易 2:手续费',
 		amount bigint  not null    comment '变动金额 单位：分' ,
 		balance bigint  not null    comment '帐户余额 单位：分' ,
 		create_time datetime default current_timestamp not null    comment '创建时间' 

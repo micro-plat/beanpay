@@ -19,7 +19,8 @@
 | record_id   | number(20)   | 100000  |  否   | PK,SEQ | 变动编号                        |
 | account_id  | number(20)   |         |  否   |  UNQ   | 帐户编号                        |
 | trade_no    | varchar2(32) |         |  否   |  UNQ   | 交易编号                        |
-| change_type | number(1)    |         |  否   |  UNQ   | 变动类型 1:加款 2：扣款 3：退款 |
+| change_type | number(1)    |         |  否   |  UNQ   | 变动类型 1:加款 2：提款 3：扣款 4：退款 |
+| trade_type  | number(1)    |    1    |  否   |  UNQ   | 变动类型 1:订单交易 2：手续费 |
 | amount      | number(20)   |         |  否   |        | 变动金额 单位：分               |
 | balance     | number(20)   |         |  否   |        | 帐户余额 单位：分               |
 | create_time | date         | sysdate |  否   |        | 创建时间                        |

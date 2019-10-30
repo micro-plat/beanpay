@@ -51,7 +51,7 @@ limit #pf,#ps`
 //LockDuductRecord 锁扣款记录
 const LockDuductRecord = `
 select 
--1*t.amount
+(-1*t.amount) amount
 from beanpay_account_record t 
 where t.trade_no=@trade_no 
 and t.trade_type=@trade_type

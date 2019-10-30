@@ -55,12 +55,12 @@ where l2.rn > (@pi) * @ps`
 //LockDuductRecord 锁扣款记录
 const LockDuductRecord = `
 select 
--1*t.amount 
+(-1*t.amount) amount 
 from beanpay_account_record t 
 where t.trade_no=@trade_no 
 and t.account_id=@account_id
 and t.change_type=@tp
-andt.trade_type=@trade_type
+and t.trade_type=@trade_type
 for update
 `
 

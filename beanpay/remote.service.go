@@ -129,6 +129,7 @@ func (b *RemoteBeanpay) DrawingAmount(i interface{}, eid string, tradeNo string,
 
 //DeductAmount 指定用户编号，交易变号，金额进行资金帐户扣款
 func (b *RemoteBeanpay) DeductAmount(i interface{}, eid string, tradeNo string, amount int, kv ...string) (*context.Result, error) {
+
 	request, err := getRequest(i)
 	if err != nil {
 		return nil, err
