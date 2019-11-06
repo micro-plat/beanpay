@@ -8,18 +8,18 @@ import (
 )
 
 //Create 根据eid,name创建帐户,如果帐户存在直接返回帐户编号
-func Create(db db.IDBExecuter, eid string, tp string, name string) (*AccountResult, error) {
-	acc, err := GetAccount(db, eid)
+func Create(db db.IDBExecuter, ident string, group string, eid string, name string) (*AccountResult, error) {
+	acc, err := GetAccount(db, ident, group, eid)
 	if err == nil {
 		return NewAccountResult(ecodes.HasExists, acc), nil
 	}
 	if context.GetCode(err) != ecodes.NotExists {
 		return nil, err
 	}
-	if err = create(db, eid, tp, name); err != nil {
+	if err = create(db, ident, group, eid, name); err != nil {
 		return nil, err
 	}
-	acc, err = GetAccount(db, eid)
+	acc, err = GetAccount(db, ident, group, eid)
 	if err != nil {
 		return nil, err
 	}
@@ -27,13 +27,13 @@ func Create(db db.IDBExecuter, eid string, tp string, name string) (*AccountResu
 }
 
 //GetBalance 获取帐户余额
-func GetBalance(db db.IDBExecuter, eid string) (int, error) {
-	return getBalance(db, eid)
+func GetBalance(db db.IDBExecuter, ident string, group string, eid string) (int, error) {
+	return getBalance(db, ident, group, eid)
 }
 
 //GetAccount 根据eid获取帐户
-func GetAccount(db db.IDBExecuter, eid string) (acc *Account, err error) {
-	row, err := getAccount(db, eid)
+func GetAccount(db db.IDBExecuter, ident string, group string, eid string) (acc *Account, err error) {
+	row, err := getAccount(db, ident, group, eid)
 	if err != nil {
 		return nil, err
 	}
@@ -45,16 +45,16 @@ func GetAccount(db db.IDBExecuter, eid string) (acc *Account, err error) {
 }
 
 //AddAmount 资金加款
-func AddAmount(db db.IDBExecuter, eid string, tradeNo string, amount int) (*RecordResult, error) {
+func AddAmount(db db.IDBExecuter, ident string, group string, eid string, tradeNo string, amount int, ext string) (*RecordResult, error) {
 	if amount <= 0 {
 		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%d", amount)
 	}
-	acc, err := GetAccount(db, eid)
+	acc, err := GetAccount(db, ident, group, eid)
 	if err != nil {
 		return nil, err
 	}
 
-	b, err := exists(db, acc.ID, tradeNo, 0, ttypes.Add, ttypes.OrderTrade)
+	b, err := exists(db, acc.ID, tradeNo, 0, ttypes.Account, ttypes.Add)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +65,7 @@ func AddAmount(db db.IDBExecuter, eid string, tradeNo string, amount int) (*Reco
 		}
 		return NewRecordResult(ecodes.HasExists, row), nil
 	}
-	row, err := change(db, acc.ID, tradeNo, "0", ttypes.Add, amount, ttypes.OrderTrade)
+	row, err := change(db, acc.ID, tradeNo, "0", ttypes.Account, ttypes.Add, amount, ext)
 	if err != nil {
 		return nil, err
 	}
@@ -73,27 +73,27 @@ func AddAmount(db db.IDBExecuter, eid string, tradeNo string, amount int) (*Reco
 }
 
 //DrawingAmount 资金提款
-func DrawingAmount(db db.IDBExecuter, eid string, tradeNo string, amount int) (*RecordResult, error) {
+func DrawingAmount(db db.IDBExecuter, ident string, group string, eid string, tradeNo string, amount int, ext string) (*RecordResult, error) {
 	if amount <= 0 {
 		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%d", amount)
 	}
-	acc, err := GetAccount(db, eid)
+	acc, err := GetAccount(db, ident, group, eid)
 	if err != nil {
 		return nil, err
 	}
 
-	b, err := exists(db, acc.ID, tradeNo, 0, ttypes.Drawing, ttypes.OrderTrade)
+	b, err := exists(db, acc.ID, tradeNo, 0, ttypes.Account, ttypes.Drawing)
 	if err != nil {
 		return nil, err
 	}
 	if b {
-		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, ttypes.Drawing, ttypes.OrderTrade)
+		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, ttypes.Drawing, ttypes.Trade)
 		if err != nil {
 			return nil, context.NewError(ecodes.Failed, "暂时无法提款")
 		}
 		return NewRecordResult(ecodes.HasExists, row), nil
 	}
-	row, err := change(db, acc.ID, tradeNo, "0", ttypes.Drawing, -1*amount, ttypes.OrderTrade)
+	row, err := change(db, acc.ID, tradeNo, "0", ttypes.Account, ttypes.Drawing, -1*amount, ext)
 	if err != nil {
 		return nil, err
 	}
@@ -101,26 +101,26 @@ func DrawingAmount(db db.IDBExecuter, eid string, tradeNo string, amount int) (*
 }
 
 //DeductAmount 资金扣款
-func DeductAmount(db db.IDBExecuter, eid string, tradeNo string, amount int, tradeType int) (*RecordResult, error) {
+func DeductAmount(db db.IDBExecuter, ident string, group string, eid string, tradeNo string, tradeType int, amount int, ext string) (*RecordResult, error) {
 	if amount == 0 {
 		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%d", amount)
 	}
-	acc, err := GetAccount(db, eid)
+	acc, err := GetAccount(db, ident, group, eid)
 	if err != nil {
 		return nil, err
 	}
-	b, err := exists(db, acc.ID, tradeNo, 0, ttypes.Deduct, tradeType)
+	b, err := exists(db, acc.ID, tradeNo, 0, tradeType, ttypes.Deduct)
 	if err != nil {
 		return nil, err
 	}
 	if b {
-		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, ttypes.Deduct, tradeType)
+		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, tradeType, ttypes.Deduct)
 		if err != nil {
 			return nil, context.NewError(ecodes.Failed, "暂时无法扣款")
 		}
 		return NewRecordResult(ecodes.HasExists, row), nil
 	}
-	row, err := change(db, acc.ID, tradeNo, "0", ttypes.Deduct, -amount, tradeType)
+	row, err := change(db, acc.ID, tradeNo, "0", tradeType, ttypes.Deduct, -amount, ext)
 	if err != nil {
 		return nil, err
 	}
@@ -128,18 +128,18 @@ func DeductAmount(db db.IDBExecuter, eid string, tradeNo string, amount int, tra
 }
 
 //RefundAmount 资金退款
-func RefundAmount(db db.IDBExecuter, eid string, tradeNo string, deductNo string, amount int, tradeType int) (*RecordResult, error) {
+func RefundAmount(db db.IDBExecuter, ident string, group string, eid string, tradeNo string, deductNo string, amount int, tradeType int, ext string) (*RecordResult, error) {
 	if amount == 0 {
 		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%d", amount)
 	}
 
-	acc, err := GetAccount(db, eid)
+	acc, err := GetAccount(db, ident, group, eid)
 	if err != nil {
 		return nil, err
 	}
 
 	//检查锁扣款记录
-	deductAmount, err := lockDuductRecord(db, acc.ID, deductNo, ttypes.Deduct, ttypes.OrderTrade)
+	deductAmount, err := lockDuductRecord(db, acc.ID, deductNo, tradeType, ttypes.Deduct)
 	if err != nil {
 		return nil, err
 	}
@@ -148,7 +148,7 @@ func RefundAmount(db db.IDBExecuter, eid string, tradeNo string, deductNo string
 	}
 
 	// 查询已扣款
-	refundAmount, err := queryRefundAmount(db, acc.ID, deductNo, ttypes.Refund, tradeType)
+	refundAmount, err := queryRefundAmount(db, acc.ID, deductNo, tradeType, ttypes.Refund)
 	if err != nil {
 		return nil, err
 	}
@@ -157,7 +157,7 @@ func RefundAmount(db db.IDBExecuter, eid string, tradeNo string, deductNo string
 		return nil, context.NewErrorf(ecodes.AmountErr, "扣款金额:%d,已退款金额:%d,本次退款金额:%d", deductAmount, refundAmount, amount)
 	}
 
-	row, err := change(db, acc.ID, tradeNo, deductNo, ttypes.Refund, amount, tradeType)
+	row, err := change(db, acc.ID, tradeNo, deductNo, tradeType, ttypes.Refund, amount, ext)
 	if err != nil {
 		return nil, err
 	}
@@ -165,8 +165,8 @@ func RefundAmount(db db.IDBExecuter, eid string, tradeNo string, deductNo string
 }
 
 //Query 查询余额变动明细
-func Query(db db.IDBExecuter, eid string, startTime string, endTime string, pi int, ps int) (*RecordResults, error) {
-	acc, err := GetAccount(db, eid)
+func Query(db db.IDBExecuter, ident string, group string, eid string, startTime string, endTime string, pi int, ps int) (*RecordResults, error) {
+	acc, err := GetAccount(db, ident, group, eid)
 	if err != nil {
 		return nil, err
 	}

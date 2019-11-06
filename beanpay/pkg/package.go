@@ -9,16 +9,16 @@ import (
 )
 
 //Create 创建服务包信息
-func Create(db db.IDBExecuter, eid string, sid string, name string, total int, daily int, expires string) (interface{}, error) {
+func Create(db db.IDBExecuter, ident string, group string, eid string, sid string, name string, total int, daily int, expires string) (interface{}, error) {
 
-	pkg, err := GetPackage(db, eid, sid)
+	pkg, err := GetPackage(db, ident, group, eid, sid)
 	if err == nil {
 		return context.NewResult(ecodes.HasExists, pkg), nil
 	}
 	if context.GetCode(err) != ecodes.NotExists {
 		return nil, err
 	}
-	acc, err := account.GetAccount(db, eid)
+	acc, err := account.GetAccount(db, ident, group, eid)
 	if err != nil {
 		return nil, err
 	}
@@ -27,12 +27,12 @@ func Create(db db.IDBExecuter, eid string, sid string, name string, total int, d
 	if err != nil {
 		return nil, err
 	}
-	return GetPackage(db, eid, sid)
+	return GetPackage(db, ident, group, eid, sid)
 }
 
 //GetPackage 获取服务包编号
-func GetPackage(db db.IDBExecuter, eid string, sid string) (pkg *PKG, err error) {
-	acc, err := account.GetAccount(db, eid)
+func GetPackage(db db.IDBExecuter, ident string, group string, eid string, sid string) (pkg *PKG, err error) {
+	acc, err := account.GetAccount(db, ident, group, eid)
 	if err != nil {
 		return nil, err
 	}
@@ -48,11 +48,11 @@ func GetPackage(db db.IDBExecuter, eid string, sid string) (pkg *PKG, err error)
 }
 
 //AddCapacity 添加服务包数量
-func AddCapacity(db db.IDBExecuter, eid string, sid string, tradeNo string, capacity int) (*context.Result, error) {
+func AddCapacity(db db.IDBExecuter, ident string, group string, eid string, sid string, tradeNo string, capacity int, ext string) (*context.Result, error) {
 	if capacity <= 0 {
 		return nil, context.NewErrorf(ecodes.AmountErr, "数量错误%d", capacity)
 	}
-	pkg, err := GetPackage(db, eid, sid)
+	pkg, err := GetPackage(db, ident, group, eid, sid)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func AddCapacity(db db.IDBExecuter, eid string, sid string, tradeNo string, capa
 		return context.NewResult(ecodes.HasExists, row), nil
 	}
 
-	row, err := change(db, pkg.ID, tradeNo, ttypes.Add, capacity)
+	row, err := change(db, pkg.ID, tradeNo, ttypes.Add, capacity, ext)
 	if err != nil {
 		return nil, err
 	}
@@ -76,11 +76,11 @@ func AddCapacity(db db.IDBExecuter, eid string, sid string, tradeNo string, capa
 }
 
 //DrawingCapacity 添加服务包数量
-func DrawingCapacity(db db.IDBExecuter, eid string, sid string, tradeNo string, capacity int) (*context.Result, error) {
+func DrawingCapacity(db db.IDBExecuter, ident string, group string, eid string, sid string, tradeNo string, capacity int, ext string) (*context.Result, error) {
 	if capacity <= 0 {
 		return nil, context.NewErrorf(ecodes.AmountErr, "数量错误%d", capacity)
 	}
-	pkg, err := GetPackage(db, eid, sid)
+	pkg, err := GetPackage(db, ident, group, eid, sid)
 	if err != nil {
 		return nil, err
 	}
@@ -96,7 +96,7 @@ func DrawingCapacity(db db.IDBExecuter, eid string, sid string, tradeNo string, 
 		return context.NewResult(ecodes.HasExists, row), nil
 	}
 
-	row, err := change(db, pkg.ID, tradeNo, ttypes.Drawing, -1*capacity)
+	row, err := change(db, pkg.ID, tradeNo, ttypes.Drawing, -1*capacity, ext)
 	if err != nil {
 		return nil, err
 	}
@@ -104,12 +104,12 @@ func DrawingCapacity(db db.IDBExecuter, eid string, sid string, tradeNo string, 
 }
 
 //DeductCapacity 扣减服务包数量
-func DeductCapacity(db db.IDBExecuter, eid string, sid string, tradeNo string, capacity int) (*context.Result, error) {
+func DeductCapacity(db db.IDBExecuter, ident string, group string, eid string, sid string, tradeNo string, capacity int, ext string) (*context.Result, error) {
 
 	if capacity <= 0 {
 		return nil, context.NewErrorf(ecodes.AmountErr, "数量错误%d", capacity)
 	}
-	pkg, err := GetPackage(db, eid, sid)
+	pkg, err := GetPackage(db, ident, group, eid, sid)
 	if err != nil {
 		return nil, err
 	}
@@ -126,7 +126,7 @@ func DeductCapacity(db db.IDBExecuter, eid string, sid string, tradeNo string, c
 		return context.NewResult(ecodes.HasExists, row), nil
 	}
 
-	row, err := change(db, pkg.ID, tradeNo, ttypes.Deduct, -capacity)
+	row, err := change(db, pkg.ID, tradeNo, ttypes.Deduct, -capacity, ext)
 	if err != nil {
 		return nil, err
 	}
@@ -134,11 +134,11 @@ func DeductCapacity(db db.IDBExecuter, eid string, sid string, tradeNo string, c
 }
 
 //RefundCapacity 退回服务包数量
-func RefundCapacity(db db.IDBExecuter, eid string, sid string, tradeNo string, capacity int) (*context.Result, error) {
+func RefundCapacity(db db.IDBExecuter, ident string, group string, eid string, sid string, tradeNo string, capacity int, ext string) (*context.Result, error) {
 	if capacity <= 0 {
 		return nil, context.NewErrorf(ecodes.AmountErr, "数量错误%d", capacity)
 	}
-	pkg, err := GetPackage(db, eid, sid)
+	pkg, err := GetPackage(db, ident, group, eid, sid)
 	if err != nil {
 		return nil, err
 	}
@@ -164,7 +164,7 @@ func RefundCapacity(db db.IDBExecuter, eid string, sid string, tradeNo string, c
 		return nil, context.NewError(ecodes.HasExists, "扣款交易编号不存在")
 	}
 
-	row, err := change(db, pkg.ID, tradeNo, ttypes.Refund, capacity)
+	row, err := change(db, pkg.ID, tradeNo, ttypes.Refund, capacity, ext)
 	if err != nil {
 		return nil, err
 	}
@@ -172,8 +172,8 @@ func RefundCapacity(db db.IDBExecuter, eid string, sid string, tradeNo string, c
 }
 
 //Query 查询指定服务变的变动明细
-func Query(db db.IDBExecuter, eid string, sid string, startTime string, endTime string, pi int, ps int) (db.QueryRows, error) {
-	pkg, err := GetPackage(db, eid, sid)
+func Query(db db.IDBExecuter, ident string, group string, eid string, sid string, startTime string, endTime string, pi int, ps int) (db.QueryRows, error) {
+	pkg, err := GetPackage(db, ident, group, eid, sid)
 	if err != nil {
 		return nil, err
 	}

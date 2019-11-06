@@ -9,9 +9,11 @@ import (
 )
 
 //GetBalance 查询帐户金额
-func getBalance(db db.IDBExecuter, eid string) (int, error) {
+func getBalance(db db.IDBExecuter, ident string, group string, eid string) (int, error) {
 	input := map[string]interface{}{
-		"eid": eid,
+		"ident": ident,
+		"group": group,
+		"eid":   eid,
 	}
 	rows, _, _, err := db.Query(sql.GetAccountByeid, input)
 	if err != nil {
@@ -25,14 +27,15 @@ func getBalance(db db.IDBExecuter, eid string) (int, error) {
 }
 
 //Change 资金变动
-func change(db db.IDBExecuter, accountID int, tradeNo string, deductNo string, tp int, amount int, tradeType int) (types.XMap, error) {
+func change(db db.IDBExecuter, accountID int, tradeNo string, deductNo string, tradeType int, changeType int, amount int, ext string) (types.XMap, error) {
 	input := map[string]interface{}{
 		"account_id": accountID,
 		"amount":     amount,
 		"trade_no":   tradeNo,
 		"deduct_no":  deductNo,
-		"tp":         tp,
+		"tp":         changeType,
 		"trade_type": tradeType,
+		"ext":        ext,
 	}
 	//修改帐户余额
 	row, _, _, err := db.Execute(sql.ChangeAmount, input)
@@ -48,7 +51,7 @@ func change(db db.IDBExecuter, accountID int, tradeNo string, deductNo string, t
 	if err != nil {
 		return nil, err
 	}
-	data, err := getRecordByTradeNo(db, accountID, tradeNo, tp, tradeType)
+	data, err := getRecordByTradeNo(db, accountID, tradeNo, changeType, tradeType)
 	if context.GetCode(err) == ecodes.NotExists {
 		return nil, context.NewError(ecodes.Failed, "添加资金变动失败")
 	}
@@ -56,12 +59,12 @@ func change(db db.IDBExecuter, accountID int, tradeNo string, deductNo string, t
 }
 
 //Exists 检查交易是否已存在
-func exists(db db.IDBExecuter, accountID int, tradeNo string, maxAmount int, tp int, tradeType int) (bool, error) {
+func exists(db db.IDBExecuter, accountID int, tradeNo string, maxAmount int, tradeType int, changeType int) (bool, error) {
 	input := map[string]interface{}{
 		"account_id": accountID,
 		"trade_no":   tradeNo,
 		"max_amount": maxAmount,
-		"tp":         tp,
+		"tp":         changeType,
 		"trade_type": tradeType,
 	}
 	//修改帐户余额
@@ -83,11 +86,11 @@ func getRecordByID(db db.IDBExecuter, id int64) (db.QueryRow, error) {
 	}
 	return rows.Get(0), nil
 }
-func getRecordByTradeNo(db db.IDBExecuter, accountID int, tradeNo string, tp int, tradeType int) (db.QueryRow, error) {
+func getRecordByTradeNo(db db.IDBExecuter, accountID int, tradeNo string, tradeType int, changeType int) (db.QueryRow, error) {
 	rows, _, _, err := db.Query(sql.GetBalanceRecordByTradeNo, map[string]interface{}{
 		"account_id": accountID,
 		"trade_no":   tradeNo,
-		"tp":         tp,
+		"tp":         changeType,
 		"trade_type": tradeType,
 	})
 	if err != nil {
@@ -100,11 +103,11 @@ func getRecordByTradeNo(db db.IDBExecuter, accountID int, tradeNo string, tp int
 }
 
 // lockDuductRecord 锁扣款记录
-func lockDuductRecord(db db.IDBExecuter, accountID int, tradeNo string, tp int, tradeType int) (int, error) {
+func lockDuductRecord(db db.IDBExecuter, accountID int, tradeNo string, tradeType int, changeType int) (int, error) {
 	input := map[string]interface{}{
 		"account_id": accountID,
 		"trade_no":   tradeNo,
-		"tp":         tp,
+		"tp":         changeType,
 		"trade_type": tradeType,
 	}
 	row, _, _, err := db.Scalar(sql.LockDuductRecord, input)

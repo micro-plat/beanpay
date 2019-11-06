@@ -4,8 +4,8 @@ package sql
 
 //CreatePackage 创建服务包信息
 const CreatePackage = `INSERT INTO beanpay_package_info
-(pkg_id,account_id,spkg_id,pkg_name,total_capacity,total_remain,capacity_daily,deduct_today,expires,book_time,last_update)values
-(seq_package_info_pkg_id.nextval,@account_id,@spkg_id,@name,@total,@total,@daily,0,to_date(@expires,'yyyymmdd'),sysdate,sysdate)`
+(pkg_id,account_id,spkg_id,pkg_name,total_capacity,total_remain,capacity_daily,deduct_today,expires,book_time,last_update,ext)values
+(seq_package_info_pkg_id.nextval,@account_id,@spkg_id,@name,@total,@total,@daily,0,to_date(@expires,'yyyymmdd'),sysdate,sysdate,@ext)`
 
 //GetPackageBySPKG 根据spkg_id查询服务包编号
 const GetPackageBySPKG = `select t.pkg_id,t.account_id,t.spkg_id,t.pkg_name,t.total_capacity,

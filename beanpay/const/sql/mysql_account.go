@@ -3,11 +3,14 @@
 package sql
 
 //CreateAccount 创建帐户信息
-const CreateAccount = `INSERT INTO beanpay_account_info(account_name,eid,account_type,balance,credit,status,create_time)values(
-	@name,@eid,@account_type,0,0,0,now())`
+const CreateAccount = `INSERT INTO beanpay_account_info(
+	account_name,ident,group,eid,,balance,credit,status,create_time)values(
+	@name,@ident,@group,@eid,0,0,0,now())`
 
 //GetAccountByeid 根据eid查询帐户编号
-const GetAccountByeid = `select t.account_id,t.account_name,t.eid,t.balance,t.credit from beanpay_account_info t where t.eid=@eid`
+const GetAccountByeid = `select t.account_id,t.account_name,
+t.eid,t.balance,t.credit from beanpay_account_info t where 
+t.ident=@ident and t.group=@group and t.eid=@eid`
 
 //ChangeAmount 帐户加款
 const ChangeAmount = `update beanpay_account_info t set t.balance=t.balance + @amount where t.account_id=@account_id

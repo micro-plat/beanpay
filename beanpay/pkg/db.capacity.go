@@ -9,13 +9,14 @@ import (
 )
 
 //Change 服务包数量变动
-func change(db db.IDBExecuter, pkgID int64, tradeNo string, tp int, capacity int) (types.XMap, error) {
+func change(db db.IDBExecuter, pkgID int64, tradeNo string, tp int, capacity int, ext string) (types.XMap, error) {
 	input := map[string]interface{}{
 		"pkg_id":   pkgID,
 		"capacity": capacity,
 		"total":    types.DecodeInt(tp, 1, capacity, 0),
 		"trade_no": tradeNo,
 		"tp":       tp,
+		"ext":      ext,
 	}
 	//修改包数量
 	row, _, _, err := db.Execute(sql.ChangePackage, input)

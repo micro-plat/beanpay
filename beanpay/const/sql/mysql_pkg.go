@@ -38,8 +38,10 @@ where t.trade_no=@trade_no and pkg_id=@pkg_id
 and t.change_type=@tp`
 
 //AddPackageRecord 添加服务包变动记录
-const AddPackageRecord string = `insert into beanpay_package_record(pkg_id,account_id,trade_no,change_type,num,remain,create_time)
-select t.pkg_id,t.account_id,@trade_no,@tp,@capacity,t.total_remain,now() from beanpay_package_info t where t.pkg_id=@pkg_id`
+const AddPackageRecord string = `insert into beanpay_package_record
+(pkg_id,account_id,trade_no,change_type,num,remain,create_time,ext)
+select t.pkg_id,t.account_id,@trade_no,@tp,@capacity,t.total_remain,now(),@ext from beanpay_package_info t
+ where t.pkg_id=@pkg_id`
 
 //QueryPackageRecord 查询务包变动记录
 const QueryPackageRecord string = `select t.record_id,t.pkg_id,t.trade_no,t.change_type,t.num,t.remain,

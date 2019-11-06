@@ -24,7 +24,7 @@ func (u *AccountHandler) CreateHandle(ctx *context.Context) (r interface{}) {
 
 	ctx.Log.Info("2. 创建帐户信息")
 	bp := beanpay.NewBeanpay(ctx.Request.GetString("sid"), ctx.Request.GetString("tp"))
-	account, err := bp.CreateAccount(ctx,
+	account, err := bp.(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("name"))
 	if err != nil {

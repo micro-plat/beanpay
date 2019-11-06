@@ -6,6 +6,7 @@ const Deduct = 3
 const Refund = 4
 
 const (
-	OrderTrade = 1
-	FeeTrade   = 2
+	Account = 0
+	Trade   = 1
+	Fee     = 2
 )
