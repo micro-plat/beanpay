@@ -87,7 +87,7 @@ func DrawingAmount(db db.IDBExecuter, ident string, group string, eid string, tr
 		return nil, err
 	}
 	if b {
-		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, ttypes.Drawing, ttypes.Trade)
+		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, ttypes.Account, ttypes.Drawing)
 		if err != nil {
 			return nil, context.NewError(ecodes.Failed, "暂时无法提款")
 		}
