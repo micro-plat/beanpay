@@ -42,11 +42,11 @@ const (
 )
 
 //GetAccount 获取Account操作类
-func GetAccount(ident string, group string, tp ...string) IAccount {
+func GetAccount(ident string, group string) IAccount {
 	return newBeanpay(ident, group)
 }
 
 //GetPackage 获取package操作类
-func GetPackage(ident string, group string, tp ...string) IPackage {
+func GetPackage(ident string, group string) IPackage {
 	return newBeanpay(ident, group)
 }

@@ -7,3 +7,10 @@ func Config(db string, mq string) {
 	confs.DBName = db
 	confs.QueueName = mq
 }
+
+var localMode = true
+
+//SetRemoteMode beanpay为远程服务模式
+func SetRemoteMode() {
+	localMode = false
+}
