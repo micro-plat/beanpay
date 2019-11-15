@@ -43,11 +43,11 @@ func getPackage(db db.IDBExecuter, accountID int, spkgID string) (db.QueryRow, e
 	}
 	return rows.Get(0), nil
 }
-func getRecordByTradeNo(db db.IDBExecuter, pkgID int64, tradeNo string, tp int) (db.QueryRow, error) {
+func getRecordByTradeNo(db db.IDBExecuter, pkgID int64, tradeNo string, changeType int) (db.QueryRow, error) {
 	rows, _, _, err := db.Query(sql.GetPackageRecordByTradeNo, map[string]interface{}{
-		"pkg_id":   pkgID,
-		"trade_no": tradeNo,
-		"tp":       tp,
+		"pkg_id":      pkgID,
+		"trade_no":    tradeNo,
+		"change_type": changeType,
 	})
 	if err != nil {
 		return nil, err

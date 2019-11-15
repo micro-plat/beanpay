@@ -6,10 +6,12 @@ import (
 	"github.com/micro-plat/hydra/context"
 )
 
+// RecordHandler .
 type RecordHandler struct {
 	container component.IContainer
 }
 
+// NewRecordHandler ．
 func NewRecordHandler(container component.IContainer) (u *RecordHandler) {
 	return &RecordHandler{container: container}
 }
@@ -18,12 +20,12 @@ func NewRecordHandler(container component.IContainer) (u *RecordHandler) {
 func (u *RecordHandler) QueryHandle(ctx *context.Context) (r interface{}) {
 	ctx.Log.Info("---------------帐户资金变动查询--------------------")
 	ctx.Log.Info("1. 参数校验")
-	if err := ctx.Request.Check("sid", "eid", "start_time", "end_time"); err != nil {
+	if err := ctx.Request.Check("ident", "group", "eid", "start_time", "end_time"); err != nil {
 		return context.NewError(context.ERR_NOT_ACCEPTABLE, err)
 	}
 
 	ctx.Log.Info("2. 查询数据")
-	bp := beanpay.NewBeanpay(ctx.Request.GetString("sid"), ctx.Request.GetString("tp"))
+	bp := beanpay.GetAccount(ctx.Request.GetString("ident"), ctx.Request.GetString("group"))
 	data, err := bp.QueryAccountRecords(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("start_time"),

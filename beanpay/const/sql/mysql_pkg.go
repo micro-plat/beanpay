@@ -27,7 +27,7 @@ and (t.capacity_daily = 0 or t.capacity_daily - t.deduct_today + @capacity>0)`
 //ExistsPackageRecord 查询交易变动记录是否已存在
 const ExistsPackageRecord = `select count(0) from beanpay_package_record t 
 where t.trade_no=@trade_no and t.pkg_id=@pkg_id
-and t.change_type=@tp
+and t.change_type=@change_type
 and abs(t.num) >= @max_num`
 
 //GetPackageRecordByTradeNo 查询交易变动记录是否已存在
@@ -35,12 +35,12 @@ const GetPackageRecordByTradeNo = `select t.record_id,t.pkg_id,t.account_id,
 t.trade_no,t.change_type,t.num,t.remain,DATE_FORMAT(t.create_time, '%Y%m%d%H%i%s') create_time
  from beanpay_package_record t 
 where t.trade_no=@trade_no and pkg_id=@pkg_id
-and t.change_type=@tp`
+and t.change_type=@change_type`
 
 //AddPackageRecord 添加服务包变动记录
 const AddPackageRecord string = `insert into beanpay_package_record
 (pkg_id,account_id,trade_no,change_type,num,remain,create_time,ext)
-select t.pkg_id,t.account_id,@trade_no,@tp,@capacity,t.total_remain,now(),@ext from beanpay_package_info t
+select t.pkg_id,t.account_id,@trade_no,@change_type,@capacity,t.total_remain,now(),@ext from beanpay_package_info t
  where t.pkg_id=@pkg_id`
 
 //QueryPackageRecord 查询务包变动记录

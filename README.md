@@ -31,7 +31,7 @@
 
  或
 
- ~/work/bin$ go install -tags "prod oci" github.com/micro-plat/beanpay/apiserver #oracle
+ ~/work/bin$ go install -tags "prod oracle" github.com/micro-plat/beanpay/apiserver #oracle
 ```
 
 - 安装服务, 根据向导设置数据库连接串, 生成数据库表结构
@@ -51,30 +51,59 @@ apiserver run -r zk://192.168.106.18 -c t
 - 传入用户编号、名称创建钱包帐户。返回创建好的帐户信息
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/account/create?sid=oms&eid=86001&name=colin&tp=1"
+~/work/bin$ curl "http://192.168.4.121:9090/account/create?ident=beanpay&group=up&eid=colin&name=colin"
 
-{"account_id":86000,"account_name":"colin","account_type":"1","balance":200,"credit":0}
+{
+    "account_id": 86000,
+    "account_name": "colin",
+    "balance": 0,
+    "credit": 0
+}
 ```
 
 - 传入用户编号或商户编号,外部交易编号(幂等判断)，加款金额进行钱包加款。返回加款记录信息
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/account/balance/add?sid=oms&eid=86001&trade_no=8970876&amount=200"
-{"account_id":"86000","amount":"200","balance":"200","change_type":"1","create_time":"20190731172225","record_id":"100000","trade_no":"8970876"}
+~/work/bin$ curl "http://192.168.4.121:9090/account/balance/add?ident=beanpay&group=up&eid=colin&trade_no=86009981&amount=10000"
+{
+    "account_id": 86000,
+    "record_id": 8010,
+    "trade_no": "86009981",
+    "change_type": 1,
+    "amount": 10000,
+    "balance": 10000,
+    "create_time": "20191114140842"
+}
 ```
 
 - 传入用户编号或商户编号,外部交易编号(幂等判断)，加款金额进行钱包扣款。返回扣款记录信息
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/account/balance/deduct?sid=oms&eid=86001&trade_no=8970876&amount=200"
-{"account_id":"86000","amount":"-200","balance":"0","change_type":"2","create_time":"20190731172225","record_id":"100001","trade_no":"8970876"}
+~/work/bin$ curl "http://192.168.4.121:9090/account/balance/deduct?ident=beanpay&group=up&eid=colin&trade_no=8970876&trade_type=1&amount=200"
+{
+    "account_id": 86000,
+    "record_id": 8018,
+    "trade_no": "8970876",
+    "change_type": 3,
+    "amount": -200,
+    "balance": 9500,
+    "create_time": "20191114143240"
+}
 ```
 
 - 传入用户编号、外部扣款交易编号(幂等判断)，退款金额进行钱包退款，退款金额不能大于扣款金额，同一笔扣款只允许一次退款操作。返回退款记录信息
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/account/balance/refund?sid=oms&eid=86001&trade_no=8970876&amount=200"
-{"account_id":"86000","amount":"200","balance":"200","change_type":"3","create_time":"20190731172225","record_id":"100002","trade_no":"8970876"}
+~/work/bin$ curl "http://192.168.4.121:9090/account/balance/refund?ident=beanpay&group=up&eid=colin&trade_no=8970876&deduct_no=123123&trade_type=1&amount=200"
+{
+    "account_id": 86000,
+    "record_id": 8019,
+    "trade_no": "89708761",
+    "change_type": 4,
+    "amount": 200,
+    "balance": 9700,
+    "create_time": "20191114144059"
+}
 ```
 
 [其它接口，参考开发规范](https://github.com/micro-plat/beanpay/blob/master/api.md)
@@ -94,7 +123,7 @@ apiserver run -r zk://192.168.106.18 -c t
 
  或
 
- ~/work/bin$ go install -tags "oci" github.com/micro-plat/beanpay # oracle
+ ~/work/bin$ go install -tags "oracle" github.com/micro-plat/beanpay # oracle
 
 ```
 
@@ -103,11 +132,11 @@ apiserver run -r zk://192.168.106.18 -c t
 `beanpay [注册中心地址] [平台名称]` 即可将 `beanpay` 需要的表创建到`/平台/var/db/db` 配置的数据库中。
 
 ```sh
-~/work/bin$ beanpay zk://192.168.0.109 mall #读取/mall/var/db/db 创建数据库
+~/work/bin$ beanpay  mysql oms:123456@oms/192.168.0.36 #数据库类型 [用户名]:[密码]@[数据库名]/数据库ip
 
 或
 
-~/work/bin$ beanpay zk://192.168.0.109 mall mdb #读取 /mall/var/db/mdb 创建数据库
+~/work/bin$ beanpay oracle oms:123456@orcl136 #数据库类型 [用户名]:[密码]@[tns名称]
 
 ```
 
@@ -116,25 +145,22 @@ apiserver run -r zk://192.168.106.18 -c t
 - 创建帐户
 
 ```go
-bp:=beanpay.NewBeanpay("oms","0")//根据系统编号与帐户类型创建支付对象
-account, err := bp.CreateAccount(ctx,
+//根据ident系统标识与group用户
+bp := beanpay.GetAccount(ctx.Request.GetString("ident"),ctx.Request.GetString("group"))
+	account, err := bp.CreateAccount(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("name"))
-if err != nil {
-    return err
-}
-
 return account
 ```
 
 - 帐户加款
 
 ```go
-bp:=beanpay.NewBeanpay("oms","0")
+bp:=beanpay.GetAccount(ctx.Request.GetString("ident"),ctx.Request.GetString("group"))
 record, err := bp.AddAmount(ctx,
-		ctx.Request.GetString("eid"),
-		ctx.Request.GetString("trade_no"),
-		ctx.Request.GetInt("amount"))
+ctx.Request.GetString("eid"),
+ctx.Request.GetString("trade_no"),
+ctx.Request.GetInt("amount"))
 if err != nil {
     return err
 }
@@ -145,11 +171,12 @@ return record
 - 帐户扣款
 
 ```go
-bp:=beanpay.NewBeanpay("oms","0")
+bp:=beanpay.GetAccount(ctx.Request.GetString("ident"),ctx.Request.GetString("group"))
 record, err := bp.DeductAmount(ctx,
-		ctx.Request.GetString("eid"),
-		ctx.Request.GetString("trade_no"),
-		ctx.Request.GetInt("amount"))
+ctx.Request.GetString("eid"),
+ctx.Request.GetString("trade_no"),
+ctx.Request.GetInt("trade_type")，
+ctx.Request.GetInt("amount"))
 if err != nil {
     return err
 }

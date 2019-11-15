@@ -7,11 +7,13 @@ import (
 	"github.com/micro-plat/lib4go/db"
 )
 
+//IBeanpay Beanpay接口
 type IBeanpay interface {
 	IAccount
 	IPackage
 }
 
+//IAccount Account接口
 type IAccount interface {
 	CreateAccount(i interface{}, eid string, name string) (*account.AccountResult, error)
 	GetAccount(i interface{}, eid string) (*account.Account, error)
@@ -22,6 +24,7 @@ type IAccount interface {
 	QueryAccountRecords(i interface{}, eid string, startTime string, endTime string, pi int, ps int) (*account.RecordResults, error)
 }
 
+//IPackage Package接口
 type IPackage interface {
 	CreatePackage(i interface{}, eid string, spid string, name string, total int, daily int, expires string) (interface{}, error)
 	GetPackage(i interface{}, eid string, spid string) (*pkg.PKG, error)

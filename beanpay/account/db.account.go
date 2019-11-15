@@ -7,12 +7,12 @@ import (
 )
 
 //Create 根据eid,name创建帐户信息
-func create(db db.IDBExecuter, ident string, group string, eid string, name string) error {
+func create(db db.IDBExecuter, ident string, groups string, eid string, name string) error {
 	input := map[string]interface{}{
-		"ident": ident,
-		"group": group,
-		"eid":   eid,
-		"name":  name,
+		"ident":  ident,
+		"groups": groups,
+		"eid":    eid,
+		"name":   name,
 	}
 	_, _, _, err := db.Execute(sql.CreateAccount, input)
 	if err != nil {
@@ -22,11 +22,11 @@ func create(db db.IDBExecuter, ident string, group string, eid string, name stri
 }
 
 //GetAccountID 根据eid获取帐户编号
-func getAccount(db db.IDBExecuter, ident string, group string, eid string) (r db.QueryRow, err error) {
+func getAccount(db db.IDBExecuter, ident string, groups string, eid string) (r db.QueryRow, err error) {
 	input := map[string]interface{}{
-		"ident": ident,
-		"group": group,
-		"eid":   eid,
+		"ident":  ident,
+		"groups": groups,
+		"eid":    eid,
 	}
 	rows, _, _, err := db.Query(sql.GetAccountByeid, input)
 	if err != nil {

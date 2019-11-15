@@ -9,14 +9,14 @@ import (
 )
 
 //Change 服务包数量变动
-func change(db db.IDBExecuter, pkgID int64, tradeNo string, tp int, capacity int, ext string) (types.XMap, error) {
+func change(db db.IDBExecuter, pkgID int64, tradeNo string, changeType int, capacity int, ext string) (types.XMap, error) {
 	input := map[string]interface{}{
-		"pkg_id":   pkgID,
-		"capacity": capacity,
-		"total":    types.DecodeInt(tp, 1, capacity, 0),
-		"trade_no": tradeNo,
-		"tp":       tp,
-		"ext":      ext,
+		"pkg_id":      pkgID,
+		"capacity":    capacity,
+		"total":       types.DecodeInt(changeType, 1, capacity, 0),
+		"trade_no":    tradeNo,
+		"change_type": changeType,
+		"ext":         ext,
 	}
 	//修改包数量
 	row, _, _, err := db.Execute(sql.ChangePackage, input)
@@ -32,7 +32,7 @@ func change(db db.IDBExecuter, pkgID int64, tradeNo string, tp int, capacity int
 	if err != nil {
 		return nil, err
 	}
-	data, err := getRecordByTradeNo(db, pkgID, tradeNo, tp)
+	data, err := getRecordByTradeNo(db, pkgID, tradeNo, changeType)
 	if context.GetCode(err) == ecodes.NotExists {
 		return nil, context.NewError(ecodes.Failed, "添加资金变动失败")
 	}
@@ -40,12 +40,12 @@ func change(db db.IDBExecuter, pkgID int64, tradeNo string, tp int, capacity int
 }
 
 //Exists 检查记录是否已存在
-func exists(db db.IDBExecuter, pkgID int64, tradeNo string, num int, tp int) (bool, error) {
+func exists(db db.IDBExecuter, pkgID int64, tradeNo string, num int, changeType int) (bool, error) {
 	input := map[string]interface{}{
-		"pkg_id":   pkgID,
-		"trade_no": tradeNo,
-		"tp":       tp,
-		"max_num":  num,
+		"pkg_id":      pkgID,
+		"trade_no":    tradeNo,
+		"change_type": changeType,
+		"max_num":     num,
 	}
 	row, _, _, err := db.Scalar(sql.ExistsPackageRecord, input)
 	if err != nil {

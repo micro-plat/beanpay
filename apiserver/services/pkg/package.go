@@ -6,10 +6,12 @@ import (
 	"github.com/micro-plat/hydra/context"
 )
 
+// PackageHandler 结构体
 type PackageHandler struct {
 	container component.IContainer
 }
 
+// NewPackageHandler 构建PackageHandler
 func NewPackageHandler(container component.IContainer) (u *PackageHandler) {
 	return &PackageHandler{container: container}
 }
@@ -18,12 +20,12 @@ func NewPackageHandler(container component.IContainer) (u *PackageHandler) {
 func (u *PackageHandler) CreateHandle(ctx *context.Context) (r interface{}) {
 	ctx.Log.Info("---------------创建服务包--------------------")
 	ctx.Log.Info("1. 参数校验")
-	if err := ctx.Request.Check("sid", "eid", "spid", "name", "total"); err != nil {
+	if err := ctx.Request.Check("ident", "group", "eid", "spid", "name", "total"); err != nil {
 		return context.NewError(context.ERR_NOT_ACCEPTABLE, err)
 	}
 
 	ctx.Log.Info("2. 创建服务包")
-	bp := beanpay.NewBeanpay(ctx.Request.GetString("sid"), ctx.Request.GetString("tp"))
+	bp := beanpay.GetPackage(ctx.Request.GetString("ident"), ctx.Request.GetString("group"))
 	pkg, err := bp.CreatePackage(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("spid"),
@@ -43,12 +45,12 @@ func (u *PackageHandler) CreateHandle(ctx *context.Context) (r interface{}) {
 func (u *PackageHandler) QueryHandle(ctx *context.Context) (r interface{}) {
 	ctx.Log.Info("---------------查询服务包--------------------")
 	ctx.Log.Info("1. 参数校验")
-	if err := ctx.Request.Check("sid", "eid", "spid"); err != nil {
+	if err := ctx.Request.Check("ident", "group", "eid", "spid"); err != nil {
 		return context.NewError(context.ERR_NOT_ACCEPTABLE, err)
 	}
 
 	ctx.Log.Info("2. 查询服务包")
-	bp := beanpay.NewBeanpay(ctx.Request.GetString("sid"), ctx.Request.GetString("tp"))
+	bp := beanpay.GetPackage(ctx.Request.GetString("ident"), ctx.Request.GetString("group"))
 	pkg, err := bp.GetPackage(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("spid"))

@@ -10,10 +10,11 @@ create table beanpay_package_record
 		trade_no varchar
 	(32)  not null    comment '外部交易编号' ,
 		change_type tinyint
-	(1)  not null    comment '变动类型 1:添加 2：扣除 3：退回' ,
+	(1)  not null    comment '变动类型 1:添加　2:减少 3:扣除 4:退回' ,
 		num bigint  not null    comment '变动数量' ,
 		remain bigint  not null    comment '剩余数量' ,
-		create_time datetime default current_timestamp not null    comment '创建时间' 
+		create_time datetime default current_timestamp not null    comment '创建时间',
+		ext varchar(2024) comment '扩展字段'
 				
   )COMMENT='服务包数量变动';
 

@@ -1,6 +1,8 @@
 package account
 
 import (
+	"fmt"
+
 	"github.com/micro-plat/beanpay/beanpay/const/ecodes"
 	"github.com/micro-plat/beanpay/beanpay/const/sql"
 	"github.com/micro-plat/hydra/context"
@@ -11,9 +13,9 @@ import (
 //GetBalance 查询帐户金额
 func getBalance(db db.IDBExecuter, ident string, group string, eid string) (int, error) {
 	input := map[string]interface{}{
-		"ident": ident,
-		"group": group,
-		"eid":   eid,
+		"ident":  ident,
+		"groups": group,
+		"eid":    eid,
 	}
 	rows, _, _, err := db.Query(sql.GetAccountByeid, input)
 	if err != nil {
@@ -29,13 +31,13 @@ func getBalance(db db.IDBExecuter, ident string, group string, eid string) (int,
 //Change 资金变动
 func change(db db.IDBExecuter, accountID int, tradeNo string, deductNo string, tradeType int, changeType int, amount int, ext string) (types.XMap, error) {
 	input := map[string]interface{}{
-		"account_id": accountID,
-		"amount":     amount,
-		"trade_no":   tradeNo,
-		"deduct_no":  deductNo,
-		"tp":         changeType,
-		"trade_type": tradeType,
-		"ext":        ext,
+		"account_id":  accountID,
+		"amount":      amount,
+		"trade_no":    tradeNo,
+		"deduct_no":   deductNo,
+		"change_type": changeType,
+		"trade_type":  tradeType,
+		"ext":         ext,
 	}
 	//修改帐户余额
 	row, _, _, err := db.Execute(sql.ChangeAmount, input)
@@ -51,9 +53,9 @@ func change(db db.IDBExecuter, accountID int, tradeNo string, deductNo string, t
 	if err != nil {
 		return nil, err
 	}
-	data, err := getRecordByTradeNo(db, accountID, tradeNo, changeType, tradeType)
+	data, err := getRecordByTradeNo(db, accountID, tradeNo, tradeType, changeType)
 	if context.GetCode(err) == ecodes.NotExists {
-		return nil, context.NewError(ecodes.Failed, "添加资金变动失败")
+		return nil, context.NewError(ecodes.Failed, "添加资金变动记录失败")
 	}
 	return data, nil
 }
@@ -61,11 +63,11 @@ func change(db db.IDBExecuter, accountID int, tradeNo string, deductNo string, t
 //Exists 检查交易是否已存在
 func exists(db db.IDBExecuter, accountID int, tradeNo string, maxAmount int, tradeType int, changeType int) (bool, error) {
 	input := map[string]interface{}{
-		"account_id": accountID,
-		"trade_no":   tradeNo,
-		"max_amount": maxAmount,
-		"tp":         changeType,
-		"trade_type": tradeType,
+		"account_id":  accountID,
+		"trade_no":    tradeNo,
+		"max_amount":  maxAmount,
+		"change_type": changeType,
+		"trade_type":  tradeType,
 	}
 	//修改帐户余额
 	row, _, _, err := db.Scalar(sql.ExistsBalanceRecord, input)
@@ -88,10 +90,10 @@ func getRecordByID(db db.IDBExecuter, id int64) (db.QueryRow, error) {
 }
 func getRecordByTradeNo(db db.IDBExecuter, accountID int, tradeNo string, tradeType int, changeType int) (db.QueryRow, error) {
 	rows, _, _, err := db.Query(sql.GetBalanceRecordByTradeNo, map[string]interface{}{
-		"account_id": accountID,
-		"trade_no":   tradeNo,
-		"tp":         changeType,
-		"trade_type": tradeType,
+		"account_id":  accountID,
+		"trade_no":    tradeNo,
+		"change_type": changeType,
+		"trade_type":  tradeType,
 	})
 	if err != nil {
 		return nil, err
@@ -105,11 +107,12 @@ func getRecordByTradeNo(db db.IDBExecuter, accountID int, tradeNo string, tradeT
 // lockDuductRecord 锁扣款记录
 func lockDuductRecord(db db.IDBExecuter, accountID int, tradeNo string, tradeType int, changeType int) (int, error) {
 	input := map[string]interface{}{
-		"account_id": accountID,
-		"trade_no":   tradeNo,
-		"tp":         changeType,
-		"trade_type": tradeType,
+		"account_id":  accountID,
+		"trade_no":    tradeNo,
+		"change_type": changeType,
+		"trade_type":  tradeType,
 	}
+	fmt.Printf("input:%+v", input)
 	row, _, _, err := db.Scalar(sql.LockDuductRecord, input)
 	if err != nil {
 		return 0, err
@@ -118,12 +121,12 @@ func lockDuductRecord(db db.IDBExecuter, accountID int, tradeNo string, tradeTyp
 }
 
 // queryRefundAmount 查询已退款金额
-func queryRefundAmount(db db.IDBExecuter, accountID int, deductNo string, tp int, tradeType int) (int, error) {
+func queryRefundAmount(db db.IDBExecuter, accountID int, deductNo string, changeType int, tradeType int) (int, error) {
 	input := map[string]interface{}{
-		"account_id": accountID,
-		"deduct_no":  deductNo,
-		"tp":         tp,
-		"trade_type": tradeType,
+		"account_id":  accountID,
+		"deduct_no":   deductNo,
+		"change_type": changeType,
+		"trade_type":  tradeType,
 	}
 	row, _, _, err := db.Scalar(sql.QueryRefundAmount, input)
 	if err != nil {

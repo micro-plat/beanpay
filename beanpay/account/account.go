@@ -59,7 +59,7 @@ func AddAmount(db db.IDBExecuter, ident string, group string, eid string, tradeN
 		return nil, err
 	}
 	if b {
-		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, ttypes.Add, 1)
+		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, ttypes.Account, ttypes.Add)
 		if err != nil {
 			return nil, context.NewError(ecodes.Failed, "暂时无法加款")
 		}
@@ -128,7 +128,7 @@ func DeductAmount(db db.IDBExecuter, ident string, group string, eid string, tra
 }
 
 //RefundAmount 资金退款
-func RefundAmount(db db.IDBExecuter, ident string, group string, eid string, tradeNo string, deductNo string, amount int, tradeType int, ext string) (*RecordResult, error) {
+func RefundAmount(db db.IDBExecuter, ident string, group string, eid string, tradeNo string, deductNo string, tradeType int, amount int, ext string) (*RecordResult, error) {
 	if amount == 0 {
 		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%d", amount)
 	}
