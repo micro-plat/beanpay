@@ -10,7 +10,7 @@ create table beanpay_package_record
 	change_type number(1) not null ,
 	num number(20) not null ,
 	remain number(20) not null ,
-	create_time date default sysdate not null
+	create_time date default sysdate not null,
 	ext varchar2(1024) not null
 );
 

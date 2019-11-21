@@ -7,6 +7,6 @@ import (
 	_ "github.com/zkfy/go-oci8"
 )
 
-func CreateDB(xdb db.IDB) error {
+func CreateDB(xdb db.IDBExecuter) error {
 	return db.CreateDB(xdb, "src/github.com/micro-plat/beanpay/beanpay/const/sql/oracle")
 }
