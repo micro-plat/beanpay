@@ -7,6 +7,8 @@ import (
 
 	"github.com/micro-plat/beanpay/beanpay/account"
 	"github.com/micro-plat/beanpay/beanpay/const/confs"
+	"github.com/micro-plat/beanpay/beanpay/const/ecodes"
+	"github.com/micro-plat/beanpay/beanpay/const/ttypes"
 	"github.com/micro-plat/beanpay/beanpay/pkg"
 	"github.com/micro-plat/hydra/component"
 	"github.com/micro-plat/lib4go/db"
@@ -53,7 +55,11 @@ func (b *Beanpay) AddAmount(i interface{}, eid string, tradeNo string, amount in
 	if err != nil {
 		return nil, err
 	}
-	row, err := account.AddAmount(db, b.ident, b.group, eid, tradeNo, amount, types.GetStringByIndex(ext, 0, "{}"))
+
+	if amount <= 0 {
+		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%d", amount)
+	}
+	row, err := account.AddAmount(db, b.ident, b.group, eid, tradeNo, TPTrade, ttypes.Add, amount, types.GetStringByIndex(ext, 0, "{}"))
 	if !m {
 		return row, err
 	}
@@ -71,7 +77,10 @@ func (b *Beanpay) DrawingAmount(i interface{}, eid string, tradeNo string, amoun
 	if err != nil {
 		return nil, err
 	}
-	row, err := account.DrawingAmount(db, b.ident, b.group, eid, tradeNo, amount, types.GetStringByIndex(ext, 0, "{}"))
+	if amount <= 0 {
+		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%d", amount)
+	}
+	row, err := account.DrawingAmount(db, b.ident, b.group, eid, tradeNo, TPTrade, ttypes.Drawing, amount, types.GetStringByIndex(ext, 0, "{}"))
 	if !m {
 		return row, err
 	}
@@ -102,13 +111,91 @@ func (b *Beanpay) DeductAmount(i interface{}, eid string, tradeNo string, tradeT
 }
 
 //RefundAmount 指定用户编号，交易变号，金额进行资金帐户退款
-func (b *Beanpay) RefundAmount(i interface{}, eid string, tradeNo string, reductNo string, tradeType int, amount int, ext ...string) (*account.RecordResult, error) {
+func (b *Beanpay) RefundAmount(i interface{}, eid string, tradeNo string, extNo string, tradeType int, amount int, ext ...string) (*account.RecordResult, error) {
 
 	m, db, err := getTrans(i)
 	if err != nil {
 		return nil, err
 	}
-	row, err := account.RefundAmount(db, b.ident, b.group, eid, tradeNo, reductNo, tradeType, amount, types.GetStringByIndex(ext, 0, "{}"))
+	row, err := account.RefundAmount(db, b.ident, b.group, eid, tradeNo, extNo, tradeType, amount, types.GetStringByIndex(ext, 0, "{}"))
+	if !m {
+		return row, err
+	}
+	if err != nil {
+		db.Rollback()
+		return nil, err
+	}
+	db.Commit()
+	return row, nil
+}
+
+//TradeFlatAmount 指定用户编号，交易遍号,交易类型,变动类型(只能时交易平账和余额平账)，金额进行资金帐户交易平账
+func (b *Beanpay) TradeFlatAmount(i interface{}, eid string, tradeNo string, tradeType int, amount int, ext ...string) (*account.RecordResult, error) {
+	m, db, err := getTrans(i)
+	if err != nil {
+		return nil, err
+	}
+
+	var row *account.RecordResult
+	row, err = account.AddAmount(db, b.ident, b.group, eid, tradeNo, tradeType, ttypes.TradeFlat, amount, types.GetStringByIndex(ext, 0, "{}"))
+	if !m {
+		return row, err
+	}
+	if err != nil {
+		db.Rollback()
+		return nil, err
+	}
+	db.Commit()
+	return row, nil
+}
+
+//BalanceFlatAmount 指定用户编号，交易遍号,交易类型,变动类型(只能时交易平账和余额平账)，金额进行资金帐户余额平账
+func (b *Beanpay) BalanceFlatAmount(i interface{}, eid string, tradeNo string, tradeType int, amount int, ext ...string) (*account.RecordResult, error) {
+	m, db, err := getTrans(i)
+	if err != nil {
+		return nil, err
+	}
+
+	var row *account.RecordResult
+	row, err = account.AddAmount(db, b.ident, b.group, eid, tradeNo, tradeType, ttypes.BalanceFlat, amount, types.GetStringByIndex(ext, 0, "{}"))
+	if !m {
+		return row, err
+	}
+	if err != nil {
+		db.Rollback()
+		return nil, err
+	}
+	db.Commit()
+	return row, nil
+}
+
+// ReverseAddAmount 红冲加款
+func (b *Beanpay) ReverseAddAmount(i interface{}, eid string, tradeNo string, extNo string, tradeType int, ext ...string) (*account.RecordResult, error) {
+	m, db, err := getTrans(i)
+	if err != nil {
+		return nil, err
+	}
+
+	row, err := account.ReverseAmount(db, b.ident, b.group, eid, tradeNo, extNo, tradeType, ttypes.Add, types.GetStringByIndex(ext, 0, "{}"))
+	if !m {
+		return row, err
+	}
+	if err != nil {
+		db.Rollback()
+		return nil, err
+	}
+	db.Commit()
+	return row, nil
+}
+
+// ReverseDrawingAmount 红冲提款
+func (b *Beanpay) ReverseDrawingAmount(i interface{}, eid string, tradeNo string, extNo string, tradeType int, ext ...string) (*account.RecordResult, error) {
+	m, db, err := getTrans(i)
+	if err != nil {
+		return nil, err
+	}
+
+	row, err := account.ReverseAmount(db, b.ident, b.group, eid, tradeNo, extNo, tradeType, ttypes.Drawing, types.GetStringByIndex(ext, 0, "{}"))
 	if !m {
 		return row, err
 	}

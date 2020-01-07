@@ -6,7 +6,7 @@ CREATE TABLE `beanpay_account_record` (
   `record_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '变动编号',
   `account_id` bigint(20) NOT NULL COMMENT '帐户编号',
   `trade_no` varchar(32) NOT NULL COMMENT '交易编号',
-  `deduct_no` varchar(32) DEFAULT '0' COMMENT '扣款编号',
+  `ext_no` varchar(32) DEFAULT '0' COMMENT '拓展编号',
   `trade_type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '交易类型 1:交易 2：手续费 3:佣金',
   `change_type` tinyint(1) NOT NULL COMMENT '变动类型 1:加款 2：提款 3：扣款 4：退款',
   `amount` bigint(20) NOT NULL COMMENT '变动金额 单位：分',

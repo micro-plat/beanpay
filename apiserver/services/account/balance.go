@@ -87,7 +87,7 @@ func (u *BalanceHandler) DeductHandle(ctx *context.Context) (r interface{}) {
 func (u *BalanceHandler) RefundHandle(ctx *context.Context) (r interface{}) {
 	ctx.Log.Info("---------------帐户退款--------------------")
 	ctx.Log.Info("1. 参数校验")
-	if err := ctx.Request.Check("ident", "group", "eid", "trade_no", "deduct_no", "trade_type", "amount"); err != nil {
+	if err := ctx.Request.Check("ident", "group", "eid", "trade_no", "ext_no", "trade_type", "amount"); err != nil {
 		return context.NewError(context.ERR_NOT_ACCEPTABLE, err)
 	}
 
@@ -96,7 +96,7 @@ func (u *BalanceHandler) RefundHandle(ctx *context.Context) (r interface{}) {
 	record, err := bp.RefundAmount(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("trade_no"),
-		ctx.Request.GetString("deduct_no"),
+		ctx.Request.GetString("ext_no"),
 		ctx.Request.GetInt("trade_type"),
 		ctx.Request.GetInt("amount"))
 	if err != nil {

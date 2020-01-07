@@ -37,8 +37,8 @@ and t.change_type=@change_type and t.trade_type=@trade_type`
 
 //AddBalanceRecord 添加资金变动
 const AddBalanceRecord = `insert into beanpay_account_record
-(record_id,account_id,trade_no,deduct_no,change_type,amount,balance,create_time,trade_type,ext)
-select seq_account_record_id.nextval,@account_id,@trade_no,@deduct_no,@change_type,@amount,t.balance,sysdate,@trade_type,@ext
+(record_id,account_id,trade_no,ext_no,change_type,amount,balance,create_time,trade_type,ext)
+select seq_account_record_id.nextval,@account_id,@trade_no,@ext_no,@change_type,@amount,t.balance,sysdate,@trade_type,@ext
  from beanpay_account_info t where t.account_id=@account_id`
 
 //QueryBalanceRecord 查询余额资金变动信息
@@ -54,8 +54,8 @@ order by t.record_id desc) l1
 where rownum <= (@pi+1) * @ps) l2 
 where l2.rn > (@pi) * @ps`
 
-//LockDuductRecord 锁扣款记录
-const LockDuductRecord = `
+//LockTradeRecord 锁扣款记录
+const LockTradeRecord = `
 select 
 (-1*t.amount) amount 
 from beanpay_account_record t 
@@ -73,6 +73,6 @@ sum(t.amount)
 from beanpay_account_record t 
 where t.account_id=@account_id
 and t.change_type=@change_type
-and t.deduct_no=@deduct_no
 and t.trade_type=@trade_type
+and t.ext_no=@ext_no
 `

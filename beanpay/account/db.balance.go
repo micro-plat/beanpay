@@ -1,8 +1,6 @@
 package account
 
 import (
-	"fmt"
-
 	"github.com/micro-plat/beanpay/beanpay/const/ecodes"
 	"github.com/micro-plat/beanpay/beanpay/const/sql"
 	"github.com/micro-plat/hydra/context"
@@ -29,12 +27,12 @@ func getBalance(db db.IDBExecuter, ident string, group string, eid string) (int,
 }
 
 //Change 资金变动
-func change(db db.IDBExecuter, accountID int, tradeNo string, deductNo string, tradeType int, changeType int, amount int, ext string) (types.XMap, error) {
+func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, tradeType int, changeType int, amount int, ext string) (types.XMap, error) {
 	input := map[string]interface{}{
 		"account_id":  accountID,
 		"amount":      amount,
 		"trade_no":    tradeNo,
-		"deduct_no":   deductNo,
+		"ext_no":      extNo,
 		"change_type": changeType,
 		"trade_type":  tradeType,
 		"ext":         ext,
@@ -104,16 +102,15 @@ func getRecordByTradeNo(db db.IDBExecuter, accountID int, tradeNo string, tradeT
 	return rows.Get(0), nil
 }
 
-// lockDuductRecord 锁扣款记录
-func lockDuductRecord(db db.IDBExecuter, accountID int, tradeNo string, tradeType int, changeType int) (int, error) {
+// lockTradeRecord 锁交易记录
+func lockTradeRecord(db db.IDBExecuter, accountID int, tradeNo string, tradeType int, changeType int) (int, error) {
 	input := map[string]interface{}{
 		"account_id":  accountID,
 		"trade_no":    tradeNo,
 		"change_type": changeType,
 		"trade_type":  tradeType,
 	}
-	fmt.Printf("input:%+v", input)
-	row, _, _, err := db.Scalar(sql.LockDuductRecord, input)
+	row, _, _, err := db.Scalar(sql.LockTradeRecord, input)
 	if err != nil {
 		return 0, err
 	}
@@ -121,10 +118,10 @@ func lockDuductRecord(db db.IDBExecuter, accountID int, tradeNo string, tradeTyp
 }
 
 // queryRefundAmount 查询已退款金额
-func queryRefundAmount(db db.IDBExecuter, accountID int, deductNo string, changeType int, tradeType int) (int, error) {
+func queryRefundAmount(db db.IDBExecuter, accountID int, extNo string, changeType int, tradeType int) (int, error) {
 	input := map[string]interface{}{
 		"account_id":  accountID,
-		"deduct_no":   deductNo,
+		"ext_no":      extNo,
 		"change_type": changeType,
 		"trade_type":  tradeType,
 	}

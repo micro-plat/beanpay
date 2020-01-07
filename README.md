@@ -94,7 +94,7 @@ apiserver run -r zk://192.168.106.18 -c t
 - 传入用户编号、外部扣款交易编号(幂等判断)，退款金额进行钱包退款，退款金额不能大于扣款金额，同一笔扣款只允许一次退款操作。返回退款记录信息
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/account/balance/refund?ident=beanpay&group=up&eid=colin&trade_no=8970876&deduct_no=123123&trade_type=1&amount=200"
+~/work/bin$ curl "http://192.168.4.121:9090/account/balance/refund?ident=beanpay&group=up&eid=colin&trade_no=8970876&ext_no=123123&trade_type=1&amount=200"
 {
     "account_id": 86000,
     "record_id": 8019,

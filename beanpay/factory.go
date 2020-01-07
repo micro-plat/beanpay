@@ -20,8 +20,12 @@ type IAccount interface {
 	AddAmount(i interface{}, eid string, tradeNo string, amount int, ext ...string) (*account.RecordResult, error)
 	DrawingAmount(i interface{}, eid string, tradeNo string, amount int, ext ...string) (*account.RecordResult, error)
 	DeductAmount(i interface{}, eid string, tradeNo string, tradeType int, amount int, ext ...string) (*account.RecordResult, error)
-	RefundAmount(i interface{}, eid string, tradeNo string, reductNo string, tradeType int, amount int, ext ...string) (*account.RecordResult, error)
+	RefundAmount(i interface{}, eid string, tradeNo string, extNo string, tradeType int, amount int, ext ...string) (*account.RecordResult, error)
 	QueryAccountRecords(i interface{}, eid string, startTime string, endTime string, pi int, ps int) (*account.RecordResults, error)
+	TradeFlatAmount(i interface{}, eid string, tradeNo string, tradeType int, amount int, ext ...string) (*account.RecordResult, error)
+	BalanceFlatAmount(i interface{}, eid string, tradeNo string, tradeType int, amount int, ext ...string) (*account.RecordResult, error)
+	ReverseAddAmount(i interface{}, eid string, tradeNo string, extNo string, tradeType int, ext ...string) (*account.RecordResult, error)
+	ReverseDrawingAmount(i interface{}, eid string, tradeNo string, extNo string, tradeType int, ext ...string) (*account.RecordResult, error)
 }
 
 //IPackage Package接口
@@ -42,6 +46,8 @@ const (
 	TPFree = 2
 	//TPCommission 佣金
 	TPCommission = 3
+	// TPReverse 红冲
+	TPReverse = 4
 )
 
 //GetAccount 获取Account操作类

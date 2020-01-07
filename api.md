@@ -107,7 +107,7 @@ http.status:200
 | 参数         |  类型  | 可空  | 示例  |   说明   |
 | :----------- | :----: | :---: | :---: | :------: |
 | account_id   | number |  否   | 86000 | 帐户编号 |
-| account_name | string |  否   | colin  | 帐户名称 |
+| account_name | string |  否   | colin | 帐户名称 |
 | balance      | number |  否   |   0   | 帐户余额 |
 | credit       | number |  否   |   0   | 授信金额 |
 
@@ -308,7 +308,7 @@ http.status:200
 | group      | string |  否   |    up    | 用户分组                         |
 | eid        | string |  否   |  colin   | 外部用户编号                     |
 | trade_no   | string |  否   | 86009981 | 外部退款交易编号                 |
-| deduct_no  | string |  否   |  123123  | 退款编号                         |
+| ext_no     | string |  否   |  123123  | 拓展编号                         |
 | trade_type | number |  否   |    1     | 交易类型 1:交易 2：手续费 3:佣金 |
 | amount     | number |  否   |  10000   | 退款金额,单位分                  |
 
@@ -316,7 +316,7 @@ http.status:200
 * 请求示例:
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/account/balance/refund?ident=beanpay&group=up&eid=colin&trade_no=8970876&deduct_no=123123&trade_type=1&amount=200"
+~/work/bin$ curl "http://192.168.4.121:9090/account/balance/refund?ident=beanpay&group=up&eid=colin&trade_no=8970876&ext_no=123123&trade_type=1&amount=200"
 ```
 
 #### 2.6.2 响应参数
@@ -325,7 +325,7 @@ http.status:200
 | :---------- | :----: | :---: | :------------: | :--------------: |
 | account_id  | number |  否   |     86000      |     帐户编号     |
 | record_id   | number |  否   |      100       |   变动记录编号   |
-| trade_no    | string |  否   |   8970876１    | 外部退款交易编号 |
+| trade_no    | string |  否   |   8970876１    | 外部退款交易编号  |
 | amount      | number |  否   |      100       |     退款金额     |
 | balance     | number |  否   |      100       |   退款后的余额   |
 | change_type | number |  否   |       4        | 变动类型(退款:4) |
