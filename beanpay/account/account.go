@@ -1,7 +1,6 @@
 package account
 
 import (
-	"fmt"
 	"github.com/micro-plat/beanpay/beanpay/const/ecodes"
 	"github.com/micro-plat/beanpay/beanpay/const/ttypes"
 	"github.com/micro-plat/hydra/context"
@@ -173,7 +172,7 @@ func ReverseAmount(db db.IDBExecuter, ident string, group string, eid string, tr
 		return nil, err
 	}
 	if amount > 0 {
-		return nil, fmt.Errorf(ecodes.HasExists, "红冲交易编号(%s)已存在", extNo)
+		return nil, context.NewErrorf(ecodes.HasExists, "红冲交易编号(%s)已存在", extNo)
 	}
 	//锁交易记录
 	tradeAmount, err := lockTradeRecord(db, acc.ID, extNo, tradeType, changeType)
