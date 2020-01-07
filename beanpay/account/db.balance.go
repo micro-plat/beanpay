@@ -119,7 +119,7 @@ func lockTradeRecord(db db.IDBExecuter, accountID int, tradeNo string, tradeType
 }
 
 // queryTradedAmount 查询已交易金额
-func queryTradedAmount(db db.IDBExecuter, accountID int, extNo string, changeType int, tradeType int) (int, error) {
+func queryTradedAmount(db db.IDBExecuter, accountID int, extNo string, tradeType int, changeType int) (int, error) {
 	input := map[string]interface{}{
 		"account_id":  accountID,
 		"ext_no":      extNo,

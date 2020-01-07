@@ -171,7 +171,7 @@ func ReverseAmount(db db.IDBExecuter, ident string, group string, eid string, tr
 	if err != nil {
 		return nil, err
 	}
-	if amount > 0 {
+	if amount != 0 {
 		return nil, context.NewErrorf(ecodes.HasExists, "红冲交易编号(%s)已存在", extNo)
 	}
 	//锁交易记录
