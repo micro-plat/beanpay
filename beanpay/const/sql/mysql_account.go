@@ -51,7 +51,7 @@ and t.create_time < DATE_ADD(STR_TO_DATE(@end,'%Y%m%d'),interval 1 day)
 order by t.record_id desc
 limit #pf,#ps`
 
-//LockTradeRecord 锁扣款记录
+//LockTradeRecord 锁交易记录
 const LockTradeRecord = `
 select 
 (-1*t.amount) amount
@@ -63,8 +63,8 @@ and t.change_type=@change_type
 for update
 `
 
-// QueryRefundAmount 查询已退款金额
-const QueryRefundAmount = `
+// QueryTradedAmount 查询已交易金额
+const QueryTradedAmount = `
 select 
 sum(t.amount)
 from beanpay_account_record t 

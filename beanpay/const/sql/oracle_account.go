@@ -54,7 +54,7 @@ order by t.record_id desc) l1
 where rownum <= (@pi+1) * @ps) l2 
 where l2.rn > (@pi) * @ps`
 
-//LockTradeRecord 锁扣款记录
+//LockTradeRecord 锁交易记录
 const LockTradeRecord = `
 select 
 (-1*t.amount) amount 
@@ -66,8 +66,8 @@ and t.trade_type=@trade_type
 for update
 `
 
-// QueryRefundAmount 查询已退款金额
-const QueryRefundAmount = `
+// QueryTradedAmount 查询已交易金额
+const QueryTradedAmount = `
 select 
 sum(t.amount)
 from beanpay_account_record t 

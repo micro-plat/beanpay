@@ -1,6 +1,7 @@
 package account
 
 import (
+	"fmt"
 	"github.com/micro-plat/beanpay/beanpay/const/ecodes"
 	"github.com/micro-plat/beanpay/beanpay/const/ttypes"
 	"github.com/micro-plat/hydra/context"
@@ -140,11 +141,11 @@ func RefundAmount(db db.IDBExecuter, ident string, group string, eid string, tra
 		return nil, err
 	}
 	if deductAmount == 0 {
-		return nil, context.NewErrorf(ecodes.HasExists, "交易编号(%s)不存在", extNo)
+		return nil, context.NewErrorf(ecodes.NotExists, "交易编号(%s)不存在", extNo)
 	}
 
 	// 查询已扣款
-	refundAmount, err := queryRefundAmount(db, acc.ID, extNo, tradeType, ttypes.Refund)
+	refundAmount, err := queryTradedAmount(db, acc.ID, extNo, tradeType, ttypes.Refund)
 	if err != nil {
 		return nil, err
 	}
@@ -167,14 +168,20 @@ func ReverseAmount(db db.IDBExecuter, ident string, group string, eid string, tr
 	if err != nil {
 		return nil, err
 	}
-
+	amount, err := queryTradedAmount(db, acc.ID, extNo, ttypes.Reverse, changeType)
+	if err != nil {
+		return nil, err
+	}
+	if amount > 0 {
+		return nil, fmt.Errorf(ecodes.HasExists, "红冲交易编号(%s)已存在", extNo)
+	}
 	//锁交易记录
 	tradeAmount, err := lockTradeRecord(db, acc.ID, extNo, tradeType, changeType)
 	if err != nil {
 		return nil, err
 	}
 	if tradeAmount == 0 {
-		return nil, context.NewErrorf(ecodes.HasExists, "交易编号(%s)不存在", extNo)
+		return nil, context.NewErrorf(ecodes.NotExists, "交易编号(%s)不存在", extNo)
 	}
 
 	row, err := change(db, acc.ID, tradeNo, extNo, ttypes.Reverse, changeType, tradeAmount, ext)

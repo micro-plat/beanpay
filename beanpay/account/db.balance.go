@@ -117,15 +117,15 @@ func lockTradeRecord(db db.IDBExecuter, accountID int, tradeNo string, tradeType
 	return types.GetInt(row), nil
 }
 
-// queryRefundAmount 查询已退款金额
-func queryRefundAmount(db db.IDBExecuter, accountID int, extNo string, changeType int, tradeType int) (int, error) {
+// queryTradedAmount 查询已交易金额
+func queryTradedAmount(db db.IDBExecuter, accountID int, extNo string, changeType int, tradeType int) (int, error) {
 	input := map[string]interface{}{
 		"account_id":  accountID,
 		"ext_no":      extNo,
 		"change_type": changeType,
 		"trade_type":  tradeType,
 	}
-	row, _, _, err := db.Scalar(sql.QueryRefundAmount, input)
+	row, _, _, err := db.Scalar(sql.QueryTradedAmount, input)
 	if err != nil {
 		return 0, err
 	}
