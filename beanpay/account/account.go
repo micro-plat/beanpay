@@ -23,7 +23,7 @@ func Create(db db.IDBExecuter, ident string, group string, eid string, name stri
 	if err != nil {
 		return nil, err
 	}
-	return NewAccountResult(200, acc), nil
+	return NewAccountResult(ecodes.Success, acc), nil
 }
 
 //GetBalance 获取帐户余额
@@ -200,5 +200,5 @@ func Query(db db.IDBExecuter, ident string, group string, eid string, startTime 
 	if err != nil {
 		return nil, err
 	}
-	return NewRecordResults(200, rows), nil
+	return NewRecordResults(ecodes.Success, rows), nil
 }
