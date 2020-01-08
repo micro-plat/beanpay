@@ -137,7 +137,7 @@ func (b *Beanpay) TradeFlatAmount(i interface{}, eid string, tradeNo string, tra
 	}
 
 	var row *account.RecordResult
-	row, err = account.AddAmount(db, b.ident, b.group, eid, tradeNo, tradeType, ttypes.TradeFlat, amount, types.GetStringByIndex(ext, 0, "{}"))
+	row, err = account.AddAmount(db, b.ident, b.group, eid, tradeNo, tradeType, ttypes.TradeFlat, -amount, types.GetStringByIndex(ext, 0, "{}"))
 	if !m {
 		return row, err
 	}
