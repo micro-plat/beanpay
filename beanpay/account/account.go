@@ -26,6 +26,25 @@ func Create(db db.IDBExecuter, ident string, group string, eid string, name stri
 	return NewAccountResult(ecodes.Success, acc), nil
 }
 
+//SetCreditAmount 设置授信金额
+func SetCreditAmount(db db.IDBExecuter, ident string, group string, eid string, credit int) (*AccountResult, error) {
+	acc, err := GetAccount(db, ident, group, eid)
+	if err == nil {
+		return NewAccountResult(ecodes.HasExists, acc), nil
+	}
+	if context.GetCode(err) != ecodes.NotExists {
+		return nil, err
+	}
+	if err = setCreditAmount(db, credit, acc.ID); err != nil {
+		return nil, err
+	}
+	acc, err = GetAccount(db, ident, group, eid)
+	if err != nil {
+		return nil, err
+	}
+	return NewAccountResult(ecodes.Success, acc), nil
+}
+
 //GetBalance 获取帐户余额
 func GetBalance(db db.IDBExecuter, ident string, group string, eid string) (int, error) {
 	return getBalance(db, ident, group, eid)

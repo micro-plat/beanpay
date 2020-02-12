@@ -21,6 +21,19 @@ func create(db db.IDBExecuter, ident string, groups string, eid string, name str
 	return nil
 }
 
+//setCreditAmount 设置授信金额
+func setCreditAmount(db db.IDBExecuter, credit int, accountID int) error {
+	input := map[string]interface{}{
+		"credit":     credit,
+		"account_id": accountID,
+	}
+	_, _, _, err := db.Execute(sql.SetCreditAmount, input)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 //GetAccountID 根据eid获取帐户编号
 func getAccount(db db.IDBExecuter, ident string, groups string, eid string) (r db.QueryRow, err error) {
 	input := map[string]interface{}{

@@ -49,6 +49,15 @@ func (b *Beanpay) GetAccount(i interface{}, eid string) (*account.Account, error
 	return account.GetAccount(db, b.ident, b.group, eid)
 }
 
+// SetCreditAmount 设置授信金额
+func (b *Beanpay) SetCreditAmount(i interface{}, eid string, credit int) (*account.AccountResult, error) {
+	db, err := getDBExecuter(i)
+	if err != nil {
+		return nil, err
+	}
+	return account.SetCreditAmount(db, b.ident, b.group, eid, credit)
+}
+
 //AddAmount 指定用户编号，交易变号，金额进行资金帐户加款
 func (b *Beanpay) AddAmount(i interface{}, eid string, tradeNo string, amount int, ext ...string) (*account.RecordResult, error) {
 	m, db, err := getTrans(i)

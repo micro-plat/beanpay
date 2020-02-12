@@ -7,6 +7,13 @@ const CreateAccount = `INSERT INTO beanpay_account_info(account_id,account_name,
 	ident,groups,eid,balance,credit,status,create_time)values(seq_account_info_id.nextval,
 	@name,@ident,@groups,@eid,0,0,0,sysdate)`
 
+//SetCreditAmount 设置授信金额
+const SetCreditAmount = `UPDATE 
+beanpay_account_info b 
+SET
+b.credit = @credit 
+WHERE b.account_id = @account_id`
+
 //GetAccountByeid 根据eid查询帐户编号
 const GetAccountByeid = `select t.account_id,t.account_name,t.eid,t.balance,
 t.credit from beanpay_account_info t where
@@ -14,7 +21,7 @@ t.ident=@ident and t.groups=@groups and t.eid=@eid`
 
 //ChangeAmount 帐户加款
 const ChangeAmount = `update beanpay_account_info t set t.balance=t.balance + @amount where t.account_id=@account_id
-and t.balance + @amount >= 0`
+and t.balance + t.credit + @amount >= 0`
 
 //ExistsBalanceRecord 查询交易变动记录是否已存在
 const ExistsBalanceRecord = `select count(0) from beanpay_account_record t 

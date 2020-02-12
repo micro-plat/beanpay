@@ -26,6 +26,7 @@ type IAccount interface {
 	BalanceFlatAmount(i interface{}, eid string, tradeNo string, tradeType int, amount int, ext ...string) (*account.RecordResult, error)
 	ReverseAddAmount(i interface{}, eid string, tradeNo string, extNo string, tradeType int, ext ...string) (*account.RecordResult, error)
 	ReverseDrawingAmount(i interface{}, eid string, tradeNo string, extNo string, tradeType int, ext ...string) (*account.RecordResult, error)
+	SetCreditAmount(i interface{}, eid string, credit int) (*account.AccountResult, error)
 }
 
 //IPackage Package接口
