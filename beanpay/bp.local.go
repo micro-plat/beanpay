@@ -55,6 +55,7 @@ func (b *Beanpay) SetCreditAmount(i interface{}, eid string, credit int) (*accou
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("SetCreditAmount")
 	return account.SetCreditAmount(db, b.ident, b.group, eid, credit)
 }
 

@@ -29,10 +29,7 @@ func Create(db db.IDBExecuter, ident string, group string, eid string, name stri
 //SetCreditAmount 设置授信金额
 func SetCreditAmount(db db.IDBExecuter, ident string, group string, eid string, credit int) (*AccountResult, error) {
 	acc, err := GetAccount(db, ident, group, eid)
-	if err == nil {
-		return NewAccountResult(ecodes.HasExists, acc), nil
-	}
-	if context.GetCode(err) != ecodes.NotExists {
+	if err != nil {
 		return nil, err
 	}
 	if err = setCreditAmount(db, credit, acc.ID); err != nil {
