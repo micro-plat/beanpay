@@ -1,8 +1,6 @@
 package account
 
 import (
-	"fmt"
-
 	"github.com/micro-plat/beanpay/beanpay/const/sql"
 	"github.com/micro-plat/hydra/context"
 	"github.com/micro-plat/lib4go/db"
@@ -29,11 +27,10 @@ func setCreditAmount(db db.IDBExecuter, credit int, accountID int) error {
 		"credit":     credit,
 		"account_id": accountID,
 	}
-	s, _, _, err := db.Execute(sql.SetCreditAmount, input)
+	_, _, _, err := db.Execute(sql.SetCreditAmount, input)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("s,", s)
 	return nil
 }
 
