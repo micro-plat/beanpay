@@ -28,6 +28,7 @@ github.com/dsnet/golib v0.0.0-20171103203638-1ea166775780/go.mod h1:Lj+Z9rebOhdf
 github.com/eclipse/paho.mqtt.golang v1.2.0/go.mod h1:H9keYFcgq3Qr5OUJm/JZI/i6U7joQ8SYLhZwfeOo6Ts=
 github.com/frankban/quicktest v1.4.0 h1:rCSCih1FnSWJEel/eub9wclBSqpF2F/PuvxUWGWnbO8=
 github.com/frankban/quicktest v1.4.0/go.mod h1:36zfPVQyHxymz4cH7wlDmVwDrJuljRB60qkgn7rorfQ=
+github.com/frankban/quicktest v1.5.0 h1:Tb4jWdSpdjKzTUicPnY61PZxKbDoGa7ABbrReT3gQVY=
 github.com/frankban/quicktest v1.5.0/go.mod h1:jaStnuzAqU1AJdCO0l53JDCJrVDKcS03DbaAcR7Ks/o=
 github.com/fsnotify/fsnotify v1.4.7 h1:IXs+QLmnXW2CcXuY+8Mzv/fWEsPGWxqefPtCP5CnV9I=
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
@@ -62,6 +63,7 @@ github.com/golang/snappy v0.0.1/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEW
 github.com/google/go-cmp v0.2.0/go.mod h1:oXzfMopK8JAjlY9xF4vHSVASa0yLyX7SntLO5aqRK0M=
 github.com/google/go-cmp v0.3.0 h1:crn/baboCvb5fXaQ0IJ1SGTsTVrWpDsCWC8EGETZijY=
 github.com/google/go-cmp v0.3.0/go.mod h1:8QqcDgzrUqlUb/G2PQTWiueGozuR1884gddMywk6iLU=
+github.com/google/go-cmp v0.3.1 h1:Xye71clBPdm5HgqGwUkwhbynsUJZhDbS20FvLhQ2izg=
 github.com/google/go-cmp v0.3.1/go.mod h1:8QqcDgzrUqlUb/G2PQTWiueGozuR1884gddMywk6iLU=
 github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
 github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1/go.mod h1:wJfORRmW1u3UXTncJ5qlYoELFm8eSnnEO6hX4iZ3EWY=
@@ -73,6 +75,7 @@ github.com/hpcloud/tail v1.0.0 h1:nfCOvKYfkgYP8hkirhJocXT2+zOD8yUNjXaWfTlyFKI=
 github.com/hpcloud/tail v1.0.0/go.mod h1:ab1qPbhIpdTxEkNHXyeSf5vhxWSCs/tWer42PpOxQnU=
 github.com/json-iterator/go v1.1.6 h1:MrUvLMLTMxbqFJ9kzlvat/rYZqZnW3u4wkLzWTaFwKs=
 github.com/json-iterator/go v1.1.6/go.mod h1:+SdeFBvtyEkXs7REEP0seUULqWtbJapLOCVDaaPEHmU=
+github.com/json-iterator/go v1.1.7 h1:KfgG9LzI+pYjr4xvmz/5H4FXjokeP+rlHLhv3iH62Fo=
 github.com/json-iterator/go v1.1.7/go.mod h1:KdQUCv79m/52Kvf8AW2vK1V8akMuk1QjK/uOdHXbAo4=
 github.com/jtolds/gls v4.20.0+incompatible/go.mod h1:QJZ7F/aHp+rZTRtaJ1ow/lLfFfVYBRgL+9YlvaHOwJU=
 github.com/klauspost/compress v1.4.1/go.mod h1:RyIbtBH6LamlWaDj8nUwkbUhJ87Yi3uG0guNDohfE1A=
@@ -102,6 +105,8 @@ github.com/micro-plat/hydra v0.11.1/go.mod h1:FTRJGYeLcKjV0Sl78yUzB/ZG29FIQ+1eAF
 github.com/micro-plat/hydra v0.11.5/go.mod h1:VmRoqpKXMScjIJL14McgW2H1ePgtcNCPJQzgykLyDgs=
 github.com/micro-plat/hydra v0.12.2 h1:5JiE6rLtiEQF9yRIZspylDEj658vjI3koouuk1mQjvo=
 github.com/micro-plat/hydra v0.12.2/go.mod h1:5lImhaMbj352Y9T8XK2AqUFlljG6WI115qW1i99+n+U=
+github.com/micro-plat/hydra v0.13.2 h1:pfuSFBzIR2eR7/ABO3eeV+U84yrq3zOVm1fPDD11ZT4=
+github.com/micro-plat/hydra v0.13.2/go.mod h1:1rTZbPf2uvESGJY+uNGNOuMnB6oEkQYjLxhRpJF15a4=
 github.com/micro-plat/lib4go v0.0.0-20190705091641-a9c3303797f1/go.mod h1:zrC6IThH4iNBu3XkjduKLC+TulO/h3XZ6sWEsFx+YQY=
 github.com/micro-plat/lib4go v0.1.1/go.mod h1:QWcBeMuPBuQSm8sr0wq2DwfL864Nj6gyvDGt1bKDZTw=
 github.com/micro-plat/lib4go v0.1.8 h1:y27Ckou2tUz6BgCCi+O8OvaWqJ2ydY3DfMjLuO+CBG4=
@@ -113,6 +118,9 @@ github.com/micro-plat/lib4go v0.1.10/go.mod h1:JAgT8ciW1oK4y8q9EPnX4J6UvVxx9Gn5n
 github.com/micro-plat/lib4go v0.1.11/go.mod h1:JAgT8ciW1oK4y8q9EPnX4J6UvVxx9Gn5na9AyuS2xHU=
 github.com/micro-plat/lib4go v0.1.13 h1:e4gxHWPU8m4KALhGV2va/QRUB1/GxvijMD71ezrsB9I=
 github.com/micro-plat/lib4go v0.1.13/go.mod h1:IEpBCPHH/pfCqxJG6TJHgIUhwjYwn7s9QGk+RHguRXA=
+github.com/micro-plat/lib4go v0.3.0/go.mod h1:yJt+7OPs98Qawn1JKQvn2qwtJi2yEg/t1gRi+k7oUZo=
+github.com/micro-plat/lib4go v0.3.1 h1:HhBdtx0Ce/ulmZSbtRW8h2Oo1V6kFk4yup7b+o7symM=
+github.com/micro-plat/lib4go v0.3.1/go.mod h1:yJt+7OPs98Qawn1JKQvn2qwtJi2yEg/t1gRi+k7oUZo=
 github.com/micro-plat/qtask v0.0.0-20190708085554-931550afc18b/go.mod h1:uA1h0N/jWhAWpcA61dagfjBQrHy1Ph4Vg4D0kdwi3lc=
 github.com/micro-plat/zkcli v0.0.0-20190522060924-e37c30ff0771 h1:zu6GxRZrzru4tkGF08V4EXKdXxOQGDp65LvFqZEFFR0=
 github.com/micro-plat/zkcli v0.0.0-20190522060924-e37c30ff0771/go.mod h1:sblZVHRKhCL/6io6jGCh3apprwBIPBcThqAvPGvbA28=
@@ -130,9 +138,11 @@ github.com/onsi/ginkgo v1.6.0/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+W
 github.com/onsi/ginkgo v1.8.0 h1:VkHVNpR4iVnU8XQR6DBm8BqYjN7CRzw+xKUbVVbbW9w=
 github.com/onsi/ginkgo v1.8.0/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=
 github.com/onsi/ginkgo v1.10.1/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=
+github.com/onsi/ginkgo v1.10.2 h1:uqH7bpe+ERSiDa34FDOF7RikN6RzXgduUF8yarlZp94=
 github.com/onsi/ginkgo v1.10.2/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=
 github.com/onsi/gomega v1.5.0 h1:izbySO9zDPmjJ8rDjLvkA2zJHIo+HkYXHnf7eN7SSyo=
 github.com/onsi/gomega v1.5.0/go.mod h1:ex+gbHU/CVuBBDIJjb2X0qEXbFg53c61hWP/1CpauHY=
+github.com/onsi/gomega v1.7.0 h1:XPnZz8VVBHjVsy1vzJmRwIcSwiUO+JFfrv/xGiigmME=
 github.com/onsi/gomega v1.7.0/go.mod h1:ex+gbHU/CVuBBDIJjb2X0qEXbFg53c61hWP/1CpauHY=
 github.com/patrickmn/go-cache v2.1.0+incompatible/go.mod h1:3Qf8kWWT7OJRJbdiICTKqZju1ZixQ/KpMGzzAfe6+WQ=
 github.com/pierrec/cmdflag v0.0.2/go.mod h1:a3zKGZ3cdQUfxjd0RGMLZr8xI3nvpJOB+m6o/1X5BmU=
@@ -168,6 +178,7 @@ github.com/stretchr/objx v0.1.1/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
 github.com/stretchr/testify v1.3.0 h1:TivCn/peBQ7UY8ooIcPgZFpTNSz0Q2U6UrFlUfqbe0Q=
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
+github.com/stretchr/testify v1.4.0 h1:2E4SXV/wtOkTonXsotYi4li6zVWxYlZuYNCXe9XRJyk=
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
 github.com/ugorji/go v1.1.4 h1:j4s+tAvLfL3bZyefP2SEWmhBzmuIlH/eqNuPdFPgngw=
 github.com/ugorji/go v1.1.4/go.mod h1:uQMGLiO92mf5W77hV/PUCpI3pbzQx3CRekS0kk+RGrc=
