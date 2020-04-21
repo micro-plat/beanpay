@@ -29,7 +29,7 @@ func (u *BalanceHandler) AddHandle(ctx *context.Context) (r interface{}) {
 	record, err := bp.AddAmount(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("trade_no"),
-		ctx.Request.GetInt("amount"))
+		ctx.Request.GetInt("amount"), ctx.Request.GetString("memo"))
 	if err != nil {
 		return err
 	}
@@ -51,7 +51,7 @@ func (u *BalanceHandler) DrawingHandle(ctx *context.Context) (r interface{}) {
 	record, err := bp.DrawingAmount(ctx,
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("trade_no"),
-		ctx.Request.GetInt("amount"))
+		ctx.Request.GetInt("amount"), ctx.Request.GetString("memo"))
 	if err != nil {
 		return err
 	}
@@ -74,7 +74,7 @@ func (u *BalanceHandler) DeductHandle(ctx *context.Context) (r interface{}) {
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("trade_no"),
 		ctx.Request.GetInt("trade_type"),
-		ctx.Request.GetInt("amount"))
+		ctx.Request.GetInt("amount"), ctx.Request.GetString("memo"))
 	if err != nil {
 		return err
 	}
@@ -98,7 +98,7 @@ func (u *BalanceHandler) RefundHandle(ctx *context.Context) (r interface{}) {
 		ctx.Request.GetString("trade_no"),
 		ctx.Request.GetString("ext_no"),
 		ctx.Request.GetInt("trade_type"),
-		ctx.Request.GetInt("amount"))
+		ctx.Request.GetInt("amount"), ctx.Request.GetString("memo"))
 	if err != nil {
 		return err
 	}
