@@ -139,12 +139,13 @@ http.status:200
 | eid      | string |  否   |  colin   | 外部用户编号     |
 | trade_no | string |  否   | 86009981 | 外部加款交易编号 |
 | amount   | number |  否   |  10000   | 加款金额,单位分  |
+| memo     | string |  是   | 账户加款 | 描述             |
 
 
 * 请求示例:
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/account/balance/add?ident=beanpay&group=up&eid=colin&trade_no=86009981&amount=10000"
+~/work/bin$ curl "http://192.168.4.121:9090/account/balance/add?ident=beanpay&group=up&eid=colin&trade_no=86009981&amount=10000&memo=账户加款"
 ```
 
 #### 2.3.2 响应参数
@@ -159,7 +160,7 @@ http.status:200
 | change_type | number |  否   |       1        | 变动类型(1:加款) |
 | create_time | string |  否   | 20190731172225 |     变动时间     |
 | code        | number |  否   |      200       |      状态码      |
-
+| memo        | string |  是   |    账户加款    |       描述       |
 
 * 响应示例:
   
@@ -175,6 +176,7 @@ http.status:200
     "change_type": 1,
     "amount": 10000,
     "balance": 10000,
+    "memo": "账户加款",
     "create_time": "20191114140842"
 }
 ```
@@ -194,12 +196,13 @@ http.status:200
 | eid      | string |  否   |  colin   | 外部用户编号     |
 | trade_no | string |  否   | 86009981 | 外部提款交易编号 |
 | amount   | number |  否   |  10000   | 提款金额,单位分  |
+| memo     | string |  是   | 账户提款 | 描述             |
 
 
 * 请求示例:
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/account/balance/drawing?ident=beanpay&group=up&eid=colin&trade_no=86009981&amount=10000"
+~/work/bin$ curl "http://192.168.4.121:9090/account/balance/drawing?ident=beanpay&group=up&eid=colin&trade_no=86009981&amount=10000&memo=账户提款"
 ```
 
 #### 2.3.2 响应参数
@@ -213,6 +216,7 @@ http.status:200
 | balance     | number |  否   |      100       |   提款后的余额   |
 | change_type | number |  否   |       2        | 变动类型(2:提款) |
 | create_time | string |  否   | 20190731172225 |     变动时间     |
+| memo        | string |  是   |    账户提款    |       描述       |
 
 
 * 响应示例:
@@ -229,6 +233,7 @@ http.status:200
     "change_type": 2,
     "amount": -10000,
     "balance": 0,
+    "memo": "账户提款",
     "create_time": "20191114142152"
 }
 ```
@@ -253,12 +258,14 @@ http.status:200
 | trade_no   | string |  否   | 86009981 | 外部扣款交易编号                 |
 | trade_type | number |  否   |    1     | 交易类型 1:交易 2：手续费 3:佣金 |
 | amount     | number |  否   |  10000   | 扣款金额,单位分                  |
+| memo       | string |  是   | 账户扣款 | 描述                             |
+
 
 
 * 请求示例:
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/account/balance/deduct?ident=beanpay&group=up&eid=colin&trade_no=8970876&trade_type=1&amount=200"
+~/work/bin$ curl "http://192.168.4.121:9090/account/balance/deduct?ident=beanpay&group=up&eid=colin&trade_no=8970876&trade_type=1&amount=200&memo=账户扣款"
 ```
 
 #### 2.5.2 响应参数
@@ -272,6 +279,8 @@ http.status:200
 | balance     | number |  否   |      100       |   扣款后的余额    |
 | change_type | number |  否   |       3        | 变动类型(3：扣款) |
 | create_time | string |  否   | 20190731172225 |     变动时间      |
+| memo        | string |  是   |    账户扣款    |       描述        |
+
 
 
 * 响应示例:
@@ -288,6 +297,7 @@ http.status:200
     "change_type": 3,
     "amount": -200,
     "balance": 9500,
+    "memo": "账户扣款",
     "create_time": "20191114143240"
 }
 ```
@@ -311,12 +321,14 @@ http.status:200
 | ext_no     | string |  否   |  123123  | 拓展编号                         |
 | trade_type | number |  否   |    1     | 交易类型 1:交易 2：手续费 3:佣金 |
 | amount     | number |  否   |  10000   | 退款金额,单位分                  |
+| memo       | string |  是   | 账户退款 | 描述                             |
+
 
 
 * 请求示例:
 
 ```sh
-~/work/bin$ curl "http://192.168.4.121:9090/account/balance/refund?ident=beanpay&group=up&eid=colin&trade_no=8970876&ext_no=123123&trade_type=1&amount=200"
+~/work/bin$ curl "http://192.168.4.121:9090/account/balance/refund?ident=beanpay&group=up&eid=colin&trade_no=8970876&ext_no=123123&trade_type=1&amount=200&memo=账户扣款"
 ```
 
 #### 2.6.2 响应参数
@@ -325,11 +337,13 @@ http.status:200
 | :---------- | :----: | :---: | :------------: | :--------------: |
 | account_id  | number |  否   |     86000      |     帐户编号     |
 | record_id   | number |  否   |      100       |   变动记录编号   |
-| trade_no    | string |  否   |   8970876１    | 外部退款交易编号  |
+| trade_no    | string |  否   |   8970876１    | 外部退款交易编号 |
 | amount      | number |  否   |      100       |     退款金额     |
 | balance     | number |  否   |      100       |   退款后的余额   |
 | change_type | number |  否   |       4        | 变动类型(退款:4) |
 | create_time | string |  否   | 20190731172225 |     变动时间     |
+| memo        | string |  是   |    账户退款    |       描述       |
+
 
 
 * 响应示例:
@@ -346,6 +360,7 @@ http.status:200
     "change_type": 4,
     "amount": 200,
     "balance": 9700,
+    "memo": "账户扣款",
     "create_time": "20191114144059"
 }
 ```
@@ -386,6 +401,9 @@ curl "http://192.168.4.121:9090/account/record/query?ident=beanpay&group=up&eid=
 | amount      | number |  否   |      100       |                 退款金额                 |
 | balance     | number |  否   |      100       |               退款后的余额               |
 | create_time | string |  否   | 20190731172225 |                 变动时间                 |
+| memo        | string |  是   |    账户退款    |                   描述                   |
+
+
 
 
 * 响应示例:
@@ -403,6 +421,7 @@ http.status:200
         "change_type":"3",
         "create_time":"20190731172225",
         "record_id":"100002",
+        "memo": "账户扣款",
         "trade_no":"8970876"
     },
     {
@@ -412,6 +431,7 @@ http.status:200
         "change_type":"2",
         "create_time":"20190731172225",
         "record_id":"100001",
+        "memo": "账户扣款",
         "trade_no":"8970876"
     },
     {
@@ -421,6 +441,7 @@ http.status:200
         "change_type":"1",
         "create_time":"20190731172225",
         "record_id":"100000",
+        "memo": "账户扣款",
         "trade_no":"8970876"
     }
 ]

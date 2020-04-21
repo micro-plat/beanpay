@@ -12,6 +12,7 @@ type AccountRecord struct {
 	ChangeType int    `json:"change_type" m2s:"change_type"`
 	Amount     int    `json:"amount" m2s:"amount"`
 	Balance    int    `json:"balance" m2s:"balance"`
+	Memo       string `json:"memo" m2s:"memo"`
 	CreateTime string `json:"create_time" m2s:"create_time"`
 }
 

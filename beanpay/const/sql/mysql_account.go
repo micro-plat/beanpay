@@ -7,6 +7,15 @@ const CreateAccount = `INSERT INTO beanpay_account_info(
 	account_name,ident,groups,eid,balance,credit,status,create_time)values(
 	@name,@ident,@groups,@eid,0,0,0,now())`
 
+//UpdateAccount 修改帐户信息
+const UpdateAccount = `
+update beanpay_account_info t
+set t.account_name = @name
+where t.ident = @ident
+and t.groups = @groups
+and t.eid = @eid
+`
+
 //SetCreditAmount 设置授信金额
 const SetCreditAmount = `UPDATE 
 beanpay_account_info b 
@@ -29,12 +38,12 @@ where t.trade_no=@trade_no and t.account_id=@account_id
 and t.change_type=@change_type and t.trade_type=@trade_type`
 
 //GetBalanceRecord 查询交易变动记录是否已存在
-const GetBalanceRecord = `select  t.record_id,t.account_id,t.trade_type,
+const GetBalanceRecord = `select  t.record_id,t.account_id,t.trade_type,t.memo,
 t.trade_no,t.change_type,t.amount,t.balance,DATE_FORMAT(t.create_time, '%Y%m%d%H%i%s') create_time from beanpay_account_record t 
 where t.record_id=@record_id`
 
 //GetBalanceRecordByTradeNo 查询交易变动记录是否已存在
-const GetBalanceRecordByTradeNo = `select t.record_id,t.account_id,t.trade_type,
+const GetBalanceRecordByTradeNo = `select t.record_id,t.account_id,t.trade_type,t.memo,
 t.trade_no,t.change_type,t.amount,t.balance,DATE_FORMAT(t.create_time, '%Y%m%d%H%i%s') create_time
  from beanpay_account_record t 
 where t.trade_no=@trade_no 
@@ -44,12 +53,12 @@ and t.trade_type=@trade_type`
 
 //AddBalanceRecord 添加资金变动
 const AddBalanceRecord = `insert into beanpay_account_record
-(account_id,trade_no,ext_no,change_type,amount,balance,create_time,trade_type,ext)
-select @account_id,@trade_no,@ext_no,@change_type,@amount,t.balance,now(),@trade_type,@ext
+(account_id,trade_no,ext_no,change_type,amount,balance,create_time,trade_type,ext,memo)
+select @account_id,@trade_no,@ext_no,@change_type,@amount,t.balance,now(),@trade_type,@ext,@memo
  from beanpay_account_info t where t.account_id=@account_id`
 
 //QueryBalanceRecord 查询余额资金变动信息
-const QueryBalanceRecord = `select t.record_id,t.account_id,
+const QueryBalanceRecord = `select t.record_id,t.account_id,t.memo,
 t.trade_no,t.change_type,t.amount,t.balance,DATE_FORMAT(t.create_time, '%Y%m%d%H%i%s') create_time
 from beanpay_account_record t 
 where t.account_id = @account_id 

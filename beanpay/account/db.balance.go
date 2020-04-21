@@ -2,6 +2,7 @@ package account
 
 import (
 	"fmt"
+
 	"github.com/micro-plat/beanpay/beanpay/const/ecodes"
 	"github.com/micro-plat/beanpay/beanpay/const/sql"
 	"github.com/micro-plat/hydra/context"
@@ -28,7 +29,7 @@ func getBalance(db db.IDBExecuter, ident string, group string, eid string) (int,
 }
 
 //Change 资金变动
-func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, tradeType int, changeType int, amount int, ext string) (types.XMap, error) {
+func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, tradeType int, changeType int, amount int, memo, ext string) (types.XMap, error) {
 	input := map[string]interface{}{
 		"account_id":  accountID,
 		"amount":      amount,
@@ -37,6 +38,7 @@ func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, trad
 		"change_type": changeType,
 		"trade_type":  tradeType,
 		"ext":         ext,
+		"memo":        memo,
 	}
 	//修改帐户余额
 	row, _, _, err := db.Execute(sql.ChangeAmount, input)

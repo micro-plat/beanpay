@@ -1,51 +1,38 @@
-drop table beanpay_account_info;
+	create table beanpay_account_info(
+		account_id number(20) default 86000 not null ,
+		account_name varchar2(32)  not null ,
+		ident varchar2(32)  not null ,
+		groups varchar2(32)  not null ,
+		eid varchar2(32)  not null ,
+		balance number(20) default 0 not null ,
+		credit number(20) default 0 not null ,
+		status number(1) default 0 not null ,
+		create_time date default sysdate not null 
+		);
+	
 
-create table BEANPAY_ACCOUNT_INFO
-(
-  ACCOUNT_ID   NUMBER(20) not null,
-  ACCOUNT_NAME VARCHAR2(32) not null,
-  IDENT        VARCHAR2(32) not null,
-  GROUPS       VARCHAR2(32) not null,
-  EID          VARCHAR2(64) not null,
-  BALANCE      NUMBER(20) default 0 not null,
-  CREDIT       NUMBER(20) default 0 not null,
-  STATUS       NUMBER(1) default 0 not null,
-  CREATE_TIME  DATE default sysdate not null
-);
--- Add comments to the table 
-comment on table BEANPAY_ACCOUNT_INFO
-  is '账户信息';
--- Add comments to the columns 
-comment on column BEANPAY_ACCOUNT_INFO.ACCOUNT_ID
-  is '帐户编号';
-comment on column BEANPAY_ACCOUNT_INFO.ACCOUNT_NAME
-  is '帐户名称';
-comment on column BEANPAY_ACCOUNT_INFO.IDENT
-  is '系统标识';
-comment on column BEANPAY_ACCOUNT_INFO.GROUPS
-  is '用户分组';
-comment on column BEANPAY_ACCOUNT_INFO.EID
-  is '外部用户账户编号';
-comment on column BEANPAY_ACCOUNT_INFO.BALANCE
-  is '帐户余额，单位：分';
-comment on column BEANPAY_ACCOUNT_INFO.CREDIT
-  is '信用余额，单位：分';
-comment on column BEANPAY_ACCOUNT_INFO.STATUS
-  is '账户状态 0：正常 1:锁定';
-comment on column BEANPAY_ACCOUNT_INFO.CREATE_TIME
-  is '创建时间';
+	comment on table beanpay_account_info is '账户信息';
+	comment on column beanpay_account_info.account_id is '帐户编号';	
+	comment on column beanpay_account_info.account_name is '帐户名称';	
+	comment on column beanpay_account_info.ident is '系统标识';	
+	comment on column beanpay_account_info.groups is '用户分组';	
+	comment on column beanpay_account_info.eid is '外部用户账户编号';	
+	comment on column beanpay_account_info.balance is '帐户余额，单位：分';	
+	comment on column beanpay_account_info.credit is '信用余额，单位：分';	
+	comment on column beanpay_account_info.status is '账户状态 0：正常 1:锁定';	
+	comment on column beanpay_account_info.create_time is '创建时间';	
+	
 
-alter table BEANPAY_ACCOUNT_INFO
-  add constraint PK_ACCOUNT_INFO primary key (ACCOUNT_ID);
-alter table BEANPAY_ACCOUNT_INFO
-  add constraint BEANPAY_ACCOUNT_INFO_EID unique (IDENT, GROUPS, EID);
-
-
-
-drop sequence seq_account_info_id;
-create sequence seq_account_info_id
-	minvalue 86000
+ 
+	alter table beanpay_account_info
+	add constraint pk_beanpay_account_info primary key(account_id);
+	alter table beanpay_account_info
+	add constraint beanpay_account_info_eid unique(eid,groups,ident);
+	
+	create sequence seq_account_info_id
+	increment by 1
+	minvalue 1
 	maxvalue 99999999999
-	start with 86000
+	start with 1
 	cache 20;
 	
