@@ -1,8 +1,6 @@
 package account
 
 import (
-	"fmt"
-
 	"github.com/micro-plat/beanpay/beanpay/const/ecodes"
 	"github.com/micro-plat/beanpay/beanpay/const/sql"
 	"github.com/micro-plat/hydra/context"
@@ -128,10 +126,9 @@ func queryTradedAmount(db db.IDBExecuter, accountID int, extNo string, tradeType
 		"change_type": changeType,
 		"trade_type":  tradeType,
 	}
-	row, sqlStr, args, err := db.Scalar(sql.QueryTradedAmount, input)
+	row, _, _, err := db.Scalar(sql.QueryTradedAmount, input)
 	if err != nil {
 		return 0, err
 	}
-	fmt.Printf("row:%v,sqlStr:%v, args:%+v\n", row, sqlStr, args)
 	return types.GetInt(row), nil
 }

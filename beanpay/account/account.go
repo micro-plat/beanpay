@@ -5,6 +5,7 @@ import (
 	"github.com/micro-plat/beanpay/beanpay/const/ttypes"
 	"github.com/micro-plat/hydra/context"
 	"github.com/micro-plat/lib4go/db"
+	"github.com/micro-plat/lib4go/types"
 )
 
 //Create 根据eid,name创建帐户,如果帐户存在直接返回帐户编号
@@ -183,7 +184,7 @@ func RefundAmount(db db.IDBExecuter, ident string, group string, eid string, tra
 		return nil, err
 	}
 
-	if deductAmount < refundAmount+amount {
+	if abs(types.GetInt64(deductAmount)) < abs(types.GetInt64(refundAmount))+abs(types.GetInt64(amount)) {
 		return nil, context.NewErrorf(ecodes.AmountErr, "扣款金额:%d,已退款金额:%d,本次退款金额:%d", deductAmount, refundAmount, amount)
 	}
 
@@ -235,4 +236,9 @@ func Query(db db.IDBExecuter, ident string, group string, eid string, startTime 
 		return nil, err
 	}
 	return NewRecordResults(ecodes.Success, rows), nil
+}
+
+func abs(n int64) int64 {
+	y := n >> 63
+	return (n ^ y) - y
 }
