@@ -62,12 +62,11 @@ func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, trad
 }
 
 //Exists 检查交易是否已存在
-func exists(db db.IDBExecuter, accountID int, tradeNo string, maxAmount int, tradeType int, changeType int) (bool, error) {
+func exists(db db.IDBExecuter, accountID int, tradeNo string, tradeType int, changeType int) (bool, error) {
 
 	input := map[string]interface{}{
 		"account_id":  accountID,
 		"trade_no":    tradeNo,
-		"max_amount":  maxAmount,
 		"change_type": changeType,
 		"trade_type":  tradeType,
 	}

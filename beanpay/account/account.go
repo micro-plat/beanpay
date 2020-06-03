@@ -92,7 +92,7 @@ func AddAmount(db db.IDBExecuter, ident string, group string, eid string, tradeN
 		return nil, err
 	}
 
-	b, err := exists(db, acc.ID, tradeNo, 0, tradeType, changeType)
+	b, err := exists(db, acc.ID, tradeNo, tradeType, changeType)
 	if err != nil {
 		return nil, err
 	}
@@ -118,7 +118,7 @@ func DrawingAmount(db db.IDBExecuter, ident string, group string, eid string, tr
 		return nil, err
 	}
 
-	b, err := exists(db, acc.ID, tradeNo, 0, tradeType, changeType)
+	b, err := exists(db, acc.ID, tradeNo, tradeType, changeType)
 	if err != nil {
 		return nil, err
 	}
@@ -145,7 +145,7 @@ func DeductAmount(db db.IDBExecuter, ident string, group string, eid string, tra
 	if err != nil {
 		return nil, err
 	}
-	b, err := exists(db, acc.ID, tradeNo, 0, tradeType, ttypes.Deduct)
+	b, err := exists(db, acc.ID, tradeNo, tradeType, ttypes.Deduct)
 	if err != nil {
 		return nil, err
 	}
