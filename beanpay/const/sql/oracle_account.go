@@ -57,12 +57,19 @@ const AddBalanceRecord = `insert into beanpay_account_record
 select seq_account_record_id.nextval,@account_id,@trade_no,@ext_no,@change_type,@amount,t.balance,sysdate,@trade_type,@ext,@memo
  from beanpay_account_info t where t.account_id=@account_id`
 
-//QueryBalanceRecord 查询余额资金变动信息
-const QueryBalanceRecord = `select 
+//QueryBalanceRecordCount 查询余额资金变动信息
+const QueryBalanceRecordCount = `select 
 l2.record_id,l2.account_id,l2.memo,
 l2.trade_no,l2.change_type,l2.amount,l2.balance,l2.create_time
 from(select rownum rn,l1.* from(select t.record_id,t.account_id,t.memo,
 t.trade_no,t.change_type,t.amount,t.balance,t.trade_type,to_char(t.create_time, 'yyyymmddhh24miss') create_time from  
+beanpay_account_record t where t.account_id = @account_id and 
+t.create_time >= to_date(@start,'yyyymmdd')
+and t.create_time < to_date(@end,'yyyymmdd')+1
+`
+
+//QueryBalanceRecord 查询余额资金变动信息
+const QueryBalanceRecord = `select count(1) from  
 beanpay_account_record t where t.account_id = @account_id and 
 t.create_time >= to_date(@start,'yyyymmdd')
 and t.create_time < to_date(@end,'yyyymmdd')+1
@@ -91,4 +98,39 @@ where t.account_id=@account_id
 and t.change_type=@change_type
 and t.trade_type=@trade_type
 and t.ext_no=@ext_no
+`
+
+//QueryAccountListCount 获取账户信息列表条数
+const QueryAccountListCount = `
+select count(1)
+from beanpay_account_info t
+where  t.groups like '%' || @types || '%'
+ &t.account_name
+ &t.eid
+ &t.groups
+ &t.ident
+ &t.status`
+
+//QueryAccountList 查询账户信息列表数据
+const QueryAccountList = `
+select TAB1.*
+  from (select L.*
+          from (select rownum as rn, R.*
+                  from (select t.account_id,
+                               t.account_name,
+                               t.ident,
+                               t.groups,
+                               t.eid,
+                               t.balance,
+                               t.credit,
+                               to_char(t.create_time,'yyyy-MM-dd HH24:mi:ss') create_time,
+                               t.status
+                          from beanpay_account_info t
+                         where t.groups like '%' || @types || '%'
+                         &t.account_name &t.eid 
+                         &t.groups  &t.ident
+                         &t.status
+                         order by t.account_id desc) R
+                 where rownum <= @size) L
+         where L.rn > @currentPage) TAB1
 `

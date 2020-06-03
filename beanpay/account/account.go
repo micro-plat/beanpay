@@ -46,7 +46,7 @@ func SetAccountName(db db.IDBExecuter, ident string, group string, eid string, n
 }
 
 //SetCreditAmount 设置授信金额
-func SetCreditAmount(db db.IDBExecuter, ident string, group string, eid string, credit int) (*AccountResult, error) {
+func SetCreditAmount(db db.IDBExecuter, ident string, group string, eid string, credit float64) (*AccountResult, error) {
 	acc, err := GetAccount(db, ident, group, eid)
 	if err != nil {
 		return nil, err
@@ -79,8 +79,13 @@ func GetAccount(db db.IDBExecuter, ident string, group string, eid string) (acc 
 	return acc, nil
 }
 
+// QueryAccount 查询账户列表
+func QueryAccount(db db.IDBExecuter, ident, group, eid, accountType, name string, pi, ps, status int) (r *AccountInfoList, err error) {
+	return queryAccount(db, ident, group, eid, accountType, name, pi, ps, status)
+}
+
 //AddAmount 资金加款
-func AddAmount(db db.IDBExecuter, ident string, group string, eid string, tradeNo string, tradeType int, changeType int, amount int, memo, ext string) (*RecordResult, error) {
+func AddAmount(db db.IDBExecuter, ident string, group string, eid string, tradeNo string, tradeType int, changeType int, amount float64, memo, ext string) (*RecordResult, error) {
 
 	acc, err := GetAccount(db, ident, group, eid)
 	if err != nil {
@@ -106,7 +111,7 @@ func AddAmount(db db.IDBExecuter, ident string, group string, eid string, tradeN
 }
 
 //DrawingAmount 资金提款
-func DrawingAmount(db db.IDBExecuter, ident string, group string, eid string, tradeNo string, tradeType int, changeType int, amount int, memo, ext string) (*RecordResult, error) {
+func DrawingAmount(db db.IDBExecuter, ident string, group string, eid string, tradeNo string, tradeType int, changeType int, amount float64, memo, ext string) (*RecordResult, error) {
 
 	acc, err := GetAccount(db, ident, group, eid)
 	if err != nil {
@@ -132,7 +137,7 @@ func DrawingAmount(db db.IDBExecuter, ident string, group string, eid string, tr
 }
 
 //DeductAmount 资金扣款
-func DeductAmount(db db.IDBExecuter, ident string, group string, eid string, tradeNo string, tradeType int, amount int, memo, ext string) (*RecordResult, error) {
+func DeductAmount(db db.IDBExecuter, ident string, group string, eid string, tradeNo string, tradeType int, amount float64, memo, ext string) (*RecordResult, error) {
 	if amount == 0 {
 		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%d", amount)
 	}
@@ -159,7 +164,7 @@ func DeductAmount(db db.IDBExecuter, ident string, group string, eid string, tra
 }
 
 //RefundAmount 资金退款
-func RefundAmount(db db.IDBExecuter, ident string, group string, eid string, tradeNo string, extNo string, tradeType int, amount int, memo, ext string) (*RecordResult, error) {
+func RefundAmount(db db.IDBExecuter, ident string, group string, eid string, tradeNo string, extNo string, tradeType int, amount float64, memo, ext string) (*RecordResult, error) {
 	if amount == 0 {
 		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%d", amount)
 	}
@@ -231,11 +236,11 @@ func Query(db db.IDBExecuter, ident string, group string, eid string, startTime 
 	if err != nil {
 		return nil, err
 	}
-	rows, err := query(db, acc.ID, startTime, endTime, pi, ps)
+	count, rows, err := query(db, acc.ID, startTime, endTime, pi, ps)
 	if err != nil {
 		return nil, err
 	}
-	return NewRecordResults(ecodes.Success, rows), nil
+	return NewRecordResults(ecodes.Success, count, rows), nil
 }
 
 func abs(n int64) int64 {

@@ -27,7 +27,7 @@ func getBalance(db db.IDBExecuter, ident string, group string, eid string) (int,
 }
 
 //Change 资金变动
-func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, tradeType int, changeType int, amount int, memo, ext string) (types.XMap, error) {
+func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, tradeType int, changeType int, amount float64, memo, ext string) (types.XMap, error) {
 	input := map[string]interface{}{
 		"account_id":  accountID,
 		"amount":      amount,
@@ -104,7 +104,7 @@ func getRecordByTradeNo(db db.IDBExecuter, accountID int, tradeNo string, tradeT
 }
 
 // lockTradeRecord 锁交易记录
-func lockTradeRecord(db db.IDBExecuter, accountID int, tradeNo string, tradeType int, changeType int) (int, error) {
+func lockTradeRecord(db db.IDBExecuter, accountID int, tradeNo string, tradeType int, changeType int) (float64, error) {
 	input := map[string]interface{}{
 		"account_id":  accountID,
 		"trade_no":    tradeNo,
@@ -115,7 +115,7 @@ func lockTradeRecord(db db.IDBExecuter, accountID int, tradeNo string, tradeType
 	if err != nil {
 		return 0, err
 	}
-	return types.GetInt(row), nil
+	return types.GetFloat64(row), nil
 }
 
 // queryTradedAmount 查询已交易金额

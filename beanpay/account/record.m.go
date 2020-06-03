@@ -41,15 +41,16 @@ func (r *RecordResult) GetCode() int {
 
 // RecordResults 查询账户记录
 type RecordResults struct {
-	List []*AccountRecord
-	code int
+	List  []*AccountRecord
+	code  int
+	Count int
 }
 
 // NewRecordResults maps转RecordResults
-func NewRecordResults(code int, m types.XMaps) *RecordResults {
+func NewRecordResults(code, count int, m types.XMaps) *RecordResults {
 	var accounts []*AccountRecord
 	m.ToStructs(&accounts)
-	return &RecordResults{List: accounts, code: code}
+	return &RecordResults{List: accounts, code: code, Count: count}
 }
 
 // GetResult 获取账户记录

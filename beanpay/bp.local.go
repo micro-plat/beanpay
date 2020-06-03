@@ -58,8 +58,17 @@ func (b *Beanpay) GetAccount(i interface{}, eid string) (*account.Account, error
 	return account.GetAccount(db, b.ident, b.group, eid)
 }
 
+//QueryAccount 查询账户列表
+func (b *Beanpay) QueryAccount(i interface{}, eid, accountType, name string, pi, ps, status int) (r *account.AccountInfoList, err error) {
+	db, err := getDBExecuter(i)
+	if err != nil {
+		return nil, err
+	}
+	return account.QueryAccount(db, b.ident, b.group, eid, accountType, name, pi, ps, status)
+}
+
 // SetCreditAmount 设置授信金额
-func (b *Beanpay) SetCreditAmount(i interface{}, eid string, credit int) (*account.AccountResult, error) {
+func (b *Beanpay) SetCreditAmount(i interface{}, eid string, credit float64) (*account.AccountResult, error) {
 	db, err := getDBExecuter(i)
 	if err != nil {
 		return nil, err
@@ -68,7 +77,7 @@ func (b *Beanpay) SetCreditAmount(i interface{}, eid string, credit int) (*accou
 }
 
 //AddAmount 指定用户编号，交易变号，金额进行资金帐户加款,memo 第一个参数为交易描述, ext拓展信息
-func (b *Beanpay) AddAmount(i interface{}, eid string, tradeNo string, amount int, memo string, ext ...string) (*account.RecordResult, error) {
+func (b *Beanpay) AddAmount(i interface{}, eid string, tradeNo string, amount float64, memo string, ext ...string) (*account.RecordResult, error) {
 	m, db, err := getTrans(i)
 	if err != nil {
 		return nil, err
@@ -90,7 +99,7 @@ func (b *Beanpay) AddAmount(i interface{}, eid string, tradeNo string, amount in
 }
 
 //DrawingAmount 指定用户编号，交易变号，金额进行资金帐户提款
-func (b *Beanpay) DrawingAmount(i interface{}, eid string, tradeNo string, amount int, memo string, ext ...string) (*account.RecordResult, error) {
+func (b *Beanpay) DrawingAmount(i interface{}, eid string, tradeNo string, amount float64, memo string, ext ...string) (*account.RecordResult, error) {
 	m, db, err := getTrans(i)
 	if err != nil {
 		return nil, err
@@ -111,7 +120,7 @@ func (b *Beanpay) DrawingAmount(i interface{}, eid string, tradeNo string, amoun
 }
 
 //DeductAmount 指定用户编号，交易变号，金额进行资金帐户扣款
-func (b *Beanpay) DeductAmount(i interface{}, eid string, tradeNo string, tradeType int, amount int, memo string, ext ...string) (*account.RecordResult, error) {
+func (b *Beanpay) DeductAmount(i interface{}, eid string, tradeNo string, tradeType int, amount float64, memo string, ext ...string) (*account.RecordResult, error) {
 	m, db, err := getTrans(i)
 	if err != nil {
 		return nil, err
@@ -129,7 +138,7 @@ func (b *Beanpay) DeductAmount(i interface{}, eid string, tradeNo string, tradeT
 }
 
 //RefundAmount 指定用户编号，交易变号，金额进行资金帐户退款
-func (b *Beanpay) RefundAmount(i interface{}, eid string, tradeNo string, extNo string, tradeType int, amount int, memo string, ext ...string) (*account.RecordResult, error) {
+func (b *Beanpay) RefundAmount(i interface{}, eid string, tradeNo string, extNo string, tradeType int, amount float64, memo string, ext ...string) (*account.RecordResult, error) {
 
 	m, db, err := getTrans(i)
 	if err != nil {
@@ -148,7 +157,7 @@ func (b *Beanpay) RefundAmount(i interface{}, eid string, tradeNo string, extNo 
 }
 
 //TradeFlatAmount 指定用户编号，交易遍号,交易类型,变动类型(只能时交易平账和余额平账)，金额进行资金帐户交易平账
-func (b *Beanpay) TradeFlatAmount(i interface{}, eid string, tradeNo string, tradeType int, amount int, memo string, ext ...string) (*account.RecordResult, error) {
+func (b *Beanpay) TradeFlatAmount(i interface{}, eid string, tradeNo string, tradeType int, amount float64, memo string, ext ...string) (*account.RecordResult, error) {
 	m, db, err := getTrans(i)
 	if err != nil {
 		return nil, err
@@ -168,7 +177,7 @@ func (b *Beanpay) TradeFlatAmount(i interface{}, eid string, tradeNo string, tra
 }
 
 //BalanceFlatAmount 指定用户编号，交易遍号,交易类型,变动类型(只能时交易平账和余额平账)，金额进行资金帐户余额平账
-func (b *Beanpay) BalanceFlatAmount(i interface{}, eid string, tradeNo string, tradeType int, amount int, memo string, ext ...string) (*account.RecordResult, error) {
+func (b *Beanpay) BalanceFlatAmount(i interface{}, eid string, tradeNo string, tradeType int, amount float64, memo string, ext ...string) (*account.RecordResult, error) {
 	m, db, err := getTrans(i)
 	if err != nil {
 		return nil, err

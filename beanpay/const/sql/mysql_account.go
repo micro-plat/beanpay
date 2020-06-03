@@ -57,6 +57,13 @@ const AddBalanceRecord = `insert into beanpay_account_record
 select @account_id,@trade_no,@ext_no,@change_type,@amount,t.balance,now(),@trade_type,@ext,@memo
  from beanpay_account_info t where t.account_id=@account_id`
 
+//QueryBalanceRecordCount 查询余额资金变动信息
+const QueryBalanceRecordCount = `select count(1)
+from beanpay_account_record t 
+where t.account_id = @account_id 
+and t.create_time >= STR_TO_DATE(@start,'%Y%m%d')
+and t.create_time < DATE_ADD(STR_TO_DATE(@end,'%Y%m%d'),interval 1 day)`
+
 //QueryBalanceRecord 查询余额资金变动信息
 const QueryBalanceRecord = `select t.record_id,t.account_id,t.memo,
 t.trade_no,t.change_type,t.amount,t.balance,DATE_FORMAT(t.create_time, '%Y%m%d%H%i%s') create_time
@@ -88,4 +95,38 @@ where t.account_id=@account_id
 and t.trade_type=@trade_type
 and t.change_type=@change_type
 and t.ext_no=@ext_no
+`
+
+//QueryAccountListCount 获取账户信息列表条数
+const QueryAccountListCount = `
+select count(1)
+from beanpay_account_info t
+where  t.groups like CONCAT('',@types,'%')
+and if(isnull(@account_name)||@account_name='',1=1,t.account_name like concat('%',@account_name,'%'))
+and if(isnull(@eid)||@eid='',1=1,t.eid=@eid)
+and if(isnull(@groups)||@groups='',1=1,t.groups=@groups)
+and if(isnull(@ident)||@ident='',1=1,t.ident=@ident)
+and if(isnull(@status)||@status='',1=1,t.status=@status)`
+
+//QueryAccountList 查询账户信息列表数据
+const QueryAccountList = `
+select
+	t.account_id,
+	t.account_name,
+	t.ident,
+	t.groups,
+    t.eid,
+    t.balance,
+    t.credit,
+    t.create_time,
+    t.status
+    from beanpay_account_info t
+where t.groups like CONCAT('',@types,'%')
+and if(isnull(@account_name)||@account_name='',1=1,t.account_name like concat('%',@account_name,'%'))
+and if(isnull(@eid)||@eid='',1=1,t.eid=@eid)
+and if(isnull(@groups)||@groups='',1=1,t.groups=@groups)
+and if(isnull(@ident)||@ident='',1=1,t.ident=@ident)
+and if(isnull(@status)||@status='',1=1,t.status=@status)
+order by t.account_id desc
+limit #pageSize offset #currentPage
 `
