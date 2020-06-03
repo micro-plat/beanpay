@@ -1,6 +1,8 @@
 package account
 
 import (
+	"fmt"
+
 	"github.com/micro-plat/beanpay/beanpay/const/ecodes"
 	"github.com/micro-plat/beanpay/beanpay/const/sql"
 	"github.com/micro-plat/hydra/context"
@@ -61,6 +63,7 @@ func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, trad
 
 //Exists 检查交易是否已存在
 func exists(db db.IDBExecuter, accountID int, tradeNo string, maxAmount int, tradeType int, changeType int) (bool, error) {
+
 	input := map[string]interface{}{
 		"account_id":  accountID,
 		"trade_no":    tradeNo,
@@ -68,7 +71,13 @@ func exists(db db.IDBExecuter, accountID int, tradeNo string, maxAmount int, tra
 		"change_type": changeType,
 		"trade_type":  tradeType,
 	}
-	//修改帐户余额
+
+	// 锁账户
+	accID, _, _, err := db.Scalar(sql.LockAccount, input)
+	if err != nil || types.GetInt64(accID) == 0 {
+		return false, fmt.Errorf("锁账户失败，account_id:%v,accID:%v,err:%v", accountID, accID, err)
+	}
+	// 检查交易是否已存在
 	row, _, _, err := db.Scalar(sql.ExistsBalanceRecord, input)
 	if err != nil {
 		return false, err

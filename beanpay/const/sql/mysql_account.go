@@ -74,6 +74,16 @@ and t.create_time < DATE_ADD(STR_TO_DATE(@end,'%Y%m%d'),interval 1 day)
 order by t.record_id desc
 limit #pf,#ps`
 
+// LockAccount 锁账户
+const LockAccount = `
+SELECT 
+  a.account_id
+FROM
+  beanpay_account_info a 
+WHERE a.account_id = @account_id 
+FOR UPDATE
+`
+
 //LockTradeRecord 锁交易记录
 const LockTradeRecord = `
 select 

@@ -77,6 +77,16 @@ order by t.record_id desc) l1
 where rownum <= (@pi+1) * @ps) l2 
 where l2.rn > (@pi) * @ps`
 
+// LockAccount 锁账户
+const LockAccount = `
+SELECT 
+  a.account_id
+FROM
+  beanpay_account_info a 
+WHERE a.account_id = @account_id 
+FOR UPDATE
+`
+
 //LockTradeRecord 锁交易记录
 const LockTradeRecord = `
 select 
