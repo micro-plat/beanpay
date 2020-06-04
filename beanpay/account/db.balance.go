@@ -156,7 +156,7 @@ func checkRefundAmount(db db.IDBExecuter, accountID int, extNo string, tradeType
 		return fmt.Errorf("查询已退款金额发生异常,count:%v,err:%v", row.Len(), err)
 	}
 	if !row.Get(0).GetBool("can_refund") {
-		return context.NewErrorf(ecodes.AmountErr, "扣款金额:%d,已退款金额:%d,本次退款金额:%d", deductAmount, row.Get(0).GetFloat64("refund_amount"), amount)
+		return context.NewErrorf(ecodes.AmountErr, "扣款金额:%v,已退款金额:%v,本次退款金额:%v", deductAmount, row.Get(0).GetFloat64("refund_amount"), amount)
 	}
 	return nil
 }
