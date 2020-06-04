@@ -107,6 +107,19 @@ and t.change_type=@change_type
 and t.ext_no=@ext_no
 `
 
+// CheckRefundAmount 检查退款金额
+const CheckRefundAmount = `
+SELECT 
+  IF(ABS(@deduct_amount) - ABS(IFNULL(SUM(t.amount),0)) - ABS(@amount) >=0,TRUE,FALSE) can_refund,
+  IFNULL(SUM(t.amount),0) refund_amount 
+FROM
+  beanpay_account_record t 
+WHERE t.account_id = @account_id 
+  AND t.trade_type = @trade_type 
+  AND t.change_type = @change_type 
+  AND t.ext_no = @ext_no 
+`
+
 //QueryAccountListCount 获取账户信息列表条数
 const QueryAccountListCount = `
 select count(1)

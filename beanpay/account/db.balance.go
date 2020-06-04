@@ -140,3 +140,23 @@ func queryTradedAmount(db db.IDBExecuter, accountID int, extNo string, tradeType
 	}
 	return types.GetInt(row), nil
 }
+
+// checkRefundAmount 查询已退款金额
+func checkRefundAmount(db db.IDBExecuter, accountID int, extNo string, tradeType int, changeType int, deductAmount, amount float64) error {
+	input := map[string]interface{}{
+		"account_id":    accountID,
+		"ext_no":        extNo,
+		"change_type":   changeType,
+		"trade_type":    tradeType,
+		"deduct_amount": deductAmount,
+		"amount":        amount,
+	}
+	row, _, _, err := db.Query(sql.CheckRefundAmount, input)
+	if err != nil || row.IsEmpty() {
+		return fmt.Errorf("查询已退款金额发生异常,count:%v,err:%v", row.Len(), err)
+	}
+	if !row.Get(0).GetBool("can_refund") {
+		return context.NewErrorf(ecodes.AmountErr, "扣款金额:%d,已退款金额:%d,本次退款金额:%d", deductAmount, row.Get(0).GetFloat64("refund_amount"), amount)
+	}
+	return nil
+}

@@ -5,7 +5,6 @@ import (
 	"github.com/micro-plat/beanpay/beanpay/const/ttypes"
 	"github.com/micro-plat/hydra/context"
 	"github.com/micro-plat/lib4go/db"
-	"github.com/micro-plat/lib4go/types"
 )
 
 //Create 根据eid,name创建帐户,如果帐户存在直接返回帐户编号
@@ -183,14 +182,9 @@ func RefundAmount(db db.IDBExecuter, ident string, group string, eid string, tra
 		return nil, context.NewErrorf(ecodes.NotExists, "交易编号(%s)不存在", extNo)
 	}
 
-	// 查询已扣款
-	refundAmount, err := queryTradedAmount(db, acc.ID, extNo, tradeType, ttypes.Refund)
-	if err != nil {
+	// 检查扣款金额
+	if err := checkRefundAmount(db, acc.ID, extNo, tradeType, ttypes.Refund, deductAmount, amount); err != nil {
 		return nil, err
-	}
-
-	if abs(types.GetInt64(deductAmount)) < abs(types.GetInt64(refundAmount))+abs(types.GetInt64(amount)) {
-		return nil, context.NewErrorf(ecodes.AmountErr, "扣款金额:%d,已退款金额:%d,本次退款金额:%d", deductAmount, refundAmount, amount)
 	}
 
 	row, err := change(db, acc.ID, tradeNo, extNo, tradeType, ttypes.Refund, amount, memo, ext)
@@ -241,9 +235,4 @@ func Query(db db.IDBExecuter, ident string, group string, eid string, startTime 
 		return nil, err
 	}
 	return NewRecordResults(ecodes.Success, count, rows), nil
-}
-
-func abs(n int64) int64 {
-	y := n >> 63
-	return (n ^ y) - y
 }
