@@ -71,7 +71,7 @@ func getAccount(db db.IDBExecuter, ident string, groups string, eid string) (r d
 }
 
 //queryAccount 查询账户
-func queryAccount(db db.IDBExecuter, ident, group, eid, accountType, name string, pi, ps, status int) (r *AccountInfoList, err error) {
+func queryAccount(db db.IDBExecuter, ident, group, eid, accountType, name, status string, pi, ps int) (r *AccountInfoList, err error) {
 	input := map[string]interface{}{
 		"ident":        ident,
 		"eid":          eid,

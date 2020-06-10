@@ -79,7 +79,7 @@ func GetAccount(db db.IDBExecuter, ident string, group string, eid string) (acc 
 }
 
 // QueryAccount 查询账户列表
-func QueryAccount(db db.IDBExecuter, ident, group, eid, accountType, name string, pi, ps, status int) (r *AccountInfoList, err error) {
+func QueryAccount(db db.IDBExecuter, ident, group, eid, accountType, name, status string, pi, ps int) (r *AccountInfoList, err error) {
 	return queryAccount(db, ident, group, eid, accountType, name, pi, ps, status)
 }
 
