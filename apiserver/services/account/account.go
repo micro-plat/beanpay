@@ -91,9 +91,9 @@ func (u *AccountHandler) QueryListHandle(ctx *context.Context) (r interface{}) {
 		ctx.Request.GetString("eid"),
 		ctx.Request.GetString("account_type"),
 		ctx.Request.GetString("name"),
+		ctx.Request.GetString("status"),
 		ctx.Request.GetInt("pi", 1),
-		ctx.Request.GetInt("ps", 10),
-		ctx.Request.GetInt("status"))
+		ctx.Request.GetInt("ps", 10))
 	if err != nil {
 		return err
 	}

@@ -64,7 +64,7 @@ func (b *Beanpay) QueryAccount(i interface{}, eid, accountType, name, status str
 	if err != nil {
 		return nil, err
 	}
-	return account.QueryAccount(db, b.ident, b.group, eid, accountType, name, pi, ps, status)
+	return account.QueryAccount(db, b.ident, b.group, eid, accountType, name, status, pi, ps)
 }
 
 // SetCreditAmount 设置授信金额
