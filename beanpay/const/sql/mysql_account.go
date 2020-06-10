@@ -39,12 +39,12 @@ and t.change_type=@change_type and t.trade_type=@trade_type`
 
 //GetBalanceRecord 查询交易变动记录是否已存在
 const GetBalanceRecord = `select  t.record_id,t.account_id,t.trade_type,t.memo,
-t.trade_no,t.change_type,t.amount,ifnull(t.balance,0),DATE_FORMAT(t.create_time, '%Y%m%d%H%i%s') create_time from beanpay_account_record t 
+t.trade_no,t.change_type,t.amount,t.balance,DATE_FORMAT(t.create_time, '%Y%m%d%H%i%s') create_time from beanpay_account_record t 
 where t.record_id=@record_id`
 
 //GetBalanceRecordByTradeNo 查询交易变动记录是否已存在
 const GetBalanceRecordByTradeNo = `select t.record_id,t.account_id,t.trade_type,t.memo,
-t.trade_no,t.change_type,t.amount,ifnull(t.balance,0),DATE_FORMAT(t.create_time, '%Y%m%d%H%i%s') create_time
+t.trade_no,t.change_type,t.amount,t.balance balance,DATE_FORMAT(t.create_time, '%Y%m%d%H%i%s') create_time
  from beanpay_account_record t 
 where t.trade_no=@trade_no 
 and t.account_id=@account_id
@@ -69,7 +69,7 @@ and a.groups like CONCAT('',@types,'%')
 
 //QueryBalanceRecord 查询余额资金变动信息
 const QueryBalanceRecord = `select t.record_id,t.account_id,t.memo,
-t.trade_no,t.change_type,t.amount,ifnull(t.balance,0),DATE_FORMAT(t.create_time, '%Y%m%d%H%i%s') create_time
+t.trade_no,t.change_type,t.amount,t.balance,t.create_time
 from beanpay_account_record t 
 INNER JOIN beanpay_account_info a ON a.account_id = t.account_id
 where  t.create_time >= DATE_FORMAT(@start,'%Y%m%d')

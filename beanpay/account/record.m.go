@@ -10,6 +10,7 @@ type AccountRecord struct {
 	RecordID   int     `json:"record_id" m2s:"record_id"`
 	TradeNo    string  `json:"trade_no" m2s:"trade_no"`
 	ChangeType int     `json:"change_type" m2s:"change_type"`
+	TradeType  int     `json:"trade_type" m2s:"trade_type"`
 	Amount     float64 `json:"amount" m2s:"amount"`
 	Balance    float64 `json:"balance" m2s:"balance"`
 	Memo       string  `json:"memo" m2s:"memo"`
