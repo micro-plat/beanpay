@@ -68,7 +68,7 @@ and a.groups like CONCAT('',@types,'%')
 `
 
 //QueryBalanceRecord 查询余额资金变动信息
-const QueryBalanceRecord = `select t.record_id,t.account_id,t.memo,
+const QueryBalanceRecord = `select t.record_id,t.account_id,t.memo,t.trade_type,
 t.trade_no,t.change_type,t.amount,t.balance,t.create_time
 from beanpay_account_record t 
 INNER JOIN beanpay_account_info a ON a.account_id = t.account_id
