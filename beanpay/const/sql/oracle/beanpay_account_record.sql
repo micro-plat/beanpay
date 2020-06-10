@@ -32,7 +32,7 @@
 	alter table beanpay_account_record
 	add constraint pk_beanpay_account_record primary key(record_id);
 	alter table beanpay_account_record
-	add constraint beanpay_account_record_account_id unique(account_id,change_type,trade_no,trade_type);
+	add constraint beanpay_record_account_id unique(account_id,change_type,trade_no,trade_type);
 	
 	create sequence seq_account_record_id
 	increment by 1

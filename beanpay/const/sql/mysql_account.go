@@ -60,19 +60,25 @@ select @account_id,@trade_no,@ext_no,@change_type,@amount,t.balance,now(),@trade
 //QueryBalanceRecordCount 查询余额资金变动信息
 const QueryBalanceRecordCount = `select count(1)
 from beanpay_account_record t 
-where t.account_id = @account_id 
-and t.create_time >= STR_TO_DATE(@start,'%Y%m%d')
-and t.create_time < DATE_ADD(STR_TO_DATE(@end,'%Y%m%d'),interval 1 day)`
+INNER JOIN beanpay_account_info a ON a.account_id = t.account_id
+where t.create_time >= DATE_FORMAT(@start,'%Y%m%d')
+and t.create_time < DATE_ADD(DATE_FORMAT(@end,'%Y%m%d'),interval 1 day)
+and a.groups like CONCAT('',@types,'%')
+&t.account_id &t.change_type &t.trade_type &a.groups
+`
 
 //QueryBalanceRecord 查询余额资金变动信息
 const QueryBalanceRecord = `select t.record_id,t.account_id,t.memo,
 t.trade_no,t.change_type,t.amount,t.balance,DATE_FORMAT(t.create_time, '%Y%m%d%H%i%s') create_time
 from beanpay_account_record t 
-where t.account_id = @account_id 
-and t.create_time >= STR_TO_DATE(@start,'%Y%m%d')
-and t.create_time < DATE_ADD(STR_TO_DATE(@end,'%Y%m%d'),interval 1 day)
+INNER JOIN beanpay_account_info a ON a.account_id = t.account_id
+where  t.create_time >= DATE_FORMAT(@start,'%Y%m%d')
+and t.create_time < DATE_ADD(DATE_FORMAT(@end,'%Y%m%d'),interval 1 day)
+and a.groups like CONCAT('',@types,'%')
+&t.account_id &t.change_type &t.trade_type &a.groups
 order by t.record_id desc
-limit #pf,#ps`
+limit #pageSize offset #currentPage
+`
 
 // LockAccount 锁账户
 const LockAccount = `
@@ -145,8 +151,8 @@ select
     t.status
     from beanpay_account_info t
 where t.groups like CONCAT('',@types,'%')
-and if(isnull(@account_name)||@account_name='',1=1,t.account_name like concat('%',@account_name,'%'))
 and if(isnull(@eid)||@eid='',1=1,t.eid=@eid)
+and if(isnull(@account_name)||@account_name='',1=1,t.account_name like concat('%',@account_name,'%'))
 and if(isnull(@groups)||@groups='',1=1,t.groups=@groups)
 and if(isnull(@ident)||@ident='',1=1,t.ident=@ident)
 and if(isnull(@status)||@status='',1=1,t.status=@status)

@@ -45,6 +45,7 @@ func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, trad
 	if err != nil {
 		return nil, err
 	}
+
 	if row == 0 {
 		return nil, context.NewError(ecodes.NotEnough, "帐户余额不足")
 	}
@@ -127,7 +128,7 @@ func lockTradeRecord(db db.IDBExecuter, accountID int, tradeNo string, tradeType
 }
 
 // queryTradedAmount 查询已交易金额
-func queryTradedAmount(db db.IDBExecuter, accountID int, extNo string, tradeType int, changeType int) (int, error) {
+func queryTradedAmount(db db.IDBExecuter, accountID int, extNo string, tradeType int, changeType int) (float64, error) {
 	input := map[string]interface{}{
 		"account_id":  accountID,
 		"ext_no":      extNo,
@@ -138,25 +139,32 @@ func queryTradedAmount(db db.IDBExecuter, accountID int, extNo string, tradeType
 	if err != nil {
 		return 0, err
 	}
-	return types.GetInt(row), nil
+	return types.GetFloat64(row), nil
 }
 
 // checkRefundAmount 查询已退款金额
-func checkRefundAmount(db db.IDBExecuter, accountID int, extNo string, tradeType int, changeType int, deductAmount, amount float64) error {
+func checkRefundAmount(db db.IDBExecuter, accountID int, tradeNo, extNo string, tradeType int, changeType int, deductAmount, amount float64) (bool, error) {
 	input := map[string]interface{}{
 		"account_id":    accountID,
 		"ext_no":        extNo,
+		"trade_no":      tradeNo,
 		"change_type":   changeType,
 		"trade_type":    tradeType,
 		"deduct_amount": deductAmount,
 		"amount":        amount,
 	}
+	// 检查交易是否已存在
+	count, _, _, err := db.Scalar(sql.ExistsBalanceRecord, input)
+	if err != nil {
+		return false, err
+	}
+
 	row, _, _, err := db.Query(sql.CheckRefundAmount, input)
 	if err != nil || row.IsEmpty() {
-		return fmt.Errorf("查询已退款金额发生异常,count:%v,err:%v", row.Len(), err)
+		return false, fmt.Errorf("查询已退款金额发生异常,count:%v,err:%v", row.Len(), err)
 	}
 	if !row.Get(0).GetBool("can_refund") {
-		return context.NewErrorf(ecodes.AmountErr, "扣款金额:%v,已退款金额:%v,本次退款金额:%v", deductAmount, row.Get(0).GetFloat64("refund_amount"), amount)
+		return false, context.NewErrorf(ecodes.AmountErr, "扣款金额:%v,已退款金额:%v,本次退款金额:%v", deductAmount, row.Get(0).GetFloat64("refund_amount"), amount)
 	}
-	return nil
+	return types.GetInt(count) != 0, nil
 }

@@ -33,13 +33,13 @@ func (r *AccountResult) GetCode() int {
 }
 
 type AccountInfo struct {
-	ID      int    `json:"account_id" m2s:"account_id"`
-	Name    string `json:"account_name" m2s:"account_name"`
-	EID     string `json:"eid" m2s:"eid"`
-	Balance int    `json:"balance" m2s:"balance"`
-	Credit  int    `json:"credit" m2s:"credit"`
-	Group   string `json:"groups" m2s:"groups"`
-	Status  int    `json:"status" m2s:"status"`
+	ID      int     `json:"account_id" m2s:"account_id"`
+	Name    string  `json:"account_name" m2s:"account_name"`
+	EID     string  `json:"eid" m2s:"eid"`
+	Balance float64 `json:"balance" m2s:"balance"`
+	Credit  float64 `json:"credit" m2s:"credit"`
+	Group   string  `json:"groups" m2s:"groups"`
+	Status  int     `json:"status" m2s:"status"`
 }
 
 type AccountInfoList struct {

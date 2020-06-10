@@ -183,8 +183,16 @@ func RefundAmount(db db.IDBExecuter, ident string, group string, eid string, tra
 	}
 
 	// 检查扣款金额
-	if err := checkRefundAmount(db, acc.ID, extNo, tradeType, ttypes.Refund, deductAmount, amount); err != nil {
+	b, err := checkRefundAmount(db, acc.ID, tradeNo, extNo, tradeType, ttypes.Refund, deductAmount, amount)
+	if err != nil {
 		return nil, err
+	}
+	if b {
+		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, tradeType, ttypes.Refund)
+		if err != nil {
+			return nil, context.NewError(ecodes.Failed, "暂时无法扣款")
+		}
+		return NewRecordResult(ecodes.HasExists, row), nil
 	}
 
 	row, err := change(db, acc.ID, tradeNo, extNo, tradeType, ttypes.Refund, amount, memo, ext)
@@ -225,12 +233,8 @@ func ReverseAmount(db db.IDBExecuter, ident string, group string, eid string, tr
 }
 
 //Query 查询余额变动明细
-func Query(db db.IDBExecuter, ident string, group string, eid string, startTime string, endTime string, pi int, ps int) (*RecordResults, error) {
-	acc, err := GetAccount(db, ident, group, eid)
-	if err != nil {
-		return nil, err
-	}
-	count, rows, err := query(db, acc.ID, startTime, endTime, pi, ps)
+func Query(db db.IDBExecuter, accountType string, accountID string, group string, changeType string, tradeType string, eid string, startTime string, endTime string, pi int, ps int) (*RecordResults, error) {
+	count, rows, err := query(db, accountType, group, accountID, changeType, tradeType, startTime, endTime, pi, ps)
 	if err != nil {
 		return nil, err
 	}

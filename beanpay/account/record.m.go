@@ -6,14 +6,14 @@ import (
 
 // AccountRecord 账户余额变动记录
 type AccountRecord struct {
-	AccountID  int    `json:"account_id" m2s:"account_id"`
-	RecordID   int    `json:"record_id" m2s:"record_id"`
-	TradeNo    string `json:"trade_no" m2s:"trade_no"`
-	ChangeType int    `json:"change_type" m2s:"change_type"`
-	Amount     int    `json:"amount" m2s:"amount"`
-	Balance    int    `json:"balance" m2s:"balance"`
-	Memo       string `json:"memo" m2s:"memo"`
-	CreateTime string `json:"create_time" m2s:"create_time"`
+	AccountID  int     `json:"account_id" m2s:"account_id"`
+	RecordID   int     `json:"record_id" m2s:"record_id"`
+	TradeNo    string  `json:"trade_no" m2s:"trade_no"`
+	ChangeType int     `json:"change_type" m2s:"change_type"`
+	Amount     float64 `json:"amount" m2s:"amount"`
+	Balance    float64 `json:"balance" m2s:"balance"`
+	Memo       string  `json:"memo" m2s:"memo"`
+	CreateTime string  `json:"create_time" m2s:"create_time"`
 }
 
 // RecordResult 记录结果
@@ -41,9 +41,9 @@ func (r *RecordResult) GetCode() int {
 
 // RecordResults 查询账户记录
 type RecordResults struct {
-	List  []*AccountRecord
+	List  []*AccountRecord `json:"data"`
 	code  int
-	Count int
+	Count int `json:"count" m2s:"count"`
 }
 
 // NewRecordResults maps转RecordResults

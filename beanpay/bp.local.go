@@ -59,12 +59,12 @@ func (b *Beanpay) GetAccount(i interface{}, eid string) (*account.Account, error
 }
 
 //QueryAccount 查询账户列表
-func (b *Beanpay) QueryAccount(i interface{}, eid, accountType, name string, pi, ps, status int) (r *account.AccountInfoList, err error) {
+func (b *Beanpay) QueryAccount(i interface{}, ident, group, eid, accountType, name string, pi, ps, status int) (r *account.AccountInfoList, err error) {
 	db, err := getDBExecuter(i)
 	if err != nil {
 		return nil, err
 	}
-	return account.QueryAccount(db, b.ident, b.group, eid, accountType, name, pi, ps, status)
+	return account.QueryAccount(db, ident, group, eid, accountType, name, pi, ps, status)
 }
 
 // SetCreditAmount 设置授信金额
@@ -84,7 +84,7 @@ func (b *Beanpay) AddAmount(i interface{}, eid string, tradeNo string, amount fl
 	}
 
 	if amount <= 0 {
-		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%d", amount)
+		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%v", amount)
 	}
 	row, err := account.AddAmount(db, b.ident, b.group, eid, tradeNo, TPTrade, ttypes.Add, amount, memo, types.GetStringByIndex(ext, 0, "{}"))
 	if !m {
@@ -105,7 +105,7 @@ func (b *Beanpay) DrawingAmount(i interface{}, eid string, tradeNo string, amoun
 		return nil, err
 	}
 	if amount <= 0 {
-		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%d", amount)
+		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%v", amount)
 	}
 	row, err := account.DrawingAmount(db, b.ident, b.group, eid, tradeNo, TPTrade, ttypes.Drawing, amount, memo, types.GetStringByIndex(ext, 0, "{}"))
 	if !m {
@@ -235,12 +235,12 @@ func (b *Beanpay) ReverseDrawingAmount(i interface{}, eid string, tradeNo string
 }
 
 //QueryAccountRecords 查询指定用户在一段时间内的资金变动信息
-func (b *Beanpay) QueryAccountRecords(i interface{}, eid string, startTime string, endTime string, pi int, ps int) (*account.RecordResults, error) {
+func (b *Beanpay) QueryAccountRecords(i interface{}, accountType string, accountID string, group string, changeType string, tradeType string, eid string, startTime string, endTime string, pi int, ps int) (*account.RecordResults, error) {
 	db, err := getDBExecuter(i)
 	if err != nil {
 		return nil, err
 	}
-	return account.Query(db, b.ident, b.group, eid, startTime, endTime, pi, ps)
+	return account.Query(db, accountType, accountID, group, changeType, tradeType, eid, startTime, endTime, pi, ps)
 }
 
 //CreatePackage 根据用户编号， 服务编号，服务名称，服务包可用总数，日限制使用次数，过期时间创建服务包

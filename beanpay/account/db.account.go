@@ -1,6 +1,8 @@
 package account
 
 import (
+	"fmt"
+
 	"github.com/micro-plat/beanpay/beanpay/const/sql"
 	"github.com/micro-plat/hydra/context"
 	"github.com/micro-plat/lib4go/db"
@@ -81,20 +83,19 @@ func queryAccount(db db.IDBExecuter, ident, group, eid, accountType, name string
 		"size":         pi * ps,
 		"pageSize":     ps,
 	}
-	count, _, _, err := db.Scalar(sql.QueryAccountListCount, input)
+	count, sqls, args, err := db.Scalar(sql.QueryAccountListCount, input)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("sqls:%v,args:%v,err:%v", sqls, args, err)
 	}
 	if types.GetInt(count) == 0 {
 		return nil, nil
 	}
-	rows, _, _, err := db.Query(sql.QueryAccountList, input)
+	rows, sqls, args, err := db.Query(sql.QueryAccountList, input)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("sqls:%v,args:%v,err:%v", sqls, args, err)
 	}
-	accounts := make([]*AccountInfo, rows.Len())
-
-	if err := types.Map2Struct(rows, &accounts); err != nil {
+	var accounts []*AccountInfo
+	if err := rows.ToStructs(&accounts); err != nil {
 		return nil, err
 	}
 
