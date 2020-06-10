@@ -24,8 +24,8 @@ b.credit = @credit
 WHERE b.account_id = @account_id`
 
 //GetAccountByeid 根据eid查询帐户编号
-const GetAccountByeid = `select t.account_id,t.account_name,t.eid,t.balance,
-t.credit from beanpay_account_info t where
+const GetAccountByeid = `select t.account_id,t.account_name,t.eid,nvl(t.balance,0) balance,
+nvl(t.credit,0) credit from beanpay_account_info t where
 t.ident=@ident and t.groups=@groups and t.eid=@eid`
 
 //ChangeAmount 帐户加款
@@ -158,8 +158,8 @@ select TAB1.*
                                t.ident,
                                t.groups,
                                t.eid,
-                               t.balance,
-                               t.credit,
+                               nvl(t.balance,0) balance,
+                               nvl(t.credit,0) credit,
                                to_char(t.create_time,'yyyy-MM-dd HH24:mi:ss') create_time,
                                t.status
                           from beanpay_account_info t

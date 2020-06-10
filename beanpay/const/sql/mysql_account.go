@@ -25,7 +25,7 @@ WHERE b.account_id = @account_id`
 
 //GetAccountByeid 根据eid查询帐户编号
 const GetAccountByeid = `select t.account_id,t.account_name,
-t.eid,t.balance,t.credit from beanpay_account_info t where 
+t.eid,ifnull(t.balance,0) balance,ifnull(t.credit,0) credit from beanpay_account_info t where 
 t.ident=@ident and t.groups=@groups and t.eid=@eid`
 
 //ChangeAmount 帐户加款
@@ -39,12 +39,12 @@ and t.change_type=@change_type and t.trade_type=@trade_type`
 
 //GetBalanceRecord 查询交易变动记录是否已存在
 const GetBalanceRecord = `select  t.record_id,t.account_id,t.trade_type,t.memo,
-t.trade_no,t.change_type,t.amount,t.balance,DATE_FORMAT(t.create_time, '%Y%m%d%H%i%s') create_time from beanpay_account_record t 
+t.trade_no,t.change_type,t.amount,ifnull(t.balance,0),DATE_FORMAT(t.create_time, '%Y%m%d%H%i%s') create_time from beanpay_account_record t 
 where t.record_id=@record_id`
 
 //GetBalanceRecordByTradeNo 查询交易变动记录是否已存在
 const GetBalanceRecordByTradeNo = `select t.record_id,t.account_id,t.trade_type,t.memo,
-t.trade_no,t.change_type,t.amount,t.balance,DATE_FORMAT(t.create_time, '%Y%m%d%H%i%s') create_time
+t.trade_no,t.change_type,t.amount,ifnull(t.balance,0),DATE_FORMAT(t.create_time, '%Y%m%d%H%i%s') create_time
  from beanpay_account_record t 
 where t.trade_no=@trade_no 
 and t.account_id=@account_id
@@ -69,7 +69,7 @@ and a.groups like CONCAT('',@types,'%')
 
 //QueryBalanceRecord 查询余额资金变动信息
 const QueryBalanceRecord = `select t.record_id,t.account_id,t.memo,
-t.trade_no,t.change_type,t.amount,t.balance,DATE_FORMAT(t.create_time, '%Y%m%d%H%i%s') create_time
+t.trade_no,t.change_type,t.amount,ifnull(t.balance,0),DATE_FORMAT(t.create_time, '%Y%m%d%H%i%s') create_time
 from beanpay_account_record t 
 INNER JOIN beanpay_account_info a ON a.account_id = t.account_id
 where  t.create_time >= DATE_FORMAT(@start,'%Y%m%d')
@@ -145,8 +145,8 @@ select
 	t.ident,
 	t.groups,
     t.eid,
-    t.balance,
-    t.credit,
+    ifnull(t.balance,0) balance,
+    ifnull(t.credit,0) credit,
     t.create_time,
     t.status
     from beanpay_account_info t
