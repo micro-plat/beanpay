@@ -88,7 +88,7 @@ func queryAccount(db db.IDBExecuter, ident, group, eid, accountType, name string
 		return nil, fmt.Errorf("sqls:%v,args:%v,err:%v", sqls, args, err)
 	}
 	if types.GetInt(count) == 0 {
-		return nil, nil
+		return &AccountInfoList{Count: 0}, nil
 	}
 	rows, sqls, args, err := db.Query(sql.QueryAccountList, input)
 	if err != nil {
