@@ -59,12 +59,12 @@ func (b *Beanpay) GetAccount(i interface{}, eid string) (*account.Account, error
 }
 
 //QueryAccount 查询账户列表
-func (b *Beanpay) QueryAccount(i interface{}, ident, group, eid, accountType, name string, pi, ps, status int) (r *account.AccountInfoList, err error) {
+func (b *Beanpay) QueryAccount(i interface{}, eid, accountType, name string, pi, ps, status int) (r *account.AccountInfoList, err error) {
 	db, err := getDBExecuter(i)
 	if err != nil {
 		return nil, err
 	}
-	return account.QueryAccount(db, ident, group, eid, accountType, name, pi, ps, status)
+	return account.QueryAccount(db, b.ident, b.group, eid, accountType, name, pi, ps, status)
 }
 
 // SetCreditAmount 设置授信金额
