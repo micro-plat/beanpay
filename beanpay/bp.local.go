@@ -235,12 +235,12 @@ func (b *Beanpay) ReverseDrawingAmount(i interface{}, eid string, tradeNo string
 }
 
 //QueryAccountRecords 查询指定用户在一段时间内的资金变动信息
-func (b *Beanpay) QueryAccountRecords(i interface{}, accountType string, accountID string, group string, changeType string, tradeType string, eid string, startTime string, endTime string, pi int, ps int) (*account.RecordResults, error) {
+func (b *Beanpay) QueryAccountRecords(i interface{}, accountType string, accountID string, accountName string, group string, changeType string, tradeType string, eid string, startTime string, endTime string, pi int, ps int) (*account.RecordResults, error) {
 	db, err := getDBExecuter(i)
 	if err != nil {
 		return nil, err
 	}
-	return account.Query(db, accountType, accountID, group, changeType, tradeType, eid, startTime, endTime, pi, ps)
+	return account.Query(db, accountType, accountID, accountName, group, changeType, tradeType, eid, startTime, endTime, pi, ps)
 }
 
 //CreatePackage 根据用户编号， 服务编号，服务名称，服务包可用总数，日限制使用次数，过期时间创建服务包

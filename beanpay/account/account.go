@@ -233,8 +233,8 @@ func ReverseAmount(db db.IDBExecuter, ident string, group string, eid string, tr
 }
 
 //Query 查询余额变动明细
-func Query(db db.IDBExecuter, accountType string, accountID string, group string, changeType string, tradeType string, eid string, startTime string, endTime string, pi int, ps int) (*RecordResults, error) {
-	count, rows, err := query(db, accountType, group, accountID, changeType, tradeType, startTime, endTime, pi, ps)
+func Query(db db.IDBExecuter, accountType string, accountID string, accountName string, group string, changeType string, tradeType string, eid string, startTime string, endTime string, pi int, ps int) (*RecordResults, error) {
+	count, rows, err := query(db, accountType, group, accountID, accountName, changeType, tradeType, startTime, endTime, pi, ps)
 	if err != nil {
 		return nil, err
 	}

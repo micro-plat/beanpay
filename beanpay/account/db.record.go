@@ -9,18 +9,19 @@ import (
 )
 
 //Query 查询余额变动明细
-func query(db db.IDBExecuter, accountType string, group string, accountID string, changeType string, tradeType string, startTime string, endTime string, pi int, ps int) (int, db.QueryRows, error) {
+func query(db db.IDBExecuter, accountType string, group string, accountID string, accountName string, changeType string, tradeType string, startTime string, endTime string, pi int, ps int) (int, db.QueryRows, error) {
 	input := map[string]interface{}{
-		"types":       accountType,
-		"account_id":  accountID,
-		"start":       startTime,
-		"end":         endTime,
-		"change_type": changeType,
-		"groups":      group,
-		"trade_type":  tradeType,
-		"currentPage": (pi - 1) * ps,
-		"size":        pi * ps,
-		"pageSize":    ps,
+		"types":        accountType,
+		"account_id":   accountID,
+		"start":        startTime,
+		"end":          endTime,
+		"change_type":  changeType,
+		"groups":       group,
+		"account_name": accountName,
+		"trade_type":   tradeType,
+		"currentPage":  (pi - 1) * ps,
+		"size":         pi * ps,
+		"pageSize":     ps,
 	}
 	count, s, p, err := db.Scalar(sql.QueryBalanceRecordCount, input)
 	if err != nil {
