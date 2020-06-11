@@ -64,17 +64,19 @@ INNER JOIN beanpay_account_info a ON a.account_id = t.account_id
 where t.create_time >= DATE_FORMAT(@start,'%Y%m%d')
 and t.create_time < DATE_ADD(DATE_FORMAT(@end,'%Y%m%d'),interval 1 day)
 and a.groups like CONCAT('',@types,'%')
+and a.account_name like concat('%',@account_name,'%')
 &t.account_id &t.change_type &t.trade_type &a.groups
 `
 
 //QueryBalanceRecord 查询余额资金变动信息
 const QueryBalanceRecord = `select t.record_id,t.account_id,t.memo,t.trade_type,
-t.trade_no,t.change_type,t.amount,t.balance,t.create_time
+t.trade_no,t.change_type,t.amount,t.balance,t.create_time,a.account_name,a.eid
 from beanpay_account_record t 
 INNER JOIN beanpay_account_info a ON a.account_id = t.account_id
 where  t.create_time >= DATE_FORMAT(@start,'%Y%m%d')
 and t.create_time < DATE_ADD(DATE_FORMAT(@end,'%Y%m%d'),interval 1 day)
 and a.groups like CONCAT('',@types,'%')
+and a.account_name like concat('%',@account_name,'%')
 &t.account_id &t.change_type &t.trade_type &a.groups
 order by t.record_id desc
 limit #pageSize offset #currentPage

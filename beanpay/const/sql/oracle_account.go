@@ -64,6 +64,7 @@ INNER JOIN beanpay_account_info a ON a.account_id = t.account_id
 where t.create_time >= to_date(@start,'yyyy-MM-dd')
 and t.create_time < to_date(@end,'yyyy-MM-dd')+1
 and a.groups like @types||'%'
+and a.account_name like '%'|| @account_name ||'%'
 &t.account_id &t.change_type &t.trade_type &a.groups
 `
 
@@ -80,12 +81,15 @@ from (select L.*
                              t.ext,
                              t.trade_no,
                              t.trade_type,
-                             t.memo
+                             t.memo,
+                             a.account_name,
+                             a.eid
                       from beanpay_account_record t
                       INNER JOIN beanpay_account_info a ON a.account_id = t.account_id
                        WHERE t.create_time >= to_date(@start,'yyyy-MM-dd')
                        and t.create_time < to_date(@end,'yyyy-MM-dd')+1
                        and a.groups like @types || '%'
+                       and a.account_name like '%'|| @account_name ||'%'
                        &t.account_id &t.change_type &t.trade_type &a.groups
                        order by t.record_id desc) R
                         where rownum <= @size) L
