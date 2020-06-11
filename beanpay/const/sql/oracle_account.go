@@ -83,7 +83,8 @@ from (select L.*
                              t.trade_type,
                              t.memo,
                              a.account_name,
-                             a.eid
+                             a.eid,
+                             a.groups
                       from beanpay_account_record t
                       INNER JOIN beanpay_account_info a ON a.account_id = t.account_id
                        WHERE t.create_time >= to_date(@start,'yyyy-MM-dd')
