@@ -31,6 +31,7 @@ func (u *RecordHandler) QueryHandle(ctx *context.Context) (r interface{}) {
 	data, err := bp.QueryAccountRecords(ctx,
 		ctx.Request.GetString("account_type"),
 		ctx.Request.GetString("account_id"),
+		ctx.Request.GetString("account_name"),
 		ctx.Request.GetString("group"),
 		ctx.Request.GetString("change_type"),
 		ctx.Request.GetString("trade_type"),
