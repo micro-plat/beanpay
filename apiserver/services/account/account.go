@@ -76,3 +76,28 @@ func (u *AccountHandler) QueryHandle(ctx *context.Context) (r interface{}) {
 	ctx.Log.Info("3. 处理返回结果")
 	return account
 }
+
+//QueryListHandle 查询资金帐户列表
+func (u *AccountHandler) QueryListHandle(ctx *context.Context) (r interface{}) {
+	ctx.Log.Info("---------------查询资金帐户列表--------------------")
+	ctx.Log.Info("1. 参数校验")
+	if err := ctx.Request.Check("ident"); err != nil {
+		return context.NewError(context.ERR_NOT_ACCEPTABLE, err)
+	}
+
+	ctx.Log.Info("2. 查询帐户信息")
+	bp := beanpay.GetAccount(ctx.Request.GetString("ident"), ctx.Request.GetString("group"))
+	account, err := bp.QueryAccount(ctx,
+		ctx.Request.GetString("eid"),
+		ctx.Request.GetString("account_type"),
+		ctx.Request.GetString("name"),
+		ctx.Request.GetString("status"),
+		ctx.Request.GetInt("pi", 1),
+		ctx.Request.GetInt("ps", 10))
+	if err != nil {
+		return err
+	}
+
+	ctx.Log.Info("3. 处理返回结果")
+	return account
+}

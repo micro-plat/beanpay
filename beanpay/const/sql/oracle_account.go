@@ -24,8 +24,8 @@ b.credit = @credit
 WHERE b.account_id = @account_id`
 
 //GetAccountByeid 根据eid查询帐户编号
-const GetAccountByeid = `select t.account_id,t.account_name,t.eid,t.balance,
-t.credit from beanpay_account_info t where
+const GetAccountByeid = `select t.account_id,t.account_name,t.eid,nvl(t.balance,0) balance,
+nvl(t.credit,0) credit from beanpay_account_info t where
 t.ident=@ident and t.groups=@groups and t.eid=@eid`
 
 //ChangeAmount 帐户加款
@@ -57,18 +57,54 @@ const AddBalanceRecord = `insert into beanpay_account_record
 select seq_account_record_id.nextval,@account_id,@trade_no,@ext_no,@change_type,@amount,t.balance,sysdate,@trade_type,@ext,@memo
  from beanpay_account_info t where t.account_id=@account_id`
 
+//QueryBalanceRecordCount 查询余额资金变动信息
+const QueryBalanceRecordCount = `select
+count(1) from  beanpay_account_record t
+INNER JOIN beanpay_account_info a ON a.account_id = t.account_id
+where t.create_time >= to_date(@start,'yyyy-MM-dd')
+and t.create_time < to_date(@end,'yyyy-MM-dd')+1
+and a.groups like @types||'%'
+and a.account_name like '%'|| @account_name ||'%'
+&t.account_id &t.change_type &t.trade_type &a.groups
+`
+
 //QueryBalanceRecord 查询余额资金变动信息
-const QueryBalanceRecord = `select 
-l2.record_id,l2.account_id,l2.memo,
-l2.trade_no,l2.change_type,l2.amount,l2.balance,l2.create_time
-from(select rownum rn,l1.* from(select t.record_id,t.account_id,t.memo,
-t.trade_no,t.change_type,t.amount,t.balance,t.trade_type,to_char(t.create_time, 'yyyymmddhh24miss') create_time from  
-beanpay_account_record t where t.account_id = @account_id and 
-t.create_time >= to_date(@start,'yyyymmdd')
-and t.create_time < to_date(@end,'yyyymmdd')+1
-order by t.record_id desc) l1
-where rownum <= (@pi+1) * @ps) l2 
-where l2.rn > (@pi) * @ps`
+const QueryBalanceRecord = `select TAB1.*
+from (select L.*
+        from (select rownum as rn, R.*
+                from (select t.record_id,
+                             t.account_id,
+                             t.amount,
+                             t.balance,
+                             t.change_type,
+                             to_char(t.create_time,'yyyy-MM-dd HH24:mi:ss') create_time,
+                             t.ext,
+                             t.trade_no,
+                             t.trade_type,
+                             t.memo,
+                             a.account_name,
+                             a.eid,
+                             a.groups
+                      from beanpay_account_record t
+                      INNER JOIN beanpay_account_info a ON a.account_id = t.account_id
+                       WHERE t.create_time >= to_date(@start,'yyyy-MM-dd')
+                       and t.create_time < to_date(@end,'yyyy-MM-dd')+1
+                       and a.groups like @types || '%'
+                       and a.account_name like '%'|| @account_name ||'%'
+                       &t.account_id &t.change_type &t.trade_type &a.groups
+                       order by t.record_id desc) R
+                        where rownum <= @size) L
+                       where L.rn > @currentPage) TAB1`
+
+// LockAccount 锁账户
+const LockAccount = `
+SELECT 
+  a.account_id
+FROM
+  beanpay_account_info a 
+WHERE a.account_id = @account_id 
+FOR UPDATE
+`
 
 //LockTradeRecord 锁交易记录
 const LockTradeRecord = `
@@ -91,4 +127,52 @@ where t.account_id=@account_id
 and t.change_type=@change_type
 and t.trade_type=@trade_type
 and t.ext_no=@ext_no
+`
+
+// CheckRefundAmount 检查退款金额
+const CheckRefundAmount = `
+SELECT 
+  case when ABS(@deduct_amount) - ABS(nvl(SUM(t.amount),0)) - ABS(@amount) >=0 then 'true' else 'false' end can_refund,
+  nvl(SUM(t.amount),0) refund_amount 
+FROM
+  beanpay_account_record t 
+WHERE t.account_id = @account_id 
+  AND t.trade_type = @trade_type 
+  AND t.change_type = @change_type 
+  AND t.ext_no = @ext_no 
+`
+
+//QueryAccountListCount 获取账户信息列表条数
+const QueryAccountListCount = `
+select count(1)
+from beanpay_account_info t
+where  t.groups like '%' || @types || '%'
+ &t.account_name
+ &t.eid
+ &t.groups
+ &t.ident
+ &t.status`
+
+//QueryAccountList 查询账户信息列表数据
+const QueryAccountList = `
+select TAB1.*
+  from (select L.*
+          from (select rownum as rn, R.*
+                  from (select t.account_id,
+                               t.account_name,
+                               t.ident,
+                               t.groups,
+                               t.eid,
+                               nvl(t.balance,0) balance,
+                               nvl(t.credit,0) credit,
+                               to_char(t.create_time,'yyyy-MM-dd HH24:mi:ss') create_time,
+                               t.status
+                          from beanpay_account_info t
+                         where t.groups like '' || @types || '%'
+                         &t.account_name &t.eid 
+                         &t.groups  &t.ident
+                         &t.status
+                         order by t.account_id desc) R
+                 where rownum <= @size) L
+         where L.rn > @currentPage) TAB1
 `

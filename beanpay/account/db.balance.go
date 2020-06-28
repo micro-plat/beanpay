@@ -29,7 +29,7 @@ func getBalance(db db.IDBExecuter, ident string, group string, eid string) (int,
 }
 
 //Change 资金变动
-func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, tradeType int, changeType int, amount int, memo, ext string) (types.XMap, error) {
+func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, tradeType int, changeType int, amount float64, memo, ext string) (types.XMap, error) {
 	input := map[string]interface{}{
 		"account_id":  accountID,
 		"amount":      amount,
@@ -41,10 +41,11 @@ func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, trad
 		"memo":        memo,
 	}
 	//修改帐户余额
-	row, _, _, err := db.Execute(sql.ChangeAmount, input)
+	row, sqls, args, err := db.Execute(sql.ChangeAmount, input)
 	if err != nil {
 		return nil, err
 	}
+	fmt.Printf("sqls:%v,args:%v", sqls, args)
 	if row == 0 {
 		return nil, context.NewError(ecodes.NotEnough, "帐户余额不足")
 	}
@@ -62,15 +63,21 @@ func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, trad
 }
 
 //Exists 检查交易是否已存在
-func exists(db db.IDBExecuter, accountID int, tradeNo string, maxAmount int, tradeType int, changeType int) (bool, error) {
+func exists(db db.IDBExecuter, accountID int, tradeNo string, tradeType int, changeType int) (bool, error) {
+
 	input := map[string]interface{}{
 		"account_id":  accountID,
 		"trade_no":    tradeNo,
-		"max_amount":  maxAmount,
 		"change_type": changeType,
 		"trade_type":  tradeType,
 	}
-	//修改帐户余额
+
+	// 锁账户
+	accID, _, _, err := db.Scalar(sql.LockAccount, input)
+	if err != nil || types.GetInt64(accID) == 0 {
+		return false, fmt.Errorf("锁账户失败，account_id:%v,accID:%v,err:%v", accountID, accID, err)
+	}
+	// 检查交易是否已存在
 	row, _, _, err := db.Scalar(sql.ExistsBalanceRecord, input)
 	if err != nil {
 		return false, err
@@ -106,7 +113,7 @@ func getRecordByTradeNo(db db.IDBExecuter, accountID int, tradeNo string, tradeT
 }
 
 // lockTradeRecord 锁交易记录
-func lockTradeRecord(db db.IDBExecuter, accountID int, tradeNo string, tradeType int, changeType int) (int, error) {
+func lockTradeRecord(db db.IDBExecuter, accountID int, tradeNo string, tradeType int, changeType int) (float64, error) {
 	input := map[string]interface{}{
 		"account_id":  accountID,
 		"trade_no":    tradeNo,
@@ -117,21 +124,47 @@ func lockTradeRecord(db db.IDBExecuter, accountID int, tradeNo string, tradeType
 	if err != nil {
 		return 0, err
 	}
-	return types.GetInt(row), nil
+	return types.GetFloat64(row), nil
 }
 
 // queryTradedAmount 查询已交易金额
-func queryTradedAmount(db db.IDBExecuter, accountID int, extNo string, tradeType int, changeType int) (int, error) {
+func queryTradedAmount(db db.IDBExecuter, accountID int, extNo string, tradeType int, changeType int) (float64, error) {
 	input := map[string]interface{}{
 		"account_id":  accountID,
 		"ext_no":      extNo,
 		"change_type": changeType,
 		"trade_type":  tradeType,
 	}
-	row, sqlStr, args, err := db.Scalar(sql.QueryTradedAmount, input)
+	row, _, _, err := db.Scalar(sql.QueryTradedAmount, input)
 	if err != nil {
 		return 0, err
 	}
-	fmt.Printf("row:%v,sqlStr:%v, args:%+v\n", row, sqlStr, args)
-	return types.GetInt(row), nil
+	return types.GetFloat64(row), nil
+}
+
+// checkRefundAmount 查询已退款金额
+func checkRefundAmount(db db.IDBExecuter, accountID int, tradeNo, extNo string, tradeType int, changeType int, deductAmount, amount float64) (bool, error) {
+	input := map[string]interface{}{
+		"account_id":    accountID,
+		"ext_no":        extNo,
+		"trade_no":      tradeNo,
+		"change_type":   changeType,
+		"trade_type":    tradeType,
+		"deduct_amount": deductAmount,
+		"amount":        amount,
+	}
+	// 检查交易是否已存在
+	count, _, _, err := db.Scalar(sql.ExistsBalanceRecord, input)
+	if err != nil {
+		return false, err
+	}
+
+	row, _, _, err := db.Query(sql.CheckRefundAmount, input)
+	if err != nil || row.IsEmpty() {
+		return false, fmt.Errorf("查询已退款金额发生异常,count:%v,err:%v", row.Len(), err)
+	}
+	if !row.Get(0).GetBool("can_refund") {
+		return false, context.NewErrorf(ecodes.AmountErr, "扣款金额:%v,已退款金额:%v,本次退款金额:%v", deductAmount, row.Get(0).GetFloat64("refund_amount"), amount)
+	}
+	return types.GetInt(count) != 0, nil
 }

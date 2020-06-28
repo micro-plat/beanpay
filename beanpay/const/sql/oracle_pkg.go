@@ -41,7 +41,7 @@ and t.change_type=@change_type`
 const AddPackageRecord string = `insert into beanpay_package_record(record_id,pkg_id,account_id,trade_no,change_type,num,remain,create_time,ext)
 select seq_package_record_id.nextval,t.pkg_id,t.account_id,@trade_no,@change_type,@capacity,t.total_remain,sysdate,@ext from beanpay_package_info t where t.pkg_id=@pkg_id`
 
-//QueryBalanceRecord 查询余额资金变动信息
+//QueryPackageRecord 查询余额资金变动信息
 const QueryPackageRecord = `select 
 l2.record_id,l2.pkg_id,l2.trade_no,l2.change_type,l2.num,l2.remain, l2.create_time
 from(select rownum rn,l1.* from(	

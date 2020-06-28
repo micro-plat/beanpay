@@ -25,7 +25,7 @@ WHERE b.account_id = @account_id`
 
 //GetAccountByeid 根据eid查询帐户编号
 const GetAccountByeid = `select t.account_id,t.account_name,
-t.eid,t.balance,t.credit from beanpay_account_info t where 
+t.eid,ifnull(t.balance,0) balance,ifnull(t.credit,0) credit from beanpay_account_info t where 
 t.ident=@ident and t.groups=@groups and t.eid=@eid`
 
 //ChangeAmount 帐户加款
@@ -44,7 +44,7 @@ where t.record_id=@record_id`
 
 //GetBalanceRecordByTradeNo 查询交易变动记录是否已存在
 const GetBalanceRecordByTradeNo = `select t.record_id,t.account_id,t.trade_type,t.memo,
-t.trade_no,t.change_type,t.amount,t.balance,DATE_FORMAT(t.create_time, '%Y%m%d%H%i%s') create_time
+t.trade_no,t.change_type,t.amount,t.balance balance,DATE_FORMAT(t.create_time, '%Y%m%d%H%i%s') create_time
  from beanpay_account_record t 
 where t.trade_no=@trade_no 
 and t.account_id=@account_id
@@ -57,15 +57,40 @@ const AddBalanceRecord = `insert into beanpay_account_record
 select @account_id,@trade_no,@ext_no,@change_type,@amount,t.balance,now(),@trade_type,@ext,@memo
  from beanpay_account_info t where t.account_id=@account_id`
 
-//QueryBalanceRecord 查询余额资金变动信息
-const QueryBalanceRecord = `select t.record_id,t.account_id,t.memo,
-t.trade_no,t.change_type,t.amount,t.balance,DATE_FORMAT(t.create_time, '%Y%m%d%H%i%s') create_time
+//QueryBalanceRecordCount 查询余额资金变动信息
+const QueryBalanceRecordCount = `select count(1)
 from beanpay_account_record t 
-where t.account_id = @account_id 
-and t.create_time >= STR_TO_DATE(@start,'%Y%m%d')
-and t.create_time < DATE_ADD(STR_TO_DATE(@end,'%Y%m%d'),interval 1 day)
+INNER JOIN beanpay_account_info a ON a.account_id = t.account_id
+where t.create_time >= DATE_FORMAT(@start,'%Y%m%d')
+and t.create_time < DATE_ADD(DATE_FORMAT(@end,'%Y%m%d'),interval 1 day)
+and a.groups like CONCAT('',@types,'%')
+and a.account_name like concat('%',@account_name,'%')
+&t.account_id &t.change_type &t.trade_type &a.groups
+`
+
+//QueryBalanceRecord 查询余额资金变动信息
+const QueryBalanceRecord = `select t.record_id,t.account_id,t.memo,t.trade_type,
+t.trade_no,t.change_type,t.amount,t.balance,t.create_time,a.account_name,a.eid,a.groups
+from beanpay_account_record t 
+INNER JOIN beanpay_account_info a ON a.account_id = t.account_id
+where  t.create_time >= DATE_FORMAT(@start,'%Y%m%d')
+and t.create_time < DATE_ADD(DATE_FORMAT(@end,'%Y%m%d'),interval 1 day)
+and a.groups like CONCAT('',@types,'%')
+and a.account_name like concat('%',@account_name,'%')
+&t.account_id &t.change_type &t.trade_type &a.groups
 order by t.record_id desc
-limit #pf,#ps`
+limit #pageSize offset #currentPage
+`
+
+// LockAccount 锁账户
+const LockAccount = `
+SELECT 
+  a.account_id
+FROM
+  beanpay_account_info a 
+WHERE a.account_id = @account_id 
+FOR UPDATE
+`
 
 //LockTradeRecord 锁交易记录
 const LockTradeRecord = `
@@ -88,4 +113,51 @@ where t.account_id=@account_id
 and t.trade_type=@trade_type
 and t.change_type=@change_type
 and t.ext_no=@ext_no
+`
+
+// CheckRefundAmount 检查退款金额
+const CheckRefundAmount = `
+SELECT 
+  IF(ABS(@deduct_amount) - ABS(IFNULL(SUM(t.amount),0)) - ABS(@amount) >=0,TRUE,FALSE) can_refund,
+  IFNULL(SUM(t.amount),0) refund_amount 
+FROM
+  beanpay_account_record t 
+WHERE t.account_id = @account_id 
+  AND t.trade_type = @trade_type 
+  AND t.change_type = @change_type 
+  AND t.ext_no = @ext_no 
+`
+
+//QueryAccountListCount 获取账户信息列表条数
+const QueryAccountListCount = `
+select count(1)
+from beanpay_account_info t
+where  t.groups like CONCAT('',@types,'%')
+and if(isnull(@account_name)||@account_name='',1=1,t.account_name like concat('%',@account_name,'%'))
+and if(isnull(@eid)||@eid='',1=1,t.eid=@eid)
+and if(isnull(@groups)||@groups='',1=1,t.groups=@groups)
+and if(isnull(@ident)||@ident='',1=1,t.ident=@ident)
+and if(isnull(@status)||@status='',1=1,t.status=@status)`
+
+//QueryAccountList 查询账户信息列表数据
+const QueryAccountList = `
+select
+	t.account_id,
+	t.account_name,
+	t.ident,
+	t.groups,
+    t.eid,
+    ifnull(t.balance,0) balance,
+    ifnull(t.credit,0) credit,
+    t.create_time,
+    t.status
+    from beanpay_account_info t
+where t.groups like CONCAT('',@types,'%')
+and if(isnull(@eid)||@eid='',1=1,t.eid=@eid)
+and if(isnull(@account_name)||@account_name='',1=1,t.account_name like concat('%',@account_name,'%'))
+and if(isnull(@groups)||@groups='',1=1,t.groups=@groups)
+and if(isnull(@ident)||@ident='',1=1,t.ident=@ident)
+and if(isnull(@status)||@status='',1=1,t.status=@status)
+order by t.account_id desc
+limit #pageSize offset #currentPage
 `

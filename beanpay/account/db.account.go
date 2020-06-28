@@ -1,9 +1,12 @@
 package account
 
 import (
+	"fmt"
+
 	"github.com/micro-plat/beanpay/beanpay/const/sql"
 	"github.com/micro-plat/hydra/context"
 	"github.com/micro-plat/lib4go/db"
+	"github.com/micro-plat/lib4go/types"
 )
 
 //Create 根据eid,name创建帐户信息
@@ -37,7 +40,7 @@ func update(db db.IDBExecuter, ident string, groups string, eid string, name str
 }
 
 //setCreditAmount 设置授信金额
-func setCreditAmount(db db.IDBExecuter, credit int, accountID int) error {
+func setCreditAmount(db db.IDBExecuter, credit float64, accountID int) error {
 	input := map[string]interface{}{
 		"credit":     credit,
 		"account_id": accountID,
@@ -64,5 +67,41 @@ func getAccount(db db.IDBExecuter, ident string, groups string, eid string) (r d
 		return nil, context.NewError(908, "帐户不存在")
 	}
 	return rows.Get(0), nil
+
+}
+
+//queryAccount 查询账户
+func queryAccount(db db.IDBExecuter, ident, group, eid, accountType, name, status string, pi, ps int) (r *AccountInfoList, err error) {
+	input := map[string]interface{}{
+		"ident":        ident,
+		"eid":          eid,
+		"groups":       group,
+		"status":       status,
+		"account_name": name,
+		"types":        accountType,
+		"currentPage":  (pi - 1) * ps,
+		"size":         pi * ps,
+		"pageSize":     ps,
+	}
+	count, sqls, args, err := db.Scalar(sql.QueryAccountListCount, input)
+	if err != nil {
+		return nil, fmt.Errorf("sqls:%v,args:%v,err:%v", sqls, args, err)
+	}
+	if types.GetInt(count) == 0 {
+		return &AccountInfoList{Count: 0}, nil
+	}
+	rows, sqls, args, err := db.Query(sql.QueryAccountList, input)
+	if err != nil {
+		return nil, fmt.Errorf("sqls:%v,args:%v,err:%v", sqls, args, err)
+	}
+	var accounts []*AccountInfo
+	if err := rows.ToStructs(&accounts); err != nil {
+		return nil, err
+	}
+
+	return &AccountInfoList{
+		Count: types.GetInt(count),
+		Data:  accounts,
+	}, nil
 
 }
