@@ -29,8 +29,7 @@ t.eid,ifnull(t.balance,0) balance,ifnull(t.credit,0) credit from beanpay_account
 t.ident=@ident and t.groups=@groups and t.eid=@eid`
 
 //ChangeAmount 帐户加款
-const ChangeAmount = `update beanpay_account_info t set t.balance=t.balance + @amount where t.account_id=@account_id
-and t.balance + t.credit + @amount >= 0`
+const ChangeAmount = `update beanpay_account_info t set t.balance=t.balance + @amount where t.account_id=@account_id`
 
 //ExistsBalanceRecord 查询交易变动记录是否已存在
 const ExistsBalanceRecord = `select count(0) from beanpay_account_record t 
