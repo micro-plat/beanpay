@@ -29,7 +29,9 @@ nvl(t.credit,0) credit from beanpay_account_info t where
 t.ident=@ident and t.groups=@groups and t.eid=@eid`
 
 //ChangeAmount 帐户加款
-const ChangeAmount = `update beanpay_account_info t set t.balance=t.balance + @amount where t.account_id=@account_id`
+const ChangeAmount = `update beanpay_account_info t set t.balance=t.balance + @amount where t.account_id=@account_id
+AND ((t.balance + t.credit + @amount >= 0 AND t.groups = 'down_channel') OR t.groups != 'down_channel')
+`
 
 //ExistsBalanceRecord 查询交易变动记录是否已存在
 const ExistsBalanceRecord = `select count(0) from beanpay_account_record t 
