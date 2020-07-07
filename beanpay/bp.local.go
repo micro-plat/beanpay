@@ -83,7 +83,7 @@ func (b *Beanpay) AddAmount(i interface{}, eid string, tradeNo string, amount fl
 		return nil, err
 	}
 
-	if amount <= 0 {
+	if amount == 0 {
 		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%v", amount)
 	}
 	row, err := account.AddAmount(db, b.ident, b.group, eid, tradeNo, TPTrade, ttypes.Add, amount, memo, types.GetStringByIndex(ext, 0, "{}"))
@@ -104,7 +104,7 @@ func (b *Beanpay) DrawingAmount(i interface{}, eid string, tradeNo string, amoun
 	if err != nil {
 		return nil, err
 	}
-	if amount <= 0 {
+	if amount == 0 {
 		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%v", amount)
 	}
 	row, err := account.DrawingAmount(db, b.ident, b.group, eid, tradeNo, TPTrade, ttypes.Drawing, amount, memo, types.GetStringByIndex(ext, 0, "{}"))
