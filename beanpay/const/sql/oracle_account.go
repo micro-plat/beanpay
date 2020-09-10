@@ -148,7 +148,7 @@ const QueryAccountListCount = `
 select count(1)
 from beanpay_account_info t
 where  t.groups like '%' || @types || '%'
- &t.account_name
+ and t.account_name like '%'|| @account_name ||'%'
  &t.eid
  &t.groups
  &t.ident
@@ -170,7 +170,8 @@ select TAB1.*
                                t.status
                           from beanpay_account_info t
                          where t.groups like '' || @types || '%'
-                         &t.account_name &t.eid 
+                         and t.account_name like '%'|| @account_name ||'%'
+                         &t.eid 
                          &t.groups  &t.ident
                          &t.status
                          order by t.account_id desc) R
