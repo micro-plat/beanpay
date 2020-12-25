@@ -23,9 +23,9 @@
 | trade_no    | varchar2(32)   |         |  否   | UNQ(beanpay_account_record_account_id) | 交易编号                                |
 | ext_no      | varchar2(32)   |    0    |  是   |                                        | 拓展编号                                |
 | trade_type  | number(1)      |    1    |  否   | UNQ(beanpay_account_record_account_id) | 交易类型 1:交易 2：手续费 3:佣金        |
-| change_type | number(1)      |         |  否   | UNQ(beanpay_account_record_account_id) | 变动类型 1:加款 2：提款 3：扣款 4：退款 |
-| amount      | number(20)     |         |  否   |                                        | 变动金额 单位：分                       |
-| balance     | number(20)     |         |  否   |                                        | 帐户余额 单位：分                       |
+| change_type | number(1)      |         |  否   | UNQ(beanpay_account_record_account_id) | 变动类型 1:加款 2：提款 3：扣款 4：退款 5: 交易平账 6: 余额平账|
+| amount      | number(20,5)     |         |  否   |                                        | 变动金额 单位：元                       |
+| balance     | number(20,5)     |         |  否   |                                        | 帐户余额 单位：元                       |
 | create_time | date           | sysdate |  否   |                                        | 创建时间                                |
 | memo        | varchar2(1024) |         |  是   |                                        | 交易说明                                |
 | ext         | varchar2(1024) |         |  是   |                                        | 扩展字段                                |

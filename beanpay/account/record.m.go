@@ -29,7 +29,7 @@ type RecordResult struct {
 // NewRecordResult map转RecordResult
 func NewRecordResult(code int, m types.XMap) *RecordResult {
 	var account AccountRecord
-	m.ToStruct(&account)
+	m.ToAnyStruct(&account)
 	return &RecordResult{AccountRecord: &account, code: code}
 }
 
@@ -53,7 +53,7 @@ type RecordResults struct {
 // NewRecordResults maps转RecordResults
 func NewRecordResults(code, count int, m types.XMaps) *RecordResults {
 	var accounts []*AccountRecord
-	m.ToStructs(&accounts)
+	m.ToAnyStructs(&accounts)
 	return &RecordResults{List: accounts, code: code, Count: count}
 }
 

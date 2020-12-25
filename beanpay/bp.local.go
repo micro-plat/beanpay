@@ -1,12 +1,12 @@
 package beanpay
 
 import (
-	"fmt"
-
 	"github.com/micro-plat/beanpay/beanpay/account"
+	"github.com/micro-plat/beanpay/beanpay/const/confs"
 	"github.com/micro-plat/beanpay/beanpay/const/ecodes"
 	"github.com/micro-plat/beanpay/beanpay/const/ttypes"
 	"github.com/micro-plat/beanpay/beanpay/pkg"
+	"github.com/micro-plat/hydra"
 	"github.com/micro-plat/lib4go/db"
 	"github.com/micro-plat/lib4go/errs"
 	"github.com/micro-plat/lib4go/types"
@@ -368,6 +368,7 @@ func getDB(c interface{}) (bool, db.IDBExecuter, error) {
 	case db.IDBTrans:
 		return true, v, nil
 	default:
-		return false, nil, fmt.Errorf("不支持的参数类型")
+		c, err := hydra.C.DB().GetDB(confs.DBName)
+		return false, c, err
 	}
 }

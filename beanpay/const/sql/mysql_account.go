@@ -2,6 +2,8 @@
 
 package sql
 
+import _ "github.com/micro-plat/beanpay/beanpay/const/sql/mysql"
+
 //CreateAccount 创建帐户信息
 const CreateAccount = `INSERT INTO beanpay_account_info(
 	account_name,ident,groups,eid,balance,credit,status,create_time)values(

@@ -95,7 +95,7 @@ func queryAccount(db db.IDBExecuter, ident, group, eid, accountType, name, statu
 		return nil, fmt.Errorf("sqls:%v,args:%v,err:%v", sqls, args, err)
 	}
 	var accounts []*AccountInfo
-	if err := rows.ToStructs(&accounts); err != nil {
+	if err := rows.ToAnyStructs(&accounts); err != nil {
 		return nil, err
 	}
 

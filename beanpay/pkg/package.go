@@ -41,7 +41,7 @@ func GetPackage(db db.IDBExecuter, ident string, group string, eid string, sid s
 		return nil, err
 	}
 	pkg = &PKG{}
-	if err = row.ToStruct(pkg); err != nil {
+	if err = row.ToAnyStruct(pkg); err != nil {
 		return nil, err
 	}
 	return pkg, nil

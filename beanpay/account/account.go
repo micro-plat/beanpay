@@ -72,7 +72,7 @@ func GetAccount(db db.IDBExecuter, ident string, group string, eid string) (acc 
 		return nil, err
 	}
 	acc = &Account{}
-	if err = row.ToStruct(acc); err != nil {
+	if err = row.ToAnyStruct(acc); err != nil {
 		return nil, err
 	}
 	return acc, nil
