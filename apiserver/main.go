@@ -10,8 +10,10 @@ import (
 var app = hydra.NewApp(
 	hydra.WithPlatName("beanpay"),
 	hydra.WithSystemName("apiserver"),
-	hydra.WithRunFlag("pkg", "是否注册package服务"),
 	hydra.WithServerTypes(http.API),
+	hydra.WithClusterName("prod"),
+	hydra.WithUsage("beanpay"),
+	hydra.WithRunBoolFlag("pkg", "是否注册package服务"),
 )
 
 func main() {
