@@ -16,7 +16,7 @@
 
 √ 　基于 hydra 构建
 
-[接口开发规范](https://github.com/micro-plat/beanpay/blob/master/api.md)
+[接口开发规范](https://github.com/micro-plat/beanpay/blob/master/docs/api.md)
 
 ## 一、独立服务
 
@@ -106,7 +106,7 @@ apiserver run -r zk://192.168.106.18 -c t
 }
 ```
 
-[其它接口，参考开发规范](https://github.com/micro-plat/beanpay/blob/master/api.md)
+[其它接口，参考开发规范](https://github.com/micro-plat/beanpay/blob/master/docs/api.md)
 
 ## 二、代码集成
 
@@ -183,5 +183,3 @@ if err != nil {
 return record
 
 ```
-
-> 其它操作请查看[http://github.com/micro-plat/beanpay/beanpay/service.go](https://github.com/micro-plat/beanpay/blob/master/beanpay/service.go)
