@@ -3,8 +3,8 @@ package pkg
 import (
 	"github.com/micro-plat/beanpay/beanpay/const/ecodes"
 	"github.com/micro-plat/beanpay/beanpay/const/sql"
-	"github.com/micro-plat/hydra/context"
 	"github.com/micro-plat/lib4go/db"
+	"github.com/micro-plat/lib4go/errs"
 	"github.com/micro-plat/lib4go/types"
 )
 
@@ -24,7 +24,7 @@ func change(db db.IDBExecuter, pkgID int64, tradeNo string, changeType int, capa
 		return nil, err
 	}
 	if row == 0 {
-		return nil, context.NewError(ecodes.NotEnough, "服务包剩余数量不足")
+		return nil, errs.NewError(ecodes.NotEnough, "服务包剩余数量不足")
 	}
 
 	//添加变动记录
@@ -33,8 +33,8 @@ func change(db db.IDBExecuter, pkgID int64, tradeNo string, changeType int, capa
 		return nil, err
 	}
 	data, err := getRecordByTradeNo(db, pkgID, tradeNo, changeType)
-	if context.GetCode(err) == ecodes.NotExists {
-		return nil, context.NewError(ecodes.Failed, "添加资金变动失败")
+	if errs.GetCode(err) == ecodes.NotExists {
+		return nil, errs.NewError(ecodes.Failed, "添加资金变动失败")
 	}
 	return data, nil
 }

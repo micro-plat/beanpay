@@ -5,8 +5,8 @@ import (
 
 	"github.com/micro-plat/beanpay/beanpay/const/ecodes"
 	"github.com/micro-plat/beanpay/beanpay/const/sql"
-	"github.com/micro-plat/hydra/context"
 	"github.com/micro-plat/lib4go/db"
+	"github.com/micro-plat/lib4go/errs"
 	"github.com/micro-plat/lib4go/types"
 )
 
@@ -39,7 +39,7 @@ func getPackage(db db.IDBExecuter, accountID int, spkgID string) (db.QueryRow, e
 		return nil, err
 	}
 	if rows.IsEmpty() {
-		return nil, context.NewError(ecodes.NotExists, "服务包不存在")
+		return nil, errs.NewError(ecodes.NotExists, "服务包不存在")
 	}
 	return rows.Get(0), nil
 }
@@ -53,7 +53,7 @@ func getRecordByTradeNo(db db.IDBExecuter, pkgID int64, tradeNo string, changeTy
 		return nil, err
 	}
 	if rows.IsEmpty() {
-		return nil, context.NewError(ecodes.NotExists, "记录不存在")
+		return nil, errs.NewError(ecodes.NotExists, "记录不存在")
 	}
 	return rows.Get(0), nil
 }

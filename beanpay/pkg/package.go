@@ -4,8 +4,8 @@ import (
 	"github.com/micro-plat/beanpay/beanpay/account"
 	"github.com/micro-plat/beanpay/beanpay/const/ecodes"
 	"github.com/micro-plat/beanpay/beanpay/const/ttypes"
-	"github.com/micro-plat/hydra/context"
 	"github.com/micro-plat/lib4go/db"
+	"github.com/micro-plat/lib4go/errs"
 )
 
 //Create 创建服务包信息
@@ -13,9 +13,9 @@ func Create(db db.IDBExecuter, ident string, group string, eid string, sid strin
 
 	pkg, err := GetPackage(db, ident, group, eid, sid)
 	if err == nil {
-		return context.NewResult(ecodes.HasExists, pkg), nil
+		return errs.NewResult(ecodes.HasExists, pkg), nil
 	}
-	if context.GetCode(err) != ecodes.NotExists {
+	if errs.GetCode(err) != ecodes.NotExists {
 		return nil, err
 	}
 	acc, err := account.GetAccount(db, ident, group, eid)
@@ -48,9 +48,9 @@ func GetPackage(db db.IDBExecuter, ident string, group string, eid string, sid s
 }
 
 //AddCapacity 添加服务包数量
-func AddCapacity(db db.IDBExecuter, ident string, group string, eid string, sid string, tradeNo string, capacity int, ext string) (*context.Result, error) {
+func AddCapacity(db db.IDBExecuter, ident string, group string, eid string, sid string, tradeNo string, capacity int, ext string) (*errs.Result, error) {
 	if capacity <= 0 {
-		return nil, context.NewErrorf(ecodes.AmountErr, "数量错误%d", capacity)
+		return nil, errs.NewErrorf(ecodes.AmountErr, "数量错误%d", capacity)
 	}
 	pkg, err := GetPackage(db, ident, group, eid, sid)
 	if err != nil {
@@ -63,22 +63,22 @@ func AddCapacity(db db.IDBExecuter, ident string, group string, eid string, sid 
 	if b {
 		row, err := getRecordByTradeNo(db, pkg.ID, tradeNo, ttypes.Add)
 		if err != nil {
-			return nil, context.NewError(ecodes.Failed, "暂时无法添加服务包数量")
+			return nil, errs.NewError(ecodes.Failed, "暂时无法添加服务包数量")
 		}
-		return context.NewResult(ecodes.HasExists, row), nil
+		return errs.NewResult(ecodes.HasExists, row), nil
 	}
 
 	row, err := change(db, pkg.ID, tradeNo, ttypes.Add, capacity, ext)
 	if err != nil {
 		return nil, err
 	}
-	return context.NewResult(ecodes.Success, row), nil
+	return errs.NewResult(ecodes.Success, row), nil
 }
 
 //DrawingCapacity 添加服务包数量
-func DrawingCapacity(db db.IDBExecuter, ident string, group string, eid string, sid string, tradeNo string, capacity int, ext string) (*context.Result, error) {
+func DrawingCapacity(db db.IDBExecuter, ident string, group string, eid string, sid string, tradeNo string, capacity int, ext string) (*errs.Result, error) {
 	if capacity <= 0 {
-		return nil, context.NewErrorf(ecodes.AmountErr, "数量错误%d", capacity)
+		return nil, errs.NewErrorf(ecodes.AmountErr, "数量错误%d", capacity)
 	}
 	pkg, err := GetPackage(db, ident, group, eid, sid)
 	if err != nil {
@@ -91,23 +91,23 @@ func DrawingCapacity(db db.IDBExecuter, ident string, group string, eid string, 
 	if b {
 		row, err := getRecordByTradeNo(db, pkg.ID, tradeNo, ttypes.Drawing)
 		if err != nil {
-			return nil, context.NewError(ecodes.Failed, "暂时无法提取服务包数量")
+			return nil, errs.NewError(ecodes.Failed, "暂时无法提取服务包数量")
 		}
-		return context.NewResult(ecodes.HasExists, row), nil
+		return errs.NewResult(ecodes.HasExists, row), nil
 	}
 
 	row, err := change(db, pkg.ID, tradeNo, ttypes.Drawing, -1*capacity, ext)
 	if err != nil {
 		return nil, err
 	}
-	return context.NewResult(ecodes.Success, row), nil
+	return errs.NewResult(ecodes.Success, row), nil
 }
 
 //DeductCapacity 扣减服务包数量
-func DeductCapacity(db db.IDBExecuter, ident string, group string, eid string, sid string, tradeNo string, capacity int, ext string) (*context.Result, error) {
+func DeductCapacity(db db.IDBExecuter, ident string, group string, eid string, sid string, tradeNo string, capacity int, ext string) (*errs.Result, error) {
 
 	if capacity <= 0 {
-		return nil, context.NewErrorf(ecodes.AmountErr, "数量错误%d", capacity)
+		return nil, errs.NewErrorf(ecodes.AmountErr, "数量错误%d", capacity)
 	}
 	pkg, err := GetPackage(db, ident, group, eid, sid)
 	if err != nil {
@@ -121,22 +121,22 @@ func DeductCapacity(db db.IDBExecuter, ident string, group string, eid string, s
 	if b {
 		row, err := getRecordByTradeNo(db, pkg.ID, tradeNo, ttypes.Deduct)
 		if err != nil {
-			return nil, context.NewError(ecodes.Failed, "暂时无法扣减服务包数量")
+			return nil, errs.NewError(ecodes.Failed, "暂时无法扣减服务包数量")
 		}
-		return context.NewResult(ecodes.HasExists, row), nil
+		return errs.NewResult(ecodes.HasExists, row), nil
 	}
 
 	row, err := change(db, pkg.ID, tradeNo, ttypes.Deduct, -capacity, ext)
 	if err != nil {
 		return nil, err
 	}
-	return context.NewResult(ecodes.Success, row), nil
+	return errs.NewResult(ecodes.Success, row), nil
 }
 
 //RefundCapacity 退回服务包数量
-func RefundCapacity(db db.IDBExecuter, ident string, group string, eid string, sid string, tradeNo string, capacity int, ext string) (*context.Result, error) {
+func RefundCapacity(db db.IDBExecuter, ident string, group string, eid string, sid string, tradeNo string, capacity int, ext string) (*errs.Result, error) {
 	if capacity <= 0 {
-		return nil, context.NewErrorf(ecodes.AmountErr, "数量错误%d", capacity)
+		return nil, errs.NewErrorf(ecodes.AmountErr, "数量错误%d", capacity)
 	}
 	pkg, err := GetPackage(db, ident, group, eid, sid)
 	if err != nil {
@@ -151,9 +151,9 @@ func RefundCapacity(db db.IDBExecuter, ident string, group string, eid string, s
 	if b {
 		row, err := getRecordByTradeNo(db, pkg.ID, tradeNo, ttypes.Refund)
 		if err != nil {
-			return nil, context.NewError(ecodes.Failed, "暂时无法退款")
+			return nil, errs.NewError(ecodes.Failed, "暂时无法退款")
 		}
-		return context.NewResult(ecodes.HasExists, row), nil
+		return errs.NewResult(ecodes.HasExists, row), nil
 	}
 	//检查是否存在加款记录
 	b, err = exists(db, pkg.ID, tradeNo, capacity, ttypes.Deduct)
@@ -161,14 +161,14 @@ func RefundCapacity(db db.IDBExecuter, ident string, group string, eid string, s
 		return nil, err
 	}
 	if !b {
-		return nil, context.NewError(ecodes.HasExists, "扣款交易编号不存在")
+		return nil, errs.NewError(ecodes.HasExists, "扣款交易编号不存在")
 	}
 
 	row, err := change(db, pkg.ID, tradeNo, ttypes.Refund, capacity, ext)
 	if err != nil {
 		return nil, err
 	}
-	return context.NewResult(ecodes.Success, row), nil
+	return errs.NewResult(ecodes.Success, row), nil
 }
 
 //Query 查询指定服务变的变动明细

@@ -3,8 +3,8 @@ package beanpay
 import (
 	"github.com/micro-plat/beanpay/beanpay/account"
 	"github.com/micro-plat/beanpay/beanpay/pkg"
-	"github.com/micro-plat/hydra/context"
 	"github.com/micro-plat/lib4go/db"
+	"github.com/micro-plat/lib4go/errs"
 )
 
 //IBeanpay Beanpay接口
@@ -35,10 +35,10 @@ type IAccount interface {
 type IPackage interface {
 	CreatePackage(i interface{}, eid string, spid string, name string, total int, daily int, expires string) (interface{}, error)
 	GetPackage(i interface{}, eid string, spid string) (*pkg.PKG, error)
-	AddCapacity(i interface{}, eid string, spid string, tradeNo string, capacity int, ext ...string) (*context.Result, error)
-	DrawingCapacity(i interface{}, eid string, spid string, tradeNo string, capacity int, ext ...string) (*context.Result, error)
-	DeductCapacity(i interface{}, eid string, spid string, tradeNo string, capacity int, ext ...string) (*context.Result, error)
-	RefundCapacity(i interface{}, eid string, spid string, tradeNo string, capacity int, ext ...string) (*context.Result, error)
+	AddCapacity(i interface{}, eid string, spid string, tradeNo string, capacity int, ext ...string) (*errs.Result, error)
+	DrawingCapacity(i interface{}, eid string, spid string, tradeNo string, capacity int, ext ...string) (*errs.Result, error)
+	DeductCapacity(i interface{}, eid string, spid string, tradeNo string, capacity int, ext ...string) (*errs.Result, error)
+	RefundCapacity(i interface{}, eid string, spid string, tradeNo string, capacity int, ext ...string) (*errs.Result, error)
 	QueryPackageRecords(i interface{}, eid string, spid string, startTime string, endTime string, pi int, ps int) (db.QueryRows, error)
 }
 

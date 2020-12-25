@@ -146,21 +146,21 @@ apiserver run -r zk://192.168.106.18 -c t
 
 ```go
 //根据ident系统标识与group用户
-bp := beanpay.GetAccount(ctx.Request.GetString("ident"),ctx.Request.GetString("group"))
+bp := beanpay.GetAccount(ctx.Request().GetString("ident"),ctx.Request().GetString("group"))
 	account, err := bp.CreateAccount(ctx,
-		ctx.Request.GetString("eid"),
-		ctx.Request.GetString("name"))
+		ctx.Request().GetString("eid"),
+		ctx.Request().GetString("name"))
 return account
 ```
 
 - 帐户加款
 
 ```go
-bp:=beanpay.GetAccount(ctx.Request.GetString("ident"),ctx.Request.GetString("group"))
+bp:=beanpay.GetAccount(ctx.Request().GetString("ident"),ctx.Request().GetString("group"))
 record, err := bp.AddAmount(ctx,
-ctx.Request.GetString("eid"),
-ctx.Request.GetString("trade_no"),
-ctx.Request.GetInt("amount"))
+ctx.Request().GetString("eid"),
+ctx.Request().GetString("trade_no"),
+ctx.Request().GetInt("amount"))
 if err != nil {
     return err
 }
@@ -171,12 +171,12 @@ return record
 - 帐户扣款
 
 ```go
-bp:=beanpay.GetAccount(ctx.Request.GetString("ident"),ctx.Request.GetString("group"))
+bp:=beanpay.GetAccount(ctx.Request().GetString("ident"),ctx.Request().GetString("group"))
 record, err := bp.DeductAmount(ctx,
-ctx.Request.GetString("eid"),
-ctx.Request.GetString("trade_no"),
-ctx.Request.GetInt("trade_type")，
-ctx.Request.GetInt("amount"))
+ctx.Request().GetString("eid"),
+ctx.Request().GetString("trade_no"),
+ctx.Request().GetInt("trade_type")，
+ctx.Request().GetInt("amount"))
 if err != nil {
     return err
 }

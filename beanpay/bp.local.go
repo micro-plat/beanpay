@@ -3,15 +3,12 @@ package beanpay
 import (
 	"fmt"
 
-	"github.com/micro-plat/hydra/context"
-
 	"github.com/micro-plat/beanpay/beanpay/account"
-	"github.com/micro-plat/beanpay/beanpay/const/confs"
 	"github.com/micro-plat/beanpay/beanpay/const/ecodes"
 	"github.com/micro-plat/beanpay/beanpay/const/ttypes"
 	"github.com/micro-plat/beanpay/beanpay/pkg"
-	"github.com/micro-plat/hydra/component"
 	"github.com/micro-plat/lib4go/db"
+	"github.com/micro-plat/lib4go/errs"
 	"github.com/micro-plat/lib4go/types"
 )
 
@@ -84,7 +81,7 @@ func (b *Beanpay) AddAmount(i interface{}, eid string, tradeNo string, amount fl
 	}
 
 	if amount == 0 {
-		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%v", amount)
+		return nil, errs.NewErrorf(ecodes.AmountErr, "金额错误%v", amount)
 	}
 	row, err := account.AddAmount(db, b.ident, b.group, eid, tradeNo, TPTrade, ttypes.Add, amount, memo, types.GetStringByIndex(ext, 0, "{}"))
 	if !m {
@@ -105,7 +102,7 @@ func (b *Beanpay) DrawingAmount(i interface{}, eid string, tradeNo string, amoun
 		return nil, err
 	}
 	if amount == 0 {
-		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%v", amount)
+		return nil, errs.NewErrorf(ecodes.AmountErr, "金额错误%v", amount)
 	}
 	row, err := account.DrawingAmount(db, b.ident, b.group, eid, tradeNo, TPTrade, ttypes.Drawing, amount, memo, types.GetStringByIndex(ext, 0, "{}"))
 	if !m {
@@ -263,7 +260,7 @@ func (b *Beanpay) GetPackage(i interface{}, eid string, spid string) (*pkg.PKG, 
 }
 
 //AddCapacity 指定用户编号，交易变号，金额进行服务包数量追加
-func (b *Beanpay) AddCapacity(i interface{}, eid string, spid string, tradeNo string, capacity int, ext ...string) (*context.Result, error) {
+func (b *Beanpay) AddCapacity(i interface{}, eid string, spid string, tradeNo string, capacity int, ext ...string) (*errs.Result, error) {
 	m, db, err := getTrans(i)
 	if err != nil {
 		return nil, err
@@ -281,7 +278,7 @@ func (b *Beanpay) AddCapacity(i interface{}, eid string, spid string, tradeNo st
 }
 
 //DrawingCapacity 指定用户编号，交易变号，金额进行服务包数量提取
-func (b *Beanpay) DrawingCapacity(i interface{}, eid string, spid string, tradeNo string, capacity int, ext ...string) (*context.Result, error) {
+func (b *Beanpay) DrawingCapacity(i interface{}, eid string, spid string, tradeNo string, capacity int, ext ...string) (*errs.Result, error) {
 	m, db, err := getTrans(i)
 	if err != nil {
 		return nil, err
@@ -299,7 +296,7 @@ func (b *Beanpay) DrawingCapacity(i interface{}, eid string, spid string, tradeN
 }
 
 //DeductCapacity 指定用户编号，交易变号，金额进行服务包数量扣减
-func (b *Beanpay) DeductCapacity(i interface{}, eid string, spid string, tradeNo string, capacity int, ext ...string) (*context.Result, error) {
+func (b *Beanpay) DeductCapacity(i interface{}, eid string, spid string, tradeNo string, capacity int, ext ...string) (*errs.Result, error) {
 	m, db, err := getTrans(i)
 	if err != nil {
 		return nil, err
@@ -318,7 +315,7 @@ func (b *Beanpay) DeductCapacity(i interface{}, eid string, spid string, tradeNo
 }
 
 //RefundCapacity 指定用户编号，交易变号，金额进行服务包数量退回
-func (b *Beanpay) RefundCapacity(i interface{}, eid string, spid string, tradeNo string, capacity int, ext ...string) (*context.Result, error) {
+func (b *Beanpay) RefundCapacity(i interface{}, eid string, spid string, tradeNo string, capacity int, ext ...string) (*errs.Result, error) {
 	m, db, err := getTrans(i)
 	if err != nil {
 		return nil, err
@@ -366,12 +363,6 @@ func getDBExecuter(c interface{}) (db.IDBExecuter, error) {
 
 func getDB(c interface{}) (bool, db.IDBExecuter, error) {
 	switch v := c.(type) {
-	case *context.Context:
-		db, err := v.GetContainer().GetDB(confs.DBName)
-		return false, db, err
-	case component.IContainer:
-		db, err := v.GetDB(confs.DBName)
-		return false, db, err
 	case db.IDB:
 		return false, v, nil
 	case db.IDBTrans:

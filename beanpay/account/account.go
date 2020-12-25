@@ -3,8 +3,8 @@ package account
 import (
 	"github.com/micro-plat/beanpay/beanpay/const/ecodes"
 	"github.com/micro-plat/beanpay/beanpay/const/ttypes"
-	"github.com/micro-plat/hydra/context"
 	"github.com/micro-plat/lib4go/db"
+	"github.com/micro-plat/lib4go/errs"
 )
 
 //Create 根据eid,name创建帐户,如果帐户存在直接返回帐户编号
@@ -13,7 +13,7 @@ func Create(db db.IDBExecuter, ident string, group string, eid string, name stri
 	if err == nil {
 		return NewAccountResult(ecodes.HasExists, acc), nil
 	}
-	if context.GetCode(err) != ecodes.NotExists {
+	if errs.GetCode(err) != ecodes.NotExists {
 		return nil, err
 	}
 	if err = create(db, ident, group, eid, name); err != nil {
@@ -98,7 +98,7 @@ func AddAmount(db db.IDBExecuter, ident string, group string, eid string, tradeN
 	if b {
 		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, tradeType, changeType)
 		if err != nil {
-			return nil, context.NewError(ecodes.Failed, "暂时无法加款")
+			return nil, errs.NewError(ecodes.Failed, "暂时无法加款")
 		}
 		return NewRecordResult(ecodes.HasExists, row), nil
 	}
@@ -124,7 +124,7 @@ func DrawingAmount(db db.IDBExecuter, ident string, group string, eid string, tr
 	if b {
 		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, tradeType, changeType)
 		if err != nil {
-			return nil, context.NewError(ecodes.Failed, "暂时无法提款")
+			return nil, errs.NewError(ecodes.Failed, "暂时无法提款")
 		}
 		return NewRecordResult(ecodes.HasExists, row), nil
 	}
@@ -138,7 +138,7 @@ func DrawingAmount(db db.IDBExecuter, ident string, group string, eid string, tr
 //DeductAmount 资金扣款
 func DeductAmount(db db.IDBExecuter, ident string, group string, eid string, tradeNo string, tradeType int, amount float64, memo, ext string) (*RecordResult, error) {
 	if amount == 0 {
-		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%d", amount)
+		return nil, errs.NewErrorf(ecodes.AmountErr, "金额错误%d", amount)
 	}
 	acc, err := GetAccount(db, ident, group, eid)
 	if err != nil {
@@ -151,7 +151,7 @@ func DeductAmount(db db.IDBExecuter, ident string, group string, eid string, tra
 	if b {
 		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, tradeType, ttypes.Deduct)
 		if err != nil {
-			return nil, context.NewError(ecodes.Failed, "暂时无法扣款")
+			return nil, errs.NewError(ecodes.Failed, "暂时无法扣款")
 		}
 		return NewRecordResult(ecodes.HasExists, row), nil
 	}
@@ -165,7 +165,7 @@ func DeductAmount(db db.IDBExecuter, ident string, group string, eid string, tra
 //RefundAmount 资金退款
 func RefundAmount(db db.IDBExecuter, ident string, group string, eid string, tradeNo string, extNo string, tradeType int, amount float64, memo, ext string) (*RecordResult, error) {
 	if amount == 0 {
-		return nil, context.NewErrorf(ecodes.AmountErr, "金额错误%d", amount)
+		return nil, errs.NewErrorf(ecodes.AmountErr, "金额错误%d", amount)
 	}
 
 	acc, err := GetAccount(db, ident, group, eid)
@@ -179,7 +179,7 @@ func RefundAmount(db db.IDBExecuter, ident string, group string, eid string, tra
 		return nil, err
 	}
 	if deductAmount == 0 {
-		return nil, context.NewErrorf(ecodes.NotExists, "交易编号(%s)不存在", extNo)
+		return nil, errs.NewErrorf(ecodes.NotExists, "交易编号(%s)不存在", extNo)
 	}
 
 	// 检查扣款金额
@@ -190,7 +190,7 @@ func RefundAmount(db db.IDBExecuter, ident string, group string, eid string, tra
 	if b {
 		row, err := getRecordByTradeNo(db, acc.ID, tradeNo, tradeType, ttypes.Refund)
 		if err != nil {
-			return nil, context.NewError(ecodes.Failed, "暂时无法扣款")
+			return nil, errs.NewError(ecodes.Failed, "暂时无法扣款")
 		}
 		return NewRecordResult(ecodes.HasExists, row), nil
 	}
@@ -214,7 +214,7 @@ func ReverseAmount(db db.IDBExecuter, ident string, group string, eid string, tr
 		return nil, err
 	}
 	if amount != 0 {
-		return nil, context.NewErrorf(ecodes.HasExists, "红冲交易编号(%s)已存在", extNo)
+		return nil, errs.NewErrorf(ecodes.HasExists, "红冲交易编号(%s)已存在", extNo)
 	}
 	//锁交易记录
 	tradeAmount, err := lockTradeRecord(db, acc.ID, extNo, tradeType, changeType)
@@ -222,7 +222,7 @@ func ReverseAmount(db db.IDBExecuter, ident string, group string, eid string, tr
 		return nil, err
 	}
 	if tradeAmount == 0 {
-		return nil, context.NewErrorf(ecodes.NotExists, "交易编号(%s)不存在", extNo)
+		return nil, errs.NewErrorf(ecodes.NotExists, "交易编号(%s)不存在", extNo)
 	}
 
 	row, err := change(db, acc.ID, tradeNo, extNo, ttypes.Reverse, changeType, tradeAmount, memo, ext)

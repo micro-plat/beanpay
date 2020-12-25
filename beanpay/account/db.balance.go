@@ -5,8 +5,8 @@ import (
 
 	"github.com/micro-plat/beanpay/beanpay/const/ecodes"
 	"github.com/micro-plat/beanpay/beanpay/const/sql"
-	"github.com/micro-plat/hydra/context"
 	"github.com/micro-plat/lib4go/db"
+	"github.com/micro-plat/lib4go/errs"
 	"github.com/micro-plat/lib4go/types"
 )
 
@@ -22,7 +22,7 @@ func getBalance(db db.IDBExecuter, ident string, group string, eid string) (int,
 		return 0, err
 	}
 	if rows.IsEmpty() {
-		return 0, context.NewError(908, "帐户不存在")
+		return 0, errs.NewError(908, "帐户不存在")
 	}
 	return rows.Get(0).GetInt("balance"), nil
 
@@ -47,7 +47,7 @@ func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, trad
 	}
 	fmt.Printf("sqls:%v,args:%v", sqls, args)
 	if row == 0 {
-		return nil, context.NewError(ecodes.NotEnough, "帐户余额不足")
+		return nil, errs.NewError(ecodes.NotEnough, "帐户余额不足")
 	}
 
 	//添加资金变动
@@ -56,8 +56,8 @@ func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, trad
 		return nil, err
 	}
 	data, err := getRecordByTradeNo(db, accountID, tradeNo, tradeType, changeType)
-	if context.GetCode(err) == ecodes.NotExists {
-		return nil, context.NewError(ecodes.Failed, "添加资金变动记录失败")
+	if errs.GetCode(err) == ecodes.NotExists {
+		return nil, errs.NewError(ecodes.Failed, "添加资金变动记录失败")
 	}
 	return data, nil
 }
@@ -92,7 +92,7 @@ func getRecordByID(db db.IDBExecuter, id int64) (db.QueryRow, error) {
 		return nil, err
 	}
 	if rows.IsEmpty() {
-		return nil, context.NewError(ecodes.NotExists, "记录不存在")
+		return nil, errs.NewError(ecodes.NotExists, "记录不存在")
 	}
 	return rows.Get(0), nil
 }
@@ -107,7 +107,7 @@ func getRecordByTradeNo(db db.IDBExecuter, accountID int, tradeNo string, tradeT
 		return nil, err
 	}
 	if rows.IsEmpty() {
-		return nil, context.NewError(ecodes.NotExists, "记录不存在")
+		return nil, errs.NewError(ecodes.NotExists, "记录不存在")
 	}
 	return rows.Get(0), nil
 }
@@ -164,7 +164,7 @@ func checkRefundAmount(db db.IDBExecuter, accountID int, tradeNo, extNo string, 
 		return false, fmt.Errorf("查询已退款金额发生异常,count:%v,err:%v", row.Len(), err)
 	}
 	if !row.Get(0).GetBool("can_refund") {
-		return false, context.NewErrorf(ecodes.AmountErr, "扣款金额:%v,已退款金额:%v,本次退款金额:%v", deductAmount, row.Get(0).GetFloat64("refund_amount"), amount)
+		return false, errs.NewErrorf(ecodes.AmountErr, "扣款金额:%v,已退款金额:%v,本次退款金额:%v", deductAmount, row.Get(0).GetFloat64("refund_amount"), amount)
 	}
 	return types.GetInt(count) != 0, nil
 }

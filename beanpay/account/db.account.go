@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/micro-plat/beanpay/beanpay/const/sql"
-	"github.com/micro-plat/hydra/context"
 	"github.com/micro-plat/lib4go/db"
+	"github.com/micro-plat/lib4go/errs"
 	"github.com/micro-plat/lib4go/types"
 )
 
@@ -64,7 +64,7 @@ func getAccount(db db.IDBExecuter, ident string, groups string, eid string) (r d
 		return nil, err
 	}
 	if rows.IsEmpty() {
-		return nil, context.NewError(908, "帐户不存在")
+		return nil, errs.NewError(908, "帐户不存在")
 	}
 	return rows.Get(0), nil
 
