@@ -41,11 +41,10 @@ func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, trad
 		"memo":        memo,
 	}
 	//修改帐户余额
-	row, sqls, args, err := db.Execute(sql.ChangeAmount, input)
+	row, _, _, err := db.Execute(sql.ChangeAmount, input)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("sqls:%v,args:%v", sqls, args)
 	if row == 0 {
 		return nil, errs.NewError(ecodes.NotEnough, "帐户余额不足")
 	}
