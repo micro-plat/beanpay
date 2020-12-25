@@ -5,6 +5,7 @@ import (
 	"github.com/micro-plat/beanpay/apiserver/services/pkg"
 	"github.com/micro-plat/hydra"
 	"github.com/micro-plat/hydra/hydra/servers/http"
+	"github.com/micro-plat/lib4go/types"
 )
 
 var app = hydra.NewApp(
@@ -13,7 +14,7 @@ var app = hydra.NewApp(
 	hydra.WithServerTypes(http.API),
 	hydra.WithClusterName("prod"),
 	hydra.WithUsage("beanpay"),
-	hydra.WithRunBoolFlag("pkg", "是否注册package服务"),
+	hydra.WithRunFlag(hydra.WithBoolFlag("pkg", "是否注册package服务")),
 )
 
 func main() {
@@ -25,7 +26,7 @@ func main() {
 
 	//注册服务包
 	hydra.RunCli.OnStarting(func(c hydra.ICli) error {
-		if c.IsSet("pkg") {
+		if c.IsSet("pkg") && types.GetBool(c.String("pkg")) {
 			app.Micro("/package", pkg.NewPackageHandler)
 			app.Micro("/package/capacity", pkg.NewCapacityHandler)
 			app.Micro("/package/record", pkg.NewRecordHandler)

@@ -45,7 +45,7 @@ func (r *RecordResult) GetCode() int {
 
 // RecordResults 查询账户记录
 type RecordResults struct {
-	List  []*AccountRecord `json:"data"`
+	List  []*AccountRecord `json:"data,omitempty"`
 	code  int
 	Count int `json:"count" m2s:"count"`
 }
