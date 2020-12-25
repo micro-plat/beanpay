@@ -65,7 +65,7 @@ where t.create_time >= DATE_FORMAT(@start,'%Y%m%d')
 and t.create_time < DATE_ADD(DATE_FORMAT(@end,'%Y%m%d'),interval 1 day)
 and a.groups like CONCAT('',@types,'%')
 and a.account_name like concat('%',@account_name,'%')
-&t.account_id &t.change_type &t.trade_type &a.groups
+&t.account_id &t.change_type &t.trade_type &a.groups &a.ident
 `
 
 //QueryBalanceRecord 查询余额资金变动信息
