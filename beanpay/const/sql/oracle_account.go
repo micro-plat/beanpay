@@ -66,7 +66,7 @@ where t.create_time >= to_date(@start,'yyyy-MM-dd')
 and t.create_time < to_date(@end,'yyyy-MM-dd')+1
 and a.groups like @types||'%'
 and a.account_name like '%'|| @account_name ||'%'
-&t.account_id &t.change_type &t.trade_type &a.groups
+&t.account_id &t.change_type &t.trade_type &a.groups &a.ident
 `
 
 //QueryBalanceRecord 查询余额资金变动信息
