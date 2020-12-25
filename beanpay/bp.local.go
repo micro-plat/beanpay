@@ -61,7 +61,7 @@ func (b *Beanpay) QueryAccount(i interface{}, eid, accountType, name, status str
 	if err != nil {
 		return nil, err
 	}
-	return account.QueryAccount(db, b.ident, b.group, eid, accountType, name, status, pi, ps)
+	return account.QueryAccount(db, b.ident, b.group, eid, accountType, name, status, types.GetMax(pi, 1), ps)
 }
 
 // SetCreditAmount 设置授信金额
@@ -237,7 +237,7 @@ func (b *Beanpay) QueryAccountRecords(i interface{}, accountType string, account
 	if err != nil {
 		return nil, err
 	}
-	return account.Query(db, accountType, accountID, accountName, group, changeType, tradeType, eid, startTime, endTime, pi, ps)
+	return account.Query(db, accountType, accountID, accountName, group, changeType, tradeType, eid, startTime, endTime, types.GetMax(pi, 1), ps)
 }
 
 //CreatePackage 根据用户编号， 服务编号，服务名称，服务包可用总数，日限制使用次数，过期时间创建服务包
@@ -338,7 +338,7 @@ func (b *Beanpay) QueryPackageRecords(i interface{}, eid string, spid string, st
 	if err != nil {
 		return nil, err
 	}
-	return pkg.Query(db, b.ident, b.group, eid, spid, startTime, endTime, pi, ps)
+	return pkg.Query(db, b.ident, b.group, eid, spid, startTime, endTime, types.GetMax(pi, 1), ps)
 }
 
 func getTrans(c interface{}) (bool, db.IDBTrans, error) {
