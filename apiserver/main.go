@@ -15,6 +15,7 @@ var app = hydra.NewApp(
 	hydra.WithClusterName("prod"),
 	hydra.WithUsage("beanpay"),
 	hydra.WithRunFlag(hydra.WithBoolFlag("pkg", "是否注册package服务")),
+	hydra.WithDBFlag(hydra.WithBoolFlag("pkg", "是否注册package服务")),
 )
 
 func main() {
