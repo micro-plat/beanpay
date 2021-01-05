@@ -23,14 +23,14 @@ func query(db db.IDBExecuter, accountType string, group string, accountID string
 		"size":         pi * ps,
 		"pageSize":     ps,
 	}
-	count, s, p, err := db.Scalar(sql.QueryBalanceRecordCount, input)
+	count, err := db.Scalar(sql.QueryBalanceRecordCount, input)
 	if err != nil {
-		return 0, nil, fmt.Errorf("SQL语句执行出错:%w %s(%v)", err, s, p)
+		return 0, nil, fmt.Errorf("SQL语句执行出错:%w", err)
 	}
 
-	rows, s, p, err := db.Query(sql.QueryBalanceRecord, input)
+	rows, err := db.Query(sql.QueryBalanceRecord, input)
 	if err != nil {
-		return 0, nil, fmt.Errorf("SQL语句执行出错:%w %s(%v)", err, s, p)
+		return 0, nil, fmt.Errorf("SQL语句执行出错:%w", err)
 	}
 	return types.GetInt(count), rows, nil
 }

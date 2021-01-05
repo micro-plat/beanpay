@@ -1,8 +1,6 @@
 package pkg
 
 import (
-	"fmt"
-
 	"github.com/micro-plat/beanpay/beanpay/const/ecodes"
 	"github.com/micro-plat/beanpay/beanpay/const/sql"
 	"github.com/micro-plat/lib4go/db"
@@ -20,9 +18,9 @@ func create(db db.IDBExecuter, accountID int, spkgID string, name string, total 
 		"daily":      types.DecodeInt(daily, 0, total, daily),
 		"expires":    expires,
 	}
-	_, s, p, err := db.Execute(sql.CreatePackage, input)
+	_, err := db.Execute(sql.CreatePackage, input)
 	if err != nil {
-		return fmt.Errorf("%v %s,%+v", err, s, p)
+		return err
 	}
 	return nil
 
@@ -34,7 +32,7 @@ func getPackage(db db.IDBExecuter, accountID int, spkgID string) (db.QueryRow, e
 		"account_id": accountID,
 		"spkg_id":    spkgID,
 	}
-	rows, _, _, err := db.Query(sql.GetPackageBySPKG, input)
+	rows, err := db.Query(sql.GetPackageBySPKG, input)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +42,7 @@ func getPackage(db db.IDBExecuter, accountID int, spkgID string) (db.QueryRow, e
 	return rows.Get(0), nil
 }
 func getRecordByTradeNo(db db.IDBExecuter, pkgID int64, tradeNo string, changeType int) (db.QueryRow, error) {
-	rows, _, _, err := db.Query(sql.GetPackageRecordByTradeNo, map[string]interface{}{
+	rows, err := db.Query(sql.GetPackageRecordByTradeNo, map[string]interface{}{
 		"pkg_id":      pkgID,
 		"trade_no":    tradeNo,
 		"change_type": changeType,

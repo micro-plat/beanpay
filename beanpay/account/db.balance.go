@@ -17,7 +17,7 @@ func getBalance(db db.IDBExecuter, ident string, group string, eid string) (int,
 		"groups": group,
 		"eid":    eid,
 	}
-	rows, _, _, err := db.Query(sql.GetAccountByeid, input)
+	rows, err := db.Query(sql.GetAccountByeid, input)
 	if err != nil {
 		return 0, err
 	}
@@ -41,7 +41,7 @@ func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, trad
 		"memo":        memo,
 	}
 	//修改帐户余额
-	row, _, _, err := db.Execute(sql.ChangeAmount, input)
+	row, err := db.Execute(sql.ChangeAmount, input)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, trad
 	}
 
 	//添加资金变动
-	row, _, _, err = db.Execute(sql.AddBalanceRecord, input)
+	row, err = db.Execute(sql.AddBalanceRecord, input)
 	if err != nil {
 		return nil, err
 	}
@@ -72,19 +72,19 @@ func exists(db db.IDBExecuter, accountID int, tradeNo string, tradeType int, cha
 	}
 
 	// 锁账户
-	accID, _, _, err := db.Scalar(sql.LockAccount, input)
+	accID, err := db.Scalar(sql.LockAccount, input)
 	if err != nil || types.GetInt64(accID) == 0 {
 		return false, fmt.Errorf("锁账户失败，account_id:%v,accID:%v,err:%v", accountID, accID, err)
 	}
 	// 检查交易是否已存在
-	row, _, _, err := db.Scalar(sql.ExistsBalanceRecord, input)
+	row, err := db.Scalar(sql.ExistsBalanceRecord, input)
 	if err != nil {
 		return false, err
 	}
 	return types.GetInt(row) != 0, nil
 }
 func getRecordByID(db db.IDBExecuter, id int64) (db.QueryRow, error) {
-	rows, _, _, err := db.Query(sql.GetBalanceRecord, map[string]interface{}{
+	rows, err := db.Query(sql.GetBalanceRecord, map[string]interface{}{
 		"id": id,
 	})
 	if err != nil {
@@ -96,7 +96,7 @@ func getRecordByID(db db.IDBExecuter, id int64) (db.QueryRow, error) {
 	return rows.Get(0), nil
 }
 func getRecordByTradeNo(db db.IDBExecuter, accountID int, tradeNo string, tradeType int, changeType int) (db.QueryRow, error) {
-	rows, _, _, err := db.Query(sql.GetBalanceRecordByTradeNo, map[string]interface{}{
+	rows, err := db.Query(sql.GetBalanceRecordByTradeNo, map[string]interface{}{
 		"account_id":  accountID,
 		"trade_no":    tradeNo,
 		"change_type": changeType,
@@ -119,7 +119,7 @@ func lockTradeRecord(db db.IDBExecuter, accountID int, tradeNo string, tradeType
 		"change_type": changeType,
 		"trade_type":  tradeType,
 	}
-	row, _, _, err := db.Scalar(sql.LockTradeRecord, input)
+	row, err := db.Scalar(sql.LockTradeRecord, input)
 	if err != nil {
 		return 0, err
 	}
@@ -134,7 +134,7 @@ func queryTradedAmount(db db.IDBExecuter, accountID int, extNo string, tradeType
 		"change_type": changeType,
 		"trade_type":  tradeType,
 	}
-	row, _, _, err := db.Scalar(sql.QueryTradedAmount, input)
+	row, err := db.Scalar(sql.QueryTradedAmount, input)
 	if err != nil {
 		return 0, err
 	}
@@ -153,12 +153,12 @@ func checkRefundAmount(db db.IDBExecuter, accountID int, tradeNo, extNo string, 
 		"amount":        amount,
 	}
 	// 检查交易是否已存在
-	count, _, _, err := db.Scalar(sql.ExistsBalanceRecord, input)
+	count, err := db.Scalar(sql.ExistsBalanceRecord, input)
 	if err != nil {
 		return false, err
 	}
 
-	row, _, _, err := db.Query(sql.CheckRefundAmount, input)
+	row, err := db.Query(sql.CheckRefundAmount, input)
 	if err != nil || row.IsEmpty() {
 		return false, fmt.Errorf("查询已退款金额发生异常,count:%v,err:%v", row.Len(), err)
 	}

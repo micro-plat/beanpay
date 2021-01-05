@@ -19,7 +19,7 @@ func change(db db.IDBExecuter, pkgID int64, tradeNo string, changeType int, capa
 		"ext":         ext,
 	}
 	//修改包数量
-	row, _, _, err := db.Execute(sql.ChangePackage, input)
+	row, err := db.Execute(sql.ChangePackage, input)
 	if err != nil {
 		return nil, err
 	}
@@ -28,7 +28,7 @@ func change(db db.IDBExecuter, pkgID int64, tradeNo string, changeType int, capa
 	}
 
 	//添加变动记录
-	row, _, _, err = db.Execute(sql.AddPackageRecord, input)
+	row, err = db.Execute(sql.AddPackageRecord, input)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func exists(db db.IDBExecuter, pkgID int64, tradeNo string, num int, changeType 
 		"change_type": changeType,
 		"max_num":     num,
 	}
-	row, _, _, err := db.Scalar(sql.ExistsPackageRecord, input)
+	row, err := db.Scalar(sql.ExistsPackageRecord, input)
 	if err != nil {
 		return false, err
 	}

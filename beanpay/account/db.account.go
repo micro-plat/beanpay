@@ -1,8 +1,6 @@
 package account
 
 import (
-	"fmt"
-
 	"github.com/micro-plat/beanpay/beanpay/const/sql"
 	"github.com/micro-plat/lib4go/db"
 	"github.com/micro-plat/lib4go/errs"
@@ -17,7 +15,7 @@ func create(db db.IDBExecuter, ident string, groups string, eid string, name str
 		"eid":    eid,
 		"name":   name,
 	}
-	_, _, _, err := db.Execute(sql.CreateAccount, input)
+	_, err := db.Execute(sql.CreateAccount, input)
 	if err != nil {
 		return err
 	}
@@ -32,7 +30,7 @@ func update(db db.IDBExecuter, ident string, groups string, eid string, name str
 		"eid":    eid,
 		"name":   name,
 	}
-	_, _, _, err := db.Execute(sql.UpdateAccount, input)
+	_, err := db.Execute(sql.UpdateAccount, input)
 	if err != nil {
 		return err
 	}
@@ -45,7 +43,7 @@ func setCreditAmount(db db.IDBExecuter, credit float64, accountID int) error {
 		"credit":     credit,
 		"account_id": accountID,
 	}
-	_, _, _, err := db.Execute(sql.SetCreditAmount, input)
+	_, err := db.Execute(sql.SetCreditAmount, input)
 	if err != nil {
 		return err
 	}
@@ -59,7 +57,7 @@ func getAccount(db db.IDBExecuter, ident string, groups string, eid string) (r d
 		"groups": groups,
 		"eid":    eid,
 	}
-	rows, _, _, err := db.Query(sql.GetAccountByeid, input)
+	rows, err := db.Query(sql.GetAccountByeid, input)
 	if err != nil {
 		return nil, err
 	}
@@ -83,16 +81,16 @@ func queryAccount(db db.IDBExecuter, ident, group, eid, accountType, name, statu
 		"size":         pi * ps,
 		"pageSize":     ps,
 	}
-	count, sqls, args, err := db.Scalar(sql.QueryAccountListCount, input)
+	count, err := db.Scalar(sql.QueryAccountListCount, input)
 	if err != nil {
-		return nil, fmt.Errorf("sqls:%v,args:%v,err:%v", sqls, args, err)
+		return nil, err
 	}
 	if types.GetInt(count) == 0 {
 		return &AccountInfoList{Count: 0}, nil
 	}
-	rows, sqls, args, err := db.Query(sql.QueryAccountList, input)
+	rows, err := db.Query(sql.QueryAccountList, input)
 	if err != nil {
-		return nil, fmt.Errorf("sqls:%v,args:%v,err:%v", sqls, args, err)
+		return nil, err
 	}
 	var accounts []*AccountInfo
 	if err := rows.ToAnyStructs(&accounts); err != nil {

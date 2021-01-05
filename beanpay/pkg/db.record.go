@@ -18,9 +18,9 @@ func query(db db.IDBExecuter, aid int, pkg_id int64, startTime string, endTime s
 		"pi":         pi,
 		"ps":         ps,
 	}
-	rows, s, p, err := db.Query(sql.QueryPackageRecord, input)
+	rows, err := db.Query(sql.QueryPackageRecord, input)
 	if err != nil {
-		return nil, fmt.Errorf("SQL语句执行出错:%s(%v)", s, p)
+		return nil, fmt.Errorf("SQL语句执行出错:%w", err)
 	}
 	return rows, nil
 }
