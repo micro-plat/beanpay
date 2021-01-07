@@ -1,6 +1,8 @@
 package mysql
 
-const beanpay_package_record = `CREATE TABLE  beanpay_package_record (
+const beanpay_package_record = `
+DROP TABLE IF EXISTS beanpay_package_record;
+	CREATE TABLE IF NOT EXISTS beanpay_package_record (
 		record_id BIGINT(20)  not null AUTO_INCREMENT comment '变动编号' ,
 		pkg_id BIGINT(20)  not null  comment '服务包编号' ,
 		account_id BIGINT(20)  not null  comment '帐户编号' ,

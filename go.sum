@@ -65,6 +65,8 @@ github.com/go-redis/redis v6.15.9+incompatible h1:K0pv1D7EQUjfyoMql+r/jZqCLizCGK
 github.com/go-redis/redis v6.15.9+incompatible/go.mod h1:NAIEuMOZ/fxfXJIrKDQDz8wamY7mA7PouImQ2Jvg6kA=
 github.com/go-sql-driver/mysql v1.4.1 h1:g24URVg0OFbNUTx9qqY1IRZ9D9z3iPyi5zKhQZpNwpA=
 github.com/go-sql-driver/mysql v1.4.1/go.mod h1:zAC/RDZ24gD3HViQzih4MyKcchzm+sOG5ZlKdlhCg5w=
+github.com/go-sql-driver/mysql v1.5.0 h1:ozyZYNQW3x3HtqT1jira07DN2PArx2v7/mN66gGcHOs=
+github.com/go-sql-driver/mysql v1.5.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
 github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0/go.mod h1:E/TSTwGwJL78qG/PmXZO1EjYhfJinVAhrmmHX6Z8B9k=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b h1:VKtxabqXZkF25pY9ekfRL6a582T4P37/31XEstQ5p58=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b/go.mod h1:SBH7ygxi8pfUlaOkMMuAQtPIUF8ecWP5IEl/CR7VP2Q=
@@ -73,6 +75,8 @@ github.com/golang/mock v1.2.0 h1:28o5sBqPkBsMGnC6b4MvE2TzSr5/AT4c/1fLqVGIwlk=
 github.com/golang/mock v1.2.0/go.mod h1:oTYuIxOrZwtPieC+H1uAHpcLFnEyAGVDL/k47Jfbm0A=
 github.com/golang/mock v1.4.3 h1:GV+pQPG/EUUbkh47niozDcADz6go/dUwhVzdUQHIVRw=
 github.com/golang/mock v1.4.3/go.mod h1:UOMv5ysSaYNkG+OFQykRIcU/QvvxJf3p21QfJ2Bt3cw=
+github.com/golang/mock v1.4.4 h1:l75CXGRSwbaYNpl/Z2X1XIIAMSCquvXgpVZDhwEIJsc=
+github.com/golang/mock v1.4.4/go.mod h1:l3mdAwkq5BuhzHwde/uurv3sEJeZMXNpwsxVWU71h+4=
 github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/golang/protobuf v1.3.1/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/golang/protobuf v1.3.2/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
@@ -225,6 +229,8 @@ github.com/zkfy/go-metrics v0.0.0-20161128210544-1f30fe9094a5 h1:Rb2qQMbEon+BI3I
 github.com/zkfy/go-metrics v0.0.0-20161128210544-1f30fe9094a5/go.mod h1:VOfLef4/FOZxeKOJ2BtlXFcirZ3i6/E7dR1wBl37LS8=
 github.com/zkfy/go-oci8 v0.0.0-20180327092318-ad9f59dedff0 h1:jTkoGemWKwQ/TQ+y6nX6LoN2dkV1UW9edx9vIaEt4OQ=
 github.com/zkfy/go-oci8 v0.0.0-20180327092318-ad9f59dedff0/go.mod h1:eC3OkCVU+lyyoySDy2npkH2xLZ3N55SyWrxUc97BgPU=
+github.com/zkfy/go-oci8 v1.0.0 h1:vgJk0AnBNuVDKh/q9LSdbW3smLj7R53x29dhRQ/QaqA=
+github.com/zkfy/go-oci8 v1.0.0/go.mod h1:eC3OkCVU+lyyoySDy2npkH2xLZ3N55SyWrxUc97BgPU=
 github.com/zkfy/jwt-go v3.0.0+incompatible h1:5hZNIkrRRa0mrkRiXoPFdLJWpMDByIZ6VIbX9aWhwmk=
 github.com/zkfy/jwt-go v3.0.0+incompatible/go.mod h1:/VPZ6I97VPxFImaauVUAH0vFDQBwnVZVm9XTexdfD9E=
 github.com/zkfy/log v0.0.0-20180312054228-b2704c3ef896 h1:nktyhX5ycnu+WA489Ei7SUi00bF+LW8TF2N7se5gQ/o=
