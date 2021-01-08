@@ -209,7 +209,7 @@ func ReverseAmount(db db.IDBExecuter, ident string, group string, eid string, tr
 	if err != nil {
 		return nil, err
 	}
-	amount, err := queryTradedAmount(db, acc.ID, extNo, ttypes.Reverse, changeType)
+	amount, err := queryTradedAmount(db, acc.ID, extNo, int(ttypes.Reverse), changeType)
 	if err != nil {
 		return nil, err
 	}
@@ -225,7 +225,7 @@ func ReverseAmount(db db.IDBExecuter, ident string, group string, eid string, tr
 		return nil, errs.NewErrorf(ecodes.NotExists, "交易编号(%s)不存在", extNo)
 	}
 
-	row, err := change(db, acc.ID, tradeNo, extNo, ttypes.Reverse, changeType, tradeAmount, memo, ext)
+	row, err := change(db, acc.ID, tradeNo, extNo, int(ttypes.Reverse), changeType, tradeAmount, memo, ext)
 	if err != nil {
 		return nil, err
 	}

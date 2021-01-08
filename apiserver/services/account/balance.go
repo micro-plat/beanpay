@@ -51,7 +51,6 @@ func (u *BalanceHandler) ReverseAddHandle(ctx hydra.IContext) (r interface{}) {
 		ctx.Request().GetString("eid"),
 		ctx.Request().GetString("trade_no"),
 		ctx.Request().GetString("ext_no"),
-		ctx.Request().GetInt("trade_type"),
 		ctx.Request().GetString("memo"))
 	if err != nil {
 		return err
@@ -98,7 +97,6 @@ func (u *BalanceHandler) ReverseDrawingHandle(ctx hydra.IContext) (r interface{}
 		ctx.Request().GetString("eid"),
 		ctx.Request().GetString("trade_no"),
 		ctx.Request().GetString("ext_no"),
-		ctx.Request().GetInt("trade_type"),
 		ctx.Request().GetString("memo"))
 	if err != nil {
 		return err
@@ -142,7 +140,7 @@ func (u *BalanceHandler) DeductHandle(ctx hydra.IContext) (r interface{}) {
 	record, err := bp.DeductAmount(ctx,
 		ctx.Request().GetString("eid"),
 		ctx.Request().GetString("trade_no"),
-		ctx.Request().GetInt("trade_type"),
+		beanpay.AccountTradeType,
 		ctx.Request().GetFloat64("amount"),
 		ctx.Request().GetString("memo"))
 	if err != nil {
@@ -167,7 +165,7 @@ func (u *BalanceHandler) RefundHandle(ctx hydra.IContext) (r interface{}) {
 		ctx.Request().GetString("eid"),
 		ctx.Request().GetString("trade_no"),
 		ctx.Request().GetString("ext_no"),
-		ctx.Request().GetInt("trade_type"),
+		beanpay.AccountTradeType,
 		ctx.Request().GetFloat64("amount"),
 		ctx.Request().GetString("memo"))
 	if err != nil {
@@ -191,7 +189,7 @@ func (u *BalanceHandler) TradeFlatHandle(ctx hydra.IContext) (r interface{}) {
 	record, err := bp.TradeFlatAmount(ctx,
 		ctx.Request().GetString("eid"),
 		ctx.Request().GetString("trade_no"),
-		ctx.Request().GetInt("trade_type"),
+		beanpay.AccountTradeType,
 		ctx.Request().GetFloat64("amount"),
 		ctx.Request().GetString("memo"))
 	if err != nil {
@@ -214,7 +212,7 @@ func (u *BalanceHandler) BalanceFlatHandle(ctx hydra.IContext) (r interface{}) {
 	record, err := bp.BalanceFlatAmount(ctx,
 		ctx.Request().GetString("eid"),
 		ctx.Request().GetString("trade_no"),
-		ctx.Request().GetInt("trade_type"),
+		beanpay.AccountTradeType,
 		ctx.Request().GetFloat64("amount"),
 		ctx.Request().GetString("memo"))
 	if err != nil {

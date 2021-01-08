@@ -2,28 +2,29 @@ package beanpay
 
 import (
 	"github.com/micro-plat/beanpay/beanpay/account"
+	"github.com/micro-plat/beanpay/beanpay/const/ttypes"
 	"github.com/micro-plat/beanpay/beanpay/pkg"
 	"github.com/micro-plat/lib4go/db"
 	"github.com/micro-plat/lib4go/errs"
 )
 
 //TradeType 交易类型
-type TradeType ttype.TradeType
+type TradeType = ttypes.TradeType
 
 // 交易类型
 var (
 
 	//AccountTradeType 账户交易
-	AccountTradeType = ttypes.Account
+	AccountTradeType TradeType = ttypes.Account
 
 	//FreeTradeType 费用交易
-	FreeTradeType = ttypes.Free
+	FreeTradeType TradeType = ttypes.Free
 
 	//CommissionTradeType 佣金交易
-	CommissionTradeType = ttypes.Commission
+	CommissionTradeType TradeType = ttypes.Commission
 
 	//ReverseTradeType 红冲交易
-	ReverseTradeType = ttypes.Reverse
+	ReverseTradeType TradeType = ttypes.Reverse
 )
 
 //IBeanpay Beanpay接口
@@ -45,8 +46,8 @@ type IAccount interface {
 	QueryAccountRecords(i interface{}, accountType string, accountID string, accountName string, group string, changeType string, tradeType string, eid string, startTime string, endTime string, pi int, ps int) (*account.RecordResults, error)
 	TradeFlatAmount(i interface{}, eid string, tradeNo string, tradeType TradeType, amount float64, memo string, ext ...string) (*account.RecordResult, error)
 	BalanceFlatAmount(i interface{}, eid string, tradeNo string, tradeType TradeType, amount float64, memo string, ext ...string) (*account.RecordResult, error)
-	ReverseAddAmount(i interface{}, eid string, tradeNo string, extNo string, tradeType TradeType, memo string, ext ...string) (*account.RecordResult, error)
-	ReverseDrawingAmount(i interface{}, eid string, tradeNo string, extNo string, tradeType TradeType, memo string, ext ...string) (*account.RecordResult, error)
+	ReverseAddAmount(i interface{}, eid string, tradeNo string, extNo string, memo string, ext ...string) (*account.RecordResult, error)
+	ReverseDrawingAmount(i interface{}, eid string, tradeNo string, extNo string, memo string, ext ...string) (*account.RecordResult, error)
 	SetCreditAmount(i interface{}, eid string, credit float64) (*account.AccountResult, error)
 }
 
