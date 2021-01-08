@@ -11,9 +11,12 @@ const (
 )
 
 // 交易类型
+
+type TradeType int
+
 const (
-	Account    = 1
-	Free       = 2
-	Commission = 3
-	Reverse    = 4
+	Account    TradeType = 1
+	Free       TradeType = 2
+	Commission TradeType = 3
+	Reverse    TradeType = 4
 )

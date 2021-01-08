@@ -7,6 +7,25 @@ import (
 	"github.com/micro-plat/lib4go/errs"
 )
 
+//TradeType 交易类型
+type TradeType ttype.TradeType
+
+// 交易类型
+var (
+
+	//AccountTradeType 账户交易
+	AccountTradeType = ttypes.Account
+
+	//FreeTradeType 费用交易
+	FreeTradeType = ttypes.Free
+
+	//CommissionTradeType 佣金交易
+	CommissionTradeType = ttypes.Commission
+
+	//ReverseTradeType 红冲交易
+	ReverseTradeType = ttypes.Reverse
+)
+
 //IBeanpay Beanpay接口
 type IBeanpay interface {
 	IAccount
@@ -21,13 +40,13 @@ type IAccount interface {
 	QueryAccount(i interface{}, eid, accountType, name, status string, pi, ps int) (r *account.AccountInfoList, err error)
 	AddAmount(i interface{}, eid string, tradeNo string, amount float64, memo string, ext ...string) (*account.RecordResult, error)
 	DrawingAmount(i interface{}, eid string, tradeNo string, amount float64, memo string, ext ...string) (*account.RecordResult, error)
-	DeductAmount(i interface{}, eid string, tradeNo string, tradeType int, amount float64, memo string, ext ...string) (*account.RecordResult, error)
-	RefundAmount(i interface{}, eid string, tradeNo string, extNo string, tradeType int, amount float64, memo string, ext ...string) (*account.RecordResult, error)
+	DeductAmount(i interface{}, eid string, tradeNo string, tradeType TradeType, amount float64, memo string, ext ...string) (*account.RecordResult, error)
+	RefundAmount(i interface{}, eid string, tradeNo string, extNo string, tradeType TradeType, amount float64, memo string, ext ...string) (*account.RecordResult, error)
 	QueryAccountRecords(i interface{}, accountType string, accountID string, accountName string, group string, changeType string, tradeType string, eid string, startTime string, endTime string, pi int, ps int) (*account.RecordResults, error)
-	TradeFlatAmount(i interface{}, eid string, tradeNo string, tradeType int, amount float64, memo string, ext ...string) (*account.RecordResult, error)
-	BalanceFlatAmount(i interface{}, eid string, tradeNo string, tradeType int, amount float64, memo string, ext ...string) (*account.RecordResult, error)
-	ReverseAddAmount(i interface{}, eid string, tradeNo string, extNo string, tradeType int, memo string, ext ...string) (*account.RecordResult, error)
-	ReverseDrawingAmount(i interface{}, eid string, tradeNo string, extNo string, tradeType int, memo string, ext ...string) (*account.RecordResult, error)
+	TradeFlatAmount(i interface{}, eid string, tradeNo string, tradeType TradeType, amount float64, memo string, ext ...string) (*account.RecordResult, error)
+	BalanceFlatAmount(i interface{}, eid string, tradeNo string, tradeType TradeType, amount float64, memo string, ext ...string) (*account.RecordResult, error)
+	ReverseAddAmount(i interface{}, eid string, tradeNo string, extNo string, tradeType TradeType, memo string, ext ...string) (*account.RecordResult, error)
+	ReverseDrawingAmount(i interface{}, eid string, tradeNo string, extNo string, tradeType TradeType, memo string, ext ...string) (*account.RecordResult, error)
 	SetCreditAmount(i interface{}, eid string, credit float64) (*account.AccountResult, error)
 }
 

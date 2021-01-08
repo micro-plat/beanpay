@@ -13,41 +13,6 @@ import (
 )
 
 var _ IBeanpay = &Beanpay{}
-var (
-	//Add 加款
-	Add = ttypes.Add
-
-	//Drawing 提现
-	Drawing = ttypes.Drawing
-
-	//Deduct 扣款
-	Deduct = ttypes.Deduct
-
-	//Refund 退款
-	Refund = ttypes.Refund
-
-	//TradeFlat 交易平账
-	TradeFlat = ttypes.TradeFlat
-
-	//BalanceFlat 余额平账
-	BalanceFlat = ttypes.BalanceFlat
-)
-
-// 交易类型
-var (
-
-	//Account 账户交易
-	Account = ttypes.Account
-
-	//Free 费用交易
-	Free = ttypes.Free
-
-	//Commission 佣金交易
-	Commission = ttypes.Commission
-
-	//Reverse 红冲交易
-	Reverse = ttypes.Reverse
-)
 
 //Beanpay 支付对象
 type Beanpay struct {
