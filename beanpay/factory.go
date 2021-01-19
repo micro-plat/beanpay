@@ -33,19 +33,19 @@ var (
 	//Success 成功
 	Success = ecodes.Success
 
-	//Failed　失败
+	//Failed　901失败
 	Failed = ecodes.Failed
 
-	//AmountErr　金额错误
+	//AmountErr　903金额错误
 	AmountErr = ecodes.AmountErr
 
-	//NotEnough　余额不足
+	//NotEnough　904余额不足
 	NotEnough = ecodes.NotEnough
 
-	//NotExists　交易不存在
+	//NotExists　908交易不存在
 	NotExists = ecodes.NotExists
 
-	//HasExists　交易已存在
+	//HasExists　201交易已存在
 	HasExists = ecodes.HasExists
 )
 
