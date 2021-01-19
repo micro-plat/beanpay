@@ -2,6 +2,7 @@ package beanpay
 
 import (
 	"github.com/micro-plat/beanpay/beanpay/account"
+	"github.com/micro-plat/beanpay/beanpay/const/ecodes"
 	"github.com/micro-plat/beanpay/beanpay/const/ttypes"
 	"github.com/micro-plat/beanpay/beanpay/pkg"
 	"github.com/micro-plat/lib4go/db"
@@ -25,6 +26,27 @@ var (
 
 	//ReverseTradeType 红冲交易
 	ReverseTradeType TradeType = ttypes.Reverse
+)
+
+var (
+
+	//Success 成功
+	Success = ecodes.Success
+
+	//Failed　失败
+	Failed = ecodes.Failed
+
+	//AmountErr　金额错误
+	AmountErr = ecodes.AmountErr
+
+	//NotEnough　余额不足
+	NotEnough = ecodes.NotEnough
+
+	//NotExists　交易不存在
+	NotExists = ecodes.NotExists
+
+	//HasExists　交易已存在
+	HasExists = ecodes.HasExists
 )
 
 //IBeanpay Beanpay接口
