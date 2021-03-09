@@ -384,6 +384,7 @@ func (engine *Engine) handleHTTPRequest(c *Context) {
 	httpMethod := c.Request.Method
 	rPath := c.Request.URL.Path
 	unescape := false
+
 	if engine.UseRawPath && len(c.Request.URL.RawPath) > 0 {
 		rPath = c.Request.URL.RawPath
 		unescape = engine.UnescapePathValues
@@ -403,6 +404,7 @@ func (engine *Engine) handleHTTPRequest(c *Context) {
 		// Find route in tree
 		value := root.getValue(rPath, c.Params, unescape)
 		if value.handlers != nil {
+
 			c.handlers = value.handlers
 			c.Params = value.params
 			c.fullPath = value.fullPath
@@ -410,7 +412,9 @@ func (engine *Engine) handleHTTPRequest(c *Context) {
 			c.writermem.WriteHeaderNow()
 			return
 		}
+
 		if httpMethod != "CONNECT" && rPath != "/" {
+
 			if value.tsr && engine.RedirectTrailingSlash {
 				redirectTrailingSlash(c)
 				return
@@ -486,7 +490,6 @@ func redirectRequest(c *Context) {
 	req := c.Request
 	rPath := req.URL.Path
 	rURL := req.URL.String()
-
 	code := http.StatusMovedPermanently // Permanent redirect, request with GET method
 	if req.Method != http.MethodGet {
 		code = http.StatusTemporaryRedirect

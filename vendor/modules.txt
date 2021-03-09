@@ -99,6 +99,9 @@ github.com/manifoldco/promptui/screenbuf
 github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.12
 github.com/mattn/go-isatty
+# github.com/mattn/go-oci8 v0.1.1
+## explicit
+github.com/mattn/go-oci8
 # github.com/mholt/archiver v3.1.1+incompatible
 github.com/mholt/archiver
 # github.com/micro-plat/gmq v1.0.1
@@ -279,9 +282,6 @@ github.com/yosssi/gmq/mqtt
 github.com/yosssi/gmq/mqtt/packet
 # github.com/zkfy/go-metrics v0.0.0-20161128210544-1f30fe9094a5
 github.com/zkfy/go-metrics
-# github.com/zkfy/go-oci8 v1.0.0
-## explicit
-github.com/zkfy/go-oci8
 # github.com/zkfy/jwt-go v3.0.0+incompatible
 github.com/zkfy/jwt-go
 # github.com/zkfy/log v0.0.0-20180312054228-b2704c3ef896
@@ -319,8 +319,6 @@ golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
 # golang.org/x/time v0.0.0-20201208040808-7e3f01d25324
 golang.org/x/time/rate
-# google.golang.org/appengine v1.6.7
-## explicit
 # google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013
 google.golang.org/genproto/googleapis/rpc/status
 # google.golang.org/grpc v1.34.0
@@ -402,5 +400,3 @@ google.golang.org/protobuf/types/known/timestamppb
 gopkg.in/yaml.v2
 # gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
 gopkg.in/yaml.v3
-# rsc.io/quote/v3 v3.1.0
-## explicit
