@@ -3,8 +3,8 @@
 package main
 
 import (
+	_ "github.com/mattn/go-oci8"
 	"github.com/micro-plat/hydra"
-	_ "github.com/zkfy/go-oci8"
 )
 
 func init() {
