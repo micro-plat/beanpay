@@ -20,3 +20,11 @@ const (
 	Commission TradeType = 3
 	Reverse    TradeType = 4
 )
+
+//AcccountStatus 账户状态
+type AcccountStatus int
+
+const (
+	StatusEnbled   AcccountStatus = 0
+	statusDisabled AcccountStatus = 1
+)

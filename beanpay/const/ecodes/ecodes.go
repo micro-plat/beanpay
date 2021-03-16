@@ -6,3 +6,4 @@ const AmountErr = 903
 const NotEnough = 904
 const NotExists = 908
 const HasExists = 201
+const AccountDisabled = 401

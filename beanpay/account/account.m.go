@@ -8,6 +8,7 @@ type Account struct {
 	eid     string  `json:"eid" m2s:"eid"`
 	Balance float64 `json:"balance" m2s:"balance"`
 	Credit  float64 `json:"credit" m2s:"credit"`
+	Status  int     `json:"status" m2s:"status"`
 }
 
 func NewAccount(s string) (*Account, error) {

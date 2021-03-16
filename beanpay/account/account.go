@@ -50,6 +50,9 @@ func SetCreditAmount(db db.IDBExecuter, ident string, group string, eid string, 
 	if err != nil {
 		return nil, err
 	}
+	if acc.Status != int(ttypes.StatusEnbled) {
+		return nil, errs.NewErrorf(ecodes.AccountDisabled, "账户(%s)未启用", eid)
+	}
 	if err = setCreditAmount(db, credit, acc.ID); err != nil {
 		return nil, err
 	}
@@ -90,7 +93,9 @@ func AddAmount(db db.IDBExecuter, ident string, group string, eid string, tradeN
 	if err != nil {
 		return nil, err
 	}
-
+	if acc.Status != int(ttypes.StatusEnbled) {
+		return nil, errs.NewErrorf(ecodes.AccountDisabled, "账户(%s)未启用", eid)
+	}
 	b, err := exists(db, acc.ID, tradeNo, tradeType, changeType)
 	if err != nil {
 		return nil, err
@@ -116,7 +121,9 @@ func DrawingAmount(db db.IDBExecuter, ident string, group string, eid string, tr
 	if err != nil {
 		return nil, err
 	}
-
+	if acc.Status != int(ttypes.StatusEnbled) {
+		return nil, errs.NewErrorf(ecodes.AccountDisabled, "账户(%s)未启用", eid)
+	}
 	b, err := exists(db, acc.ID, tradeNo, tradeType, changeType)
 	if err != nil {
 		return nil, err
@@ -143,6 +150,9 @@ func DeductAmount(db db.IDBExecuter, ident string, group string, eid string, tra
 	acc, err := GetAccount(db, ident, group, eid)
 	if err != nil {
 		return nil, err
+	}
+	if acc.Status != int(ttypes.StatusEnbled) {
+		return nil, errs.NewErrorf(ecodes.AccountDisabled, "账户(%s)未启用", eid)
 	}
 	b, err := exists(db, acc.ID, tradeNo, tradeType, ttypes.Deduct)
 	if err != nil {
@@ -172,7 +182,9 @@ func RefundAmount(db db.IDBExecuter, ident string, group string, eid string, tra
 	if err != nil {
 		return nil, err
 	}
-
+	if acc.Status != int(ttypes.StatusEnbled) {
+		return nil, errs.NewErrorf(ecodes.AccountDisabled, "账户(%s)未启用", eid)
+	}
 	//检查锁交易记录
 	deductAmount, err := lockTradeRecord(db, acc.ID, extNo, tradeType, ttypes.Deduct)
 	if err != nil {
@@ -208,6 +220,9 @@ func ReverseAmount(db db.IDBExecuter, ident string, group string, eid string, tr
 	acc, err := GetAccount(db, ident, group, eid)
 	if err != nil {
 		return nil, err
+	}
+	if acc.Status != int(ttypes.StatusEnbled) {
+		return nil, errs.NewErrorf(ecodes.AccountDisabled, "账户(%s)未启用", eid)
 	}
 	amount, err := queryTradedAmount(db, acc.ID, extNo, int(ttypes.Reverse), changeType)
 	if err != nil {

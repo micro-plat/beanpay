@@ -27,7 +27,7 @@ WHERE b.account_id = @account_id`
 
 //GetAccountByeid 根据eid查询帐户编号
 const GetAccountByeid = `select t.account_id,t.account_name,
-t.eid,ifnull(t.balance,0) balance,ifnull(t.credit,0) credit from beanpay_account_info t where 
+t.eid,ifnull(t.balance,0) balance,ifnull(t.credit,0) credit,t.status from beanpay_account_info t where 
 t.ident=@ident and t.groups=@groups and t.eid=@eid`
 
 //ChangeAmount 帐户加款
