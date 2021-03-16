@@ -27,7 +27,7 @@ type RecordResult struct {
 }
 
 // NewRecordResult map转RecordResult
-func NewRecordResult(code int, m types.XMap) *RecordResult {
+func NewRecordResult(code int, m types.IXMap) *RecordResult {
 	var account AccountRecord
 	m.ToAnyStruct(&account)
 	return &RecordResult{AccountRecord: &account, code: code}

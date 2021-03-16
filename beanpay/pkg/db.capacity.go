@@ -9,7 +9,7 @@ import (
 )
 
 //Change 服务包数量变动
-func change(db db.IDBExecuter, pkgID int64, tradeNo string, changeType int, capacity int, ext string) (types.XMap, error) {
+func change(db db.IDBExecuter, pkgID int64, tradeNo string, changeType int, capacity int, ext string) (types.IXMap, error) {
 	input := map[string]interface{}{
 		"pkg_id":      pkgID,
 		"capacity":    capacity,

@@ -29,7 +29,7 @@ func getBalance(db db.IDBExecuter, ident string, group string, eid string) (int,
 }
 
 //Change 资金变动
-func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, tradeType int, changeType int, amount float64, memo, ext string) (types.XMap, error) {
+func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, tradeType int, changeType int, amount float64, memo, ext string) (types.IXMap, error) {
 	input := map[string]interface{}{
 		"account_id":  accountID,
 		"amount":      amount,
@@ -83,7 +83,7 @@ func exists(db db.IDBExecuter, accountID int, tradeNo string, tradeType int, cha
 	}
 	return types.GetInt(row) != 0, nil
 }
-func getRecordByID(db db.IDBExecuter, id int64) (db.QueryRow, error) {
+func getRecordByID(db db.IDBExecuter, id int64) (types.IXMap, error) {
 	rows, err := db.Query(sql.GetBalanceRecord, map[string]interface{}{
 		"id": id,
 	})
@@ -95,7 +95,7 @@ func getRecordByID(db db.IDBExecuter, id int64) (db.QueryRow, error) {
 	}
 	return rows.Get(0), nil
 }
-func getRecordByTradeNo(db db.IDBExecuter, accountID int, tradeNo string, tradeType int, changeType int) (db.QueryRow, error) {
+func getRecordByTradeNo(db db.IDBExecuter, accountID int, tradeNo string, tradeType int, changeType int) (types.IXMap, error) {
 	rows, err := db.Query(sql.GetBalanceRecordByTradeNo, map[string]interface{}{
 		"account_id":  accountID,
 		"trade_no":    tradeNo,

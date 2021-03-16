@@ -27,7 +27,7 @@ func create(db db.IDBExecuter, accountID int, spkgID string, name string, total 
 }
 
 //GetPackageID 根据帐户编号，外部包编号获取当前系统包编号
-func getPackage(db db.IDBExecuter, accountID int, spkgID string) (db.QueryRow, error) {
+func getPackage(db db.IDBExecuter, accountID int, spkgID string) (types.IXMap, error) {
 	input := map[string]interface{}{
 		"account_id": accountID,
 		"spkg_id":    spkgID,
@@ -41,7 +41,7 @@ func getPackage(db db.IDBExecuter, accountID int, spkgID string) (db.QueryRow, e
 	}
 	return rows.Get(0), nil
 }
-func getRecordByTradeNo(db db.IDBExecuter, pkgID int64, tradeNo string, changeType int) (db.QueryRow, error) {
+func getRecordByTradeNo(db db.IDBExecuter, pkgID int64, tradeNo string, changeType int) (types.IXMap, error) {
 	rows, err := db.Query(sql.GetPackageRecordByTradeNo, map[string]interface{}{
 		"pkg_id":      pkgID,
 		"trade_no":    tradeNo,

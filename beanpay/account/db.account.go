@@ -51,7 +51,7 @@ func setCreditAmount(db db.IDBExecuter, credit float64, accountID int) error {
 }
 
 //GetAccountID 根据eid获取帐户编号
-func getAccount(db db.IDBExecuter, ident string, groups string, eid string) (r db.QueryRow, err error) {
+func getAccount(db db.IDBExecuter, ident string, groups string, eid string) (r types.IXMap, err error) {
 	input := map[string]interface{}{
 		"ident":  ident,
 		"groups": groups,
