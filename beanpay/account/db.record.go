@@ -16,7 +16,7 @@ func query(db db.IDBExecuter, accountType string, group string, accountID string
 		"start":        startTime,
 		"end":          endTime,
 		"change_type":  changeType,
-		"groups":       group,
+		"groupx":       group,
 		"account_name": accountName,
 		"trade_type":   tradeType,
 		"currentPage":  (pi - 1) * ps,

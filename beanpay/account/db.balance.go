@@ -14,7 +14,7 @@ import (
 func getBalance(db db.IDBExecuter, ident string, group string, eid string) (int, error) {
 	input := map[string]interface{}{
 		"ident":  ident,
-		"groups": group,
+		"groupx": group,
 		"eid":    eid,
 	}
 	rows, err := db.Query(sql.GetAccountByeid, input)

@@ -7,7 +7,7 @@
 | account_id   | number(20)   |  86000  |  否   |            PK,SEQ             | 帐户编号                |
 | account_name | varchar2(32) |         |  否   |                               | 帐户名称                |
 | ident        | varchar2(32) |         |  否   | UNQ(beanpay_account_info_eid) | 系统标识                |
-| groups       | varchar2(32) |         |  否   | UNQ(beanpay_account_info_eid) | 用户分组                |
+| groupx       | varchar2(32) |         |  否   | UNQ(beanpay_account_info_eid) | 用户分组                |
 | eid          | varchar2(32) |         |  否   | UNQ(beanpay_account_info_eid) | 外部用户账户编号        |
 | balance      | number(20,5) |    0    |  否   |                               | 帐户余额，单位：元      |
 | credit       | number(20,5) |    0    |  否   |                               | 信用余额，单位：元      |

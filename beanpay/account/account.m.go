@@ -39,7 +39,7 @@ type AccountInfo struct {
 	EID     string  `json:"eid"`
 	Balance float64 `json:"balance"`
 	Credit  float64 `json:"credit"`
-	Group   string  `json:"groups"`
+	Group   string  `json:"groupx"`
 	Status  int     `json:"status"`
 }
 

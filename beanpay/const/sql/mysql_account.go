@@ -6,15 +6,15 @@ import _ "github.com/micro-plat/beanpay/beanpay/const/sql/mysql"
 
 //CreateAccount 创建帐户信息
 const CreateAccount = `INSERT INTO beanpay_account_info(
-	account_name,ident,groups,eid,balance,credit,status,create_time)values(
-	@name,@ident,@groups,@eid,0,0,0,now())`
+	account_name,ident,groupx,eid,balance,credit,status,create_time)values(
+	@name,@ident,@groupx,@eid,0,0,0,now())`
 
 //UpdateAccount 修改帐户信息
 const UpdateAccount = `
 update beanpay_account_info t
 set t.account_name = @name
 where t.ident = @ident
-and t.groups = @groups
+and t.groupx = @groupx
 and t.eid = @eid
 `
 
@@ -28,7 +28,7 @@ WHERE b.account_id = @account_id`
 //GetAccountByeid 根据eid查询帐户编号
 const GetAccountByeid = `select t.account_id,t.account_name,
 t.eid,ifnull(t.balance,0) balance,ifnull(t.credit,0) credit,t.status from beanpay_account_info t where 
-t.ident=@ident and t.groups=@groups and t.eid=@eid`
+t.ident=@ident and t.groupx=@groupx and t.eid=@eid`
 
 //ChangeAmount 帐户加款
 const ChangeAmount = `update beanpay_account_info t set t.balance=t.balance + @amount where t.account_id=@account_id
@@ -65,21 +65,21 @@ from beanpay_account_record t
 INNER JOIN beanpay_account_info a ON a.account_id = t.account_id
 where t.create_time >= DATE_FORMAT(@start,'%Y%m%d')
 and t.create_time < DATE_ADD(DATE_FORMAT(@end,'%Y%m%d'),interval 1 day)
-and a.groups like CONCAT('',@types,'%')
+and a.groupx like CONCAT('',@types,'%')
 and a.account_name like concat('%',@account_name,'%')
-&t.account_id &t.change_type &t.trade_type &a.groups &a.ident
+&t.account_id &t.change_type &t.trade_type &a.groupx &a.ident
 `
 
 //QueryBalanceRecord 查询余额资金变动信息
 const QueryBalanceRecord = `select t.record_id,t.account_id,t.memo,t.trade_type,
-t.trade_no,t.change_type,t.amount,t.balance,t.create_time,a.account_name,a.eid,a.groups
+t.trade_no,t.change_type,t.amount,t.balance,t.create_time,a.account_name,a.eid,a.groupx
 from beanpay_account_record t 
 INNER JOIN beanpay_account_info a ON a.account_id = t.account_id
 where  t.create_time >= DATE_FORMAT(@start,'%Y%m%d')
 and t.create_time < DATE_ADD(DATE_FORMAT(@end,'%Y%m%d'),interval 1 day)
-and a.groups like CONCAT('',@types,'%')
+and a.groupx like CONCAT('',@types,'%')
 and a.account_name like concat('%',@account_name,'%')
-&t.account_id &t.change_type &t.trade_type &a.groups
+&t.account_id &t.change_type &t.trade_type &a.groupx
 order by t.record_id desc
 limit #pageSize offset #currentPage
 `
@@ -134,10 +134,10 @@ WHERE t.account_id = @account_id
 const QueryAccountListCount = `
 select count(1)
 from beanpay_account_info t
-where  t.groups like CONCAT('',@types,'%')
+where  t.groupx like CONCAT('',@types,'%')
 and if(isnull(@account_name)||@account_name='',1=1,t.account_name like concat('%',@account_name,'%'))
 and if(isnull(@eid)||@eid='',1=1,t.eid=@eid)
-and if(isnull(@groups)||@groups='',1=1,t.groups=@groups)
+and if(isnull(@groupx)||@groupx='',1=1,t.groupx=@groupx)
 and if(isnull(@ident)||@ident='',1=1,t.ident=@ident)
 and if(isnull(@status)||@status='',1=1,t.status=@status)`
 
@@ -147,17 +147,17 @@ select
 	t.account_id,
 	t.account_name,
 	t.ident,
-	t.groups,
+	t.groupx,
     t.eid,
     ifnull(t.balance,0) balance,
     ifnull(t.credit,0) credit,
     t.create_time,
     t.status
     from beanpay_account_info t
-where t.groups like CONCAT('',@types,'%')
+where t.groupx like CONCAT('',@types,'%')
 and if(isnull(@eid)||@eid='',1=1,t.eid=@eid)
 and if(isnull(@account_name)||@account_name='',1=1,t.account_name like concat('%',@account_name,'%'))
-and if(isnull(@groups)||@groups='',1=1,t.groups=@groups)
+and if(isnull(@groupx)||@groupx='',1=1,t.groupx=@groupx)
 and if(isnull(@ident)||@ident='',1=1,t.ident=@ident)
 and if(isnull(@status)||@status='',1=1,t.status=@status)
 order by t.account_id desc

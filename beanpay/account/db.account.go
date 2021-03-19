@@ -8,10 +8,10 @@ import (
 )
 
 //Create 根据eid,name创建帐户信息
-func create(db db.IDBExecuter, ident string, groups string, eid string, name string) error {
+func create(db db.IDBExecuter, ident string, groupx string, eid string, name string) error {
 	input := map[string]interface{}{
 		"ident":  ident,
-		"groups": groups,
+		"groupx": groupx,
 		"eid":    eid,
 		"name":   name,
 	}
@@ -23,10 +23,10 @@ func create(db db.IDBExecuter, ident string, groups string, eid string, name str
 }
 
 //update 根据eid,name修改帐户信息
-func update(db db.IDBExecuter, ident string, groups string, eid string, name string) error {
+func update(db db.IDBExecuter, ident string, groupx string, eid string, name string) error {
 	input := map[string]interface{}{
 		"ident":  ident,
-		"groups": groups,
+		"groupx": groupx,
 		"eid":    eid,
 		"name":   name,
 	}
@@ -51,10 +51,10 @@ func setCreditAmount(db db.IDBExecuter, credit float64, accountID int) error {
 }
 
 //GetAccountID 根据eid获取帐户编号
-func getAccount(db db.IDBExecuter, ident string, groups string, eid string) (r types.IXMap, err error) {
+func getAccount(db db.IDBExecuter, ident string, groupx string, eid string) (r types.IXMap, err error) {
 	input := map[string]interface{}{
 		"ident":  ident,
-		"groups": groups,
+		"groupx": groupx,
 		"eid":    eid,
 	}
 	rows, err := db.Query(sql.GetAccountByeid, input)
@@ -73,7 +73,7 @@ func queryAccount(db db.IDBExecuter, ident, group, eid, accountType, name, statu
 	input := map[string]interface{}{
 		"ident":        ident,
 		"eid":          eid,
-		"groups":       group,
+		"groupx":       group,
 		"status":       status,
 		"account_name": name,
 		"types":        accountType,

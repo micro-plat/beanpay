@@ -6,15 +6,15 @@ import _ "github.com/micro-plat/beanpay/beanpay/const/sql/oracle"
 
 //CreateAccount 创建帐户信息
 const CreateAccount = `INSERT INTO beanpay_account_info(account_id,account_name,
-	ident,groups,eid,balance,credit,status,create_time)values(seq_account_info_id.nextval,
-	@name,@ident,@groups,@eid,0,0,0,sysdate)`
+	ident,groupx,eid,balance,credit,status,create_time)values(seq_account_info_id.nextval,
+	@name,@ident,@groupx,@eid,0,0,0,sysdate)`
 
 //UpdateAccount 修改帐户信息
 const UpdateAccount = `
 update beanpay_account_info t
 set t.account_name = @name
 where t.ident = @ident
-and t.groups = @groups
+and t.groupx = @groupx
 and t.eid = @eid
 `
 
@@ -28,11 +28,11 @@ WHERE b.account_id = @account_id`
 //GetAccountByeid 根据eid查询帐户编号
 const GetAccountByeid = `select t.account_id,t.account_name,t.eid,nvl(t.balance,0) balance,
 nvl(t.credit,0) credit from beanpay_account_info t where
-t.ident=@ident and t.groups=@groups and t.eid=@eid`
+t.ident=@ident and t.groupx=@groupx and t.eid=@eid`
 
 //ChangeAmount 帐户加款
 const ChangeAmount = `update beanpay_account_info t set t.balance=t.balance + @amount where t.account_id=@account_id
-AND ((t.balance + t.credit + @amount >= 0 AND t.groups = 'down_channel') OR t.groups != 'down_channel')
+AND ((t.balance + t.credit + @amount >= 0 AND t.groupx = 'down_channel') OR t.groupx != 'down_channel')
 `
 
 //ExistsBalanceRecord 查询交易变动记录是否已存在
@@ -66,9 +66,9 @@ count(1) from  beanpay_account_record t
 INNER JOIN beanpay_account_info a ON a.account_id = t.account_id
 where t.create_time >= to_date(@start,'yyyy-MM-dd')
 and t.create_time < to_date(@end,'yyyy-MM-dd')+1
-and a.groups like @types||'%'
+and a.groupx like @types||'%'
 and a.account_name like '%'|| @account_name ||'%'
-&t.account_id &t.change_type &t.trade_type &a.groups &a.ident
+&t.account_id &t.change_type &t.trade_type &a.groupx &a.ident
 `
 
 //QueryBalanceRecord 查询余额资金变动信息
@@ -87,14 +87,14 @@ from (select L.*
                              t.memo,
                              a.account_name,
                              a.eid,
-                             a.groups
+                             a.groupx
                       from beanpay_account_record t
                       INNER JOIN beanpay_account_info a ON a.account_id = t.account_id
                        WHERE t.create_time >= to_date(@start,'yyyy-MM-dd')
                        and t.create_time < to_date(@end,'yyyy-MM-dd')+1
-                       and a.groups like @types || '%'
+                       and a.groupx like @types || '%'
                        and a.account_name like '%'|| @account_name ||'%'
-                       &t.account_id &t.change_type &t.trade_type &a.groups
+                       &t.account_id &t.change_type &t.trade_type &a.groupx
                        order by t.record_id desc) R
                         where rownum <= @size) L
                        where L.rn > @currentPage) TAB1`
@@ -149,10 +149,10 @@ WHERE t.account_id = @account_id
 const QueryAccountListCount = `
 select count(1)
 from beanpay_account_info t
-where  t.groups like '%' || @types || '%'
+where  t.groupx like '%' || @types || '%'
  and t.account_name like '%'|| @account_name ||'%'
  &t.eid
- &t.groups
+ &t.groupx
  &t.ident
  &t.status`
 
@@ -164,17 +164,17 @@ select TAB1.*
                   from (select t.account_id,
                                t.account_name,
                                t.ident,
-                               t.groups,
+                               t.groupx,
                                t.eid,
                                nvl(t.balance,0) balance,
                                nvl(t.credit,0) credit,
                                to_char(t.create_time,'yyyy-MM-dd HH24:mi:ss') create_time,
                                t.status
                           from beanpay_account_info t
-                         where t.groups like '' || @types || '%'
+                         where t.groupx like '' || @types || '%'
                          and t.account_name like '%'|| @account_name ||'%'
                          &t.eid 
-                         &t.groups  &t.ident
+                         &t.groupx  &t.ident
                          &t.status
                          order by t.account_id desc) R
                  where rownum <= @size) L

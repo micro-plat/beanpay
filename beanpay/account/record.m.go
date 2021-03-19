@@ -10,7 +10,7 @@ type AccountRecord struct {
 	RecordID    int     `json:"record_id"`
 	TradeNo     string  `json:"trade_no"`
 	EID         string  `json:"eid"`
-	Group       string  `json:"groups"`
+	Group       string  `json:"groupx"`
 	AccountName string  `json:"account_name"`
 	ChangeType  int     `json:"change_type"`
 	TradeType   int     `json:"trade_type"`
