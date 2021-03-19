@@ -59,3 +59,6 @@
 | num         | number(20)     |         |  否   |                                        | 变动数量                             |
 | remain      | number(20)     |         |  否   |                                        | 剩余数量                             |
 | ext         | varchar2(1024) |         |  是   |                                        | 扩展字段                             |
+
+
+hicli db create ./docs/db.oracle.md  ./beanpay/const/sql/mysql --gofile --drop --cover
