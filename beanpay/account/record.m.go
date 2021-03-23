@@ -51,7 +51,7 @@ type RecordResults struct {
 }
 
 // NewRecordResults maps转RecordResults
-func NewRecordResults(code, count int, m types.XMaps) *RecordResults {
+func NewRecordResults(code, count int, m types.IXMaps) *RecordResults {
 	var accounts []*AccountRecord
 	m.ToAnyStructs(&accounts)
 	return &RecordResults{List: accounts, code: code, Count: count}

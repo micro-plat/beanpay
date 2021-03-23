@@ -13,3 +13,4 @@ require (
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	golang.org/x/net v0.0.0-20201224014010-6772e930b67b // indirect
 )
+replace github.com/micro-plat/lib4go => ../../../github.com/micro-plat/lib4go
