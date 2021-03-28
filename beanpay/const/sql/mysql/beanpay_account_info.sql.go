@@ -9,8 +9,8 @@ const beanpay_account_info=`
 		ident varchar(32)  not null  comment '系统标识' ,
 		groupx varchar(32)  not null  comment '用户分组' ,
 		eid varchar(32)  not null  comment '外部用户账户编号' ,
-		balance bigint default 0 not null  comment '帐户余额，单位：分' ,
-		credit bigint default 0 not null  comment '信用余额，单位：分' ,
+		balance decimal(20,5) default 0 not null  comment '帐户余额，单位：元' ,
+		credit decimal(20,5) default 0 not null  comment '信用余额，单位：元' ,
 		status tinyint default 0 not null  comment '账户状态 0：正常 1:锁定' ,
 		create_time datetime default current_timestamp not null  comment '创建时间' 
 		,primary key (account_id)

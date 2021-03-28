@@ -32,7 +32,7 @@ func getBalance(db db.IDBExecuter, ident string, group string, eid string) (int,
 func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, tradeType int, changeType int, amount float64, memo, ext string) (types.IXMap, error) {
 	input := map[string]interface{}{
 		"account_id":  accountID,
-		"amount":      amount,
+		"amount":      types.NewDecimalFromFloat(amount),
 		"trade_no":    tradeNo,
 		"ext_no":      extNo,
 		"change_type": changeType,
@@ -46,7 +46,7 @@ func change(db db.IDBExecuter, accountID int, tradeNo string, extNo string, trad
 		return nil, err
 	}
 	if row == 0 {
-		return nil, errs.NewError(ecodes.NotEnough, "帐户余额不足")
+		return nil, errs.NewErrorf(ecodes.NotEnough, "帐户余额不足%s", types.Sprint(input))
 	}
 
 	//添加资金变动

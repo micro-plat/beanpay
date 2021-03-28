@@ -61,4 +61,4 @@
 | ext         | varchar2(1024) |         |  是   |                                        | 扩展字段                             |
 
 
-hicli db create ./docs/db.oracle.md  ./beanpay/const/sql/mysql --gofile --drop --cover
+hicli db create ./docs/db.md  ./beanpay/const/sql/mysql --gofile --drop --cover
